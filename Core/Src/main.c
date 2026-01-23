@@ -1,0 +1,945 @@
+/* USER CODE BEGIN Header */
+/**
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ *TO DO LIST:
+ * INA voltage calibration required:
+ * 		-voltage -> liner offset (0.02 at high values)
+ * 		-current -> non liner offset (0.005 max)
+ * write algorithm to get voltage and current set point
+ * menu settings, mode
+ * divide to different files funtions
+ *
+ ******************************************************************************
+ */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include "STM32_Library_Encoder/M_ENC.h"
+#include "STM32_Library_INA226/M_INA226.h"
+#include "STM32_Library_My_Graphic_Library/MGL.h"
+#include "STM32_Library_Signal_Filter/M_Filter.h"
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+#define USE_DEBUG
+
+//INA settings
+/////////////////////////////////////////////////////
+//#define INA_CALIB_MODE
+#define INA_CALIB_VAL 2450
+
+//VAW settings
+/////////////////////////////////////////////////////
+#define VAW_MAX_VOL 2400
+#define VAW_MAX_CURR 5000
+#define VAW_MAX_WATT 1200
+
+//Graphic settings
+/////////////////////////////////////////////////////
+//SCREEN RESOLUTION : 160x128
+
+/////////////////////////////////////////////////////
+#define SCREEN_REFRESH_RATE 30 ///<ms
+
+//Main field rectengle
+/////////////////////////////////////////////////////
+#define MAIN_FIELD_X 3
+#define MAIN_FIELD_Y 3
+#define MAIN_FIELD_WIDTH 154
+#define MAIN_FIELD_HEIGHT 122
+
+//Working field dimensions
+/////////////////////////////////////////////////////
+#define MEAS_FIELD_X 5
+#define MEAS_FIELD_Y 5
+#define MEAS_FIELD_WIDTH 150
+#define MEAS_FIELD_HEIGHT 118
+
+//Measurements location on the display
+/////////////////////////////////////////////////////
+#define VAW_VOLTAGE_X MEAS_FIELD_X+4
+#define VAW_VOLTAGE_Y MEAS_FIELD_Y
+#define VAW_CURRENT_X MEAS_FIELD_X+4
+#define VAW_CURRENT_Y MEAS_FIELD_Y+30
+#define VAW_WATTAGE_X MEAS_FIELD_X+4
+#define VAW_WATTAGE_Y MEAS_FIELD_Y+59
+
+//Progress bar
+/////////////////////////////////////////////////////
+#define BAR_VOLTAGE_X MEAS_FIELD_X+128
+#define BAR_VOLTAGE_Y MEAS_FIELD_Y
+#define BAR_CURRENT_X MEAS_FIELD_X+135
+#define BAR_CURRENT_Y MEAS_FIELD_Y
+#define BAR_WATTAGE_X MEAS_FIELD_X+142
+#define BAR_WATTAGE_Y MEAS_FIELD_Y
+#define BAR_WIDTH 6
+#define BAR_LENGTH 90
+
+//Colors
+/////////////////////////////////////////////////////
+#define VOL_COLOR COLOR_LIGHT_SEA_GREEN
+#define CUR_COLOR 0xFBEF
+#define WATT_COLOR COLOR_LIGHT_SALMON
+#define BG_COLOR COLOR_BLACK
+#define FONT_COLOR COLOR_LIGHT_GRAY
+#define LOW_INF_BAR_STROKE_COLOR COLOR_DARK_GRAY
+#define MP_STROKE_COLOR COLOR_RED
+#define MP_STROKE_INT_COLOR COLOR_MAROON
+#define BAR_STROKE_COLOR COLOR_DARK_GRAY
+
+//lower information bar rect
+/////////////////////////////////////////////////////
+#define LOW_ST_BAR_X 7
+#define LOW_ST_BAR_Y 100
+#define LOW_ST_BAR_W 146
+#define LOW_ST_BAR_H 21
+
+#define LOW_INF_BAR_UPP_Y 102  ///<upper string X
+#define LOW_INF_BAR_LOW_Y 112  ///<lower string X
+
+//fast functions
+/////////////////////////////////////////////////////
+#define REFRESH_MAIN_FIELD() MGL_FillRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT, BG_COLOR)
+#define DRAW_LOW_INF_BAR() MGL_DrawRectWH(LOW_ST_BAR_X, LOW_ST_BAR_Y, LOW_ST_BAR_W, LOW_ST_BAR_H, LOW_INF_BAR_STROKE_COLOR)///<lower information stroke
+#define DRAW_MAIN_FIELD_STROKE() MGL_DrawRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT - 1, MP_STROKE_INT_COLOR)///<main field stroke
+
+//NTC defines
+/////////////////////////////////////////////////////
+#define NTC_B_FACTOR 4090 ///< B-factor for NTC
+#define NTC_SERIAL_RESISTOR 10000 ///< Ohm, resistor in series
+#define NTC_RESISTANCE 10000 ///<NTC resistance
+#define NTC_NOMINAL_T 25 ///<NTC temperature in case of 10kOhm
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+DAC_HandleTypeDef hdac1;
+
+I2C_HandleTypeDef hi2c1;
+
+RTC_HandleTypeDef hrtc;
+
+SPI_HandleTypeDef hspi2;
+
+/* USER CODE BEGIN PV */
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//Encoder library structures
+////////////////////////////////////////////////////////////
+struct menc_struct_type menc1, menc2;
+volatile uint8_t flag_enc1_turn_all_dir; ///<flag which rise after any turn
+volatile uint8_t flag_enc2_turn_all_dir; ///<flag which rise after any turn
+
+//Values structure
+////////////////////////////////////////////////////////////
+struct vaw_meas {
+	uint16_t vol;
+	uint16_t cur;
+	uint16_t watt;
+	uint16_t vol_old;
+	uint16_t cur_old;
+	uint16_t watt_old;
+	int32_t tmr;
+	uint16_t calib_value;
+	uint8_t t_dc;
+	uint8_t t_ps;
+	int16_t dac_u;
+	int16_t dac_i;
+} vaw;
+
+//Bits field for status flags
+////////////////////////////////////////////////////////////
+struct {
+	unsigned main_page_start :1;      //main page constant figures draw
+	unsigned graph_page_start :1; //draw stroke and start screen of graph page flag
+	unsigned settings_page_start :1; //start drawing settings page not redrawing parts
+
+	unsigned new_conversion :1; //INA conversion and old measurement refresh flag
+	unsigned vol_draw :1;        //vol redraw flag
+	unsigned cur_draw :1;        //current redraw flag
+	unsigned watt_draw :1;       ////watt redraw flag
+	unsigned temp_draw :1; //temp drawing ready flag
+	unsigned dac_val_draw :1; //draw dac values at lower information bar
+} sflags;
+
+//Progress bars struct init
+////////////////////////////////////////////////////////////
+struct bar_gr volt_bar, curr_bar, watt_bar; //progress bars init
+
+//Timers
+////////////////////////////////////////////////////////////
+uint32_t millis_tmr_screen_refresh;
+
+//Median Filter buffers
+////////////////////////////////////////////////////////////
+uint16_t med_fil_vol_buf[3];
+uint16_t med_fil_cur_buf[3];
+
+//DAC variables
+////////////////////////////////////////////////////////////
+int16_t dac_volt_value;
+int16_t dac_curr_value;
+
+//INA variables
+////////////////////////////////////////////////////////////
+uint16_t ina_cal_val;
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_RTC_Init(void);
+static void MX_I2C1_Init(void);
+static void MX_SPI2_Init(void);
+static void MX_DAC1_Init(void);
+/* USER CODE BEGIN PFP */
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+void StartStroke(void);
+void MainPage(void);
+void VAW_Conversion(struct vaw_meas *m);
+
+//Encoders IRQ
+////////////////////////////////////////////////////////////
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if (GPIO_Pin == ENC1_S1_Pin) {
+		MENC_TurnHandlerIRQ(&menc1);
+		flag_enc1_turn_all_dir = 1;
+	}
+	if (GPIO_Pin == ENC2_S1_Pin) {
+		MENC_TurnHandlerIRQ(&menc2);
+		flag_enc2_turn_all_dir = 1;
+	}
+}
+
+//Printf
+////////////////////////////////////////////////////////////
+int _write(int file, uint8_t *ptr, int len) {
+//  (void)file;
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++) {
+		ITM_SendChar(*ptr++);
+	}
+	return len;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+ * @brief  The application entry point.
+ * @retval int
+ */
+int main(void) {
+
+	/* USER CODE BEGIN 1 */
+
+	/* USER CODE END 1 */
+
+	/* MCU Configuration--------------------------------------------------------*/
+
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
+
+	/* USER CODE BEGIN Init */
+
+	/* USER CODE END Init */
+
+	/* Configure the system clock */
+	SystemClock_Config();
+
+	/* USER CODE BEGIN SysInit */
+
+	/* USER CODE END SysInit */
+
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_RTC_Init();
+	MX_I2C1_Init();
+	MX_SPI2_Init();
+	MX_DAC1_Init();
+	/* USER CODE BEGIN 2 */
+
+	HAL_Delay(10);
+	//////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////INT MAIN()////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	//INA and DAC's init
+	//////////////////////////////////////////////////////////////////////////////////////
+	HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
+	HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
+	INA_Init();
+	INA_SetCalibration(INA_CALIB_VAL);
+	//INA_SetCalibration(INA_CALIBRATION_VALUE);
+	//MCP4725_DAC_EEPROM_Write(MCP_DAC_U_ADDR, 0);
+	//MCP4725_DAC_EEPROM_Write(MCP_DAC_I_ADDR, 0);
+
+	//Encoders init
+	//////////////////////////////////////////////////////////////////////////////////////
+	menc1.s1_pin = ENC1_S1_Pin;
+	menc1.s2_pin = ENC1_S2_Pin;
+	menc1.key_pin = 0;
+	menc1.s1_port = GPIOB;
+	menc1.s2_port = GPIOB;
+	menc1.key_port = 0;
+	menc1.key_exti_line = EXTI0_IRQn;
+
+	menc2.s1_pin = ENC2_S1_Pin;
+	menc2.s2_pin = ENC2_S2_Pin;
+	menc2.key_pin = 0;
+	menc2.s1_port = GPIOB;
+	menc2.s2_port = GPIOB;
+	menc2.key_port = 0;
+	menc2.key_exti_line = EXTI1_IRQn;
+
+	//Display
+	//////////////////////////////////////////////////////////////////////////////////////
+	MGL_DriverInit();
+	//HAL_GPIO_WritePin(ST7735_LED_GPIO_Port, ST7735_LED_Pin, 1); //turn on background LED
+	MGL_FillScreen(COLOR_BLACK);//clear screen
+	MGL_SET_BUF_BG_COLOR(COLOR_BLACK); //background for text
+
+	sflags.main_page_start = 1;  //main page not redrawing parts drawing
+
+	//Display value bars filling
+	volt_bar.num = &vaw.vol;
+	volt_bar.num_max = VAW_MAX_VOL;
+	volt_bar.x = BAR_VOLTAGE_X;
+	volt_bar.y = BAR_VOLTAGE_Y;
+	volt_bar.width = BAR_WIDTH;
+	volt_bar.length = BAR_LENGTH;
+	volt_bar.color = VOL_COLOR;
+	volt_bar.bg_color = BG_COLOR;
+	volt_bar.stroke_color = BAR_STROKE_COLOR;
+
+	curr_bar.num = &vaw.cur;
+	curr_bar.num_max = VAW_MAX_CURR;
+	curr_bar.x = BAR_CURRENT_X;
+	curr_bar.y = BAR_CURRENT_Y;
+	curr_bar.width = BAR_WIDTH;
+	curr_bar.length = BAR_LENGTH;
+	curr_bar.color = CUR_COLOR;
+	curr_bar.bg_color = BG_COLOR;
+	curr_bar.stroke_color = BAR_STROKE_COLOR;
+
+	watt_bar.num = &vaw.watt;
+	watt_bar.num_max = VAW_MAX_WATT;
+	watt_bar.x = BAR_WATTAGE_X;
+	watt_bar.y = BAR_WATTAGE_Y;
+	watt_bar.width = BAR_WIDTH;
+	watt_bar.length = BAR_LENGTH;
+	watt_bar.color = WATT_COLOR;
+	watt_bar.bg_color = BG_COLOR;
+	watt_bar.stroke_color = BAR_STROKE_COLOR;
+
+	StartStroke();  //draw stroke at start of program
+
+#ifdef USE_DEBUG
+	printf("Start program\n\r");
+	uint8_t i2c_ok_flag;
+	i2c_ok_flag = HAL_I2C_IsDeviceReady(&hi2c1, INA_I2C_ADDRESS, 1, 0xff);
+	printf("INA status:%i\n\r", i2c_ok_flag);
+#endif
+	//////////////////////////////////////////////////////////////
+	/* USER CODE END 2 */
+
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+
+	while (1) {
+
+		MENC_MainHandler(&menc1);
+		MENC_MainHandler(&menc2);
+
+		//voltage trim
+		//////////////////////////////////////////////////////////////
+		if (MENC_TurnRight(&menc1)) {
+			vaw.dac_u += 100;
+			if (vaw.dac_u >= 4095)
+				vaw.dac_u = 4095;
+		}
+
+		if (MENC_TurnLeft(&menc1)) {
+			vaw.dac_u -= 100;
+			if (vaw.dac_u < 0)
+				vaw.dac_u = 0;
+		}
+
+		//current trim
+		//////////////////////////////////////////////////////////////
+		if (MENC_TurnRight(&menc2)) {
+			vaw.dac_i += 10;
+			if (vaw.dac_i >= 4095)
+				vaw.dac_i = 4095;
+		}
+
+		if (MENC_TurnLeft(&menc2)) {
+			vaw.dac_i -= 10;
+			if (vaw.dac_i < 0)
+				vaw.dac_i = 0;
+		}
+
+		//if any turn
+		//////////////////////////////////////////////////////////////
+		if (flag_enc1_turn_all_dir) {
+			flag_enc1_turn_all_dir = 0;
+			//MCP4725_FastWrite(dac_volt_value, MCP_DAC_U_ADDR);
+			HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, vaw.dac_u);
+			sflags.dac_val_draw = 1;
+			printf("U DAC val: %i\n\r", dac_volt_value);
+		}
+		if (flag_enc2_turn_all_dir) {
+			flag_enc2_turn_all_dir = 0;
+			//MCP4725_FastWrite(dac_curr_value, MCP_DAC_I_ADDR);
+			HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, vaw.dac_i);
+			sflags.dac_val_draw = 1;
+			printf("I DAC val: %i\n\r", dac_curr_value);
+		}
+
+		//output flushing
+		//////////////////////////////////////////////////////////////
+		if (HAL_GetTick() - millis_tmr_screen_refresh >= SCREEN_REFRESH_RATE) {
+			millis_tmr_screen_refresh = HAL_GetTick();
+			VAW_Conversion(&vaw);
+//			printf("Voltage:%i  ", vaw.vol);
+//			printf("Current:%i  ", vaw.cur);
+//			printf("Wattage:%i\n\r", vaw.watt);
+#ifdef INA_CALIB_MODE
+			INA_SetCalibration(ina_cal_val);
+			printf("Cal value:%i\n\r", INA_GetCalibration());
+#endif
+
+			MainPage();
+		}
+
+//		//fast turn
+//		//////////////////////////////////////////////////////////////////////////////
+//		if (MENC_TurnFastRight(&menc1)) {
+//			dac_volt_value += 20;
+//			if (dac_volt_value > 4095) dac_volt_value = 4095;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_volt_value);
+//			sflags.vol_draw = 1;
+//		}
+//
+//		if (MENC_TurnFastRight(&menc2)) {
+//			dac_curr_value += 20;
+//			if (dac_curr_value > 4095) dac_curr_value = 4095;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_curr_value);
+//			sflags.cur_draw = 1;
+//
+//		}
+//		if (MENC_TurnFastLeft(&menc1)) {
+//			dac_volt_value -= 20;
+//			if (dac_volt_value < 0) dac_volt_value = 0;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_volt_value);
+//			sflags.vol_draw = 1;
+//		}
+//
+//		if (MENC_TurnFastLeft(&menc2)) {
+//			dac_curr_value -= 20;
+//			if (dac_curr_value < 0) dac_curr_value = 0;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_curr_value);
+//			sflags.cur_draw = 1;
+//		}
+
+		//////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////END///////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////
+
+		/* USER CODE END WHILE */
+
+		/* USER CODE BEGIN 3 */
+	}
+	/* USER CODE END 3 */
+}
+
+/**
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
+	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+
+	/** Configure the main internal regulator output voltage
+	 */
+	HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
+
+	/** Configure LSE Drive Capability
+	 */
+	HAL_PWR_EnableBkUpAccess();
+	__HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
+
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
+	RCC_OscInitStruct.PLL.PLLN = 85;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/** Enables the Clock Security System
+	 */
+	HAL_RCC_EnableCSS();
+
+	/** Enables the Clock Security System
+	 */
+	HAL_RCC_EnableLSECSS();
+}
+
+/**
+ * @brief DAC1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_DAC1_Init(void) {
+
+	/* USER CODE BEGIN DAC1_Init 0 */
+
+	/* USER CODE END DAC1_Init 0 */
+
+	DAC_ChannelConfTypeDef sConfig = { 0 };
+
+	/* USER CODE BEGIN DAC1_Init 1 */
+
+	/* USER CODE END DAC1_Init 1 */
+
+	/** DAC Initialization
+	 */
+	hdac1.Instance = DAC1;
+	if (HAL_DAC_Init(&hdac1) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/** DAC channel OUT1 config
+	 */
+	sConfig.DAC_HighFrequency = DAC_HIGH_FREQUENCY_INTERFACE_MODE_AUTOMATIC;
+	sConfig.DAC_DMADoubleDataMode = DISABLE;
+	sConfig.DAC_SignedFormat = DISABLE;
+	sConfig.DAC_SampleAndHold = DAC_SAMPLEANDHOLD_DISABLE;
+	sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
+	sConfig.DAC_Trigger2 = DAC_TRIGGER_NONE;
+	sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_DISABLE;
+	sConfig.DAC_ConnectOnChipPeripheral = DAC_CHIPCONNECT_EXTERNAL;
+	sConfig.DAC_UserTrimming = DAC_TRIMMING_FACTORY;
+	if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_1) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/** DAC channel OUT2 config
+	 */
+	if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_2) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN DAC1_Init 2 */
+
+	/* USER CODE END DAC1_Init 2 */
+
+}
+
+/**
+ * @brief I2C1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_I2C1_Init(void) {
+
+	/* USER CODE BEGIN I2C1_Init 0 */
+
+	/* USER CODE END I2C1_Init 0 */
+
+	/* USER CODE BEGIN I2C1_Init 1 */
+
+	/* USER CODE END I2C1_Init 1 */
+	hi2c1.Instance = I2C1;
+	hi2c1.Init.Timing = 0x40B285C2;
+	hi2c1.Init.OwnAddress1 = 0;
+	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	hi2c1.Init.OwnAddress2 = 0;
+	hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	if (HAL_I2C_Init(&hi2c1) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/** Configure Analogue filter
+	 */
+	if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK) {
+		Error_Handler();
+	}
+
+	/** Configure Digital filter
+	 */
+	if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN I2C1_Init 2 */
+
+	/* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+ * @brief RTC Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_RTC_Init(void) {
+
+	/* USER CODE BEGIN RTC_Init 0 */
+
+	/* USER CODE END RTC_Init 0 */
+
+	/* USER CODE BEGIN RTC_Init 1 */
+
+	/* USER CODE END RTC_Init 1 */
+
+	/** Initialize RTC Only
+	 */
+	hrtc.Instance = RTC;
+	hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+	hrtc.Init.AsynchPrediv = 127;
+	hrtc.Init.SynchPrediv = 255;
+	hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+	hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
+	hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+	hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+	hrtc.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
+	if (HAL_RTC_Init(&hrtc) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN RTC_Init 2 */
+
+	/* USER CODE END RTC_Init 2 */
+
+}
+
+/**
+ * @brief SPI2 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_SPI2_Init(void) {
+
+	/* USER CODE BEGIN SPI2_Init 0 */
+
+	/* USER CODE END SPI2_Init 0 */
+
+	/* USER CODE BEGIN SPI2_Init 1 */
+
+	/* USER CODE END SPI2_Init 1 */
+	/* SPI2 parameter configuration*/
+	hspi2.Instance = SPI2;
+	hspi2.Init.Mode = SPI_MODE_MASTER;
+	hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+	hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+	hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+	hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+	hspi2.Init.NSS = SPI_NSS_SOFT;
+	hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+	hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+	hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	hspi2.Init.CRCPolynomial = 7;
+	hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+	hspi2.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+	if (HAL_SPI_Init(&hspi2) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN SPI2_Init 2 */
+
+	/* USER CODE END SPI2_Init 2 */
+
+}
+
+/**
+ * @brief GPIO Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_GPIO_Init(void) {
+	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+	/* USER CODE BEGIN MX_GPIO_Init_1 */
+
+	/* USER CODE END MX_GPIO_Init_1 */
+
+	/* GPIO Ports Clock Enable */
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOA, ST7735_DC_Pin | ST7735_RST_Pin | ST7735_CS_Pin, GPIO_PIN_SET);
+
+	/*Configure GPIO pins : ENC2_S1_Pin ENC1_S1_Pin */
+	GPIO_InitStruct.Pin = ENC2_S1_Pin | ENC1_S1_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	/*Configure GPIO pin : PC6 */
+	GPIO_InitStruct.Pin = GPIO_PIN_6;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	/*Configure GPIO pins : ST7735_DC_Pin ST7735_RST_Pin ST7735_CS_Pin */
+	GPIO_InitStruct.Pin = ST7735_DC_Pin | ST7735_RST_Pin | ST7735_CS_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	/*Configure GPIO pins : ENC2_S2_Pin ENC1_S2_Pin */
+	GPIO_InitStruct.Pin = ENC2_S2_Pin | ENC1_S2_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	/* EXTI interrupt init*/
+	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
+	HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+	/* USER CODE BEGIN MX_GPIO_Init_2 */
+
+	/* USER CODE END MX_GPIO_Init_2 */
+}
+
+/* USER CODE BEGIN 4 */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void VAW_Conversion(struct vaw_meas *m) {
+	int16_t diff = 0; ///<differance between new and old val
+	m->vol_old = m->vol;
+	m->cur_old = m->cur;
+	m->watt_old = m->watt;
+	m->vol = INA_GetBusVoltageTiny();
+	FilterMedian(&vaw.vol, med_fil_vol_buf);
+	//FilterRunAverage(&vaw.vol,0.1);
+	m->cur = INA_GetCurrentTiny();
+	FilterMedian(&vaw.cur, med_fil_cur_buf);
+	//FilterRunAverage(&vaw.cur,0.1);
+	m->watt = INA_GetPowerTiny();
+
+	diff = m->vol_old - m->vol;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > 1)
+		sflags.vol_draw = 1;
+
+	diff = m->cur_old - m->cur;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > 1)
+		sflags.cur_draw = 1;
+
+	diff = m->watt_old - m->watt;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > 1)
+		sflags.cur_draw = 1;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void StartStroke(void) {
+	MGL_FillScreen(MP_STROKE_COLOR);                                //basic fill
+	MGL_DrawRectWH(0, 0, 160, 128, MP_STROKE_INT_COLOR);    //full screen stroke
+//  ST7735_DrawRect(VUB_0_X - 1, VUB_Y - 1, VUB_0_L + 2, VUB_HEIGHT + 2, MP_STROKE_INT_COLOR);  //upper widow stroke 1
+//  ST7735_DrawRect(VUB_1_X - 1, VUB_Y - 1, VUB_1_L + 2, VUB_HEIGHT + 2, MP_STROKE_INT_COLOR);  //ps
+//  ST7735_DrawRect(VUB_2_X - 1, VUB_Y - 1, VUB_2_L + 2, VUB_HEIGHT + 2, MP_STROKE_INT_COLOR);  //usb
+//  ST7735_DrawRect(VUB_3_X - 1, VUB_Y - 1, VUB_3_L + 2, VUB_HEIGHT + 2, MP_STROKE_INT_COLOR);  //main/graph
+//  ST7735_DrawRect(VUB_4_X - 1, VUB_Y - 1, VUB_4_L + 2, VUB_HEIGHT + 2, MP_STROKE_INT_COLOR);  //set
+}
+
+//Main display drawing function
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void MainPage(void) {
+	if (sflags.main_page_start) {
+		sflags.main_page_start = 0;
+		REFRESH_MAIN_FIELD();
+		DRAW_MAIN_FIELD_STROKE();
+		DRAW_LOW_INF_BAR();
+		sflags.vol_draw = 1;
+		sflags.cur_draw = 1;
+		sflags.watt_draw = 1;
+		sflags.dac_val_draw = 1;
+
+		//not redrawing stack
+		MGL_SET_BUF_COLOR(VOL_COLOR);
+		MGL_PrintStr_17x24("U\0", 108, VAW_VOLTAGE_Y);
+		MGL_DrawRectWH(VAW_VOLTAGE_X+FONT_17x24_WIDTH*2+4, VAW_VOLTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, VOL_COLOR);
+
+		MGL_SET_BUF_COLOR(CUR_COLOR);
+		MGL_PrintStr_17x24("A\0", 108, VAW_CURRENT_Y);
+		MGL_DrawRectWH(VAW_CURRENT_X+FONT_17x24_WIDTH*1+4, VAW_CURRENT_Y+FONT_17x24_HEIGHT-2, 2, 2, CUR_COLOR);
+
+		MGL_SET_BUF_COLOR(WATT_COLOR);
+		MGL_PrintStr_12x16("W\0", 108, VAW_WATTAGE_Y);
+		MGL_DrawRectWH(VAW_WATTAGE_X+FONT_17x24_WIDTH*3+4, VAW_WATTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, WATT_COLOR);
+
+		MGL_SET_BUF_COLOR(FONT_COLOR);
+		MGL_PrintStr_5x8("DAC_U:\0", 10, LOW_INF_BAR_UPP_Y);
+		MGL_PrintStr_5x8("DAC_I:\0", 10, LOW_INF_BAR_LOW_Y);
+	}
+
+	if (sflags.vol_draw) {
+		sflags.vol_draw = 0;
+		MGL_SET_BUF_COLOR(VOL_COLOR);
+		MGL_PrintFloatTinyR(vaw.vol, 4, 2, VAW_VOLTAGE_X, VAW_VOLTAGE_Y, FONT_17x24_FP);
+		MGL_DrawBar(&volt_bar);
+
+	}
+	if (sflags.cur_draw) {
+		sflags.cur_draw = 0;
+		MGL_SET_BUF_COLOR(CUR_COLOR);
+		MGL_PrintFloatTinyR(vaw.cur, 4, 3, VAW_CURRENT_X, VAW_CURRENT_Y, FONT_17x24_FP);
+		MGL_DrawBar(&curr_bar);
+	}
+
+	if (sflags.watt_draw) {
+		sflags.watt_draw = 0;
+		MGL_SET_BUF_COLOR(WATT_COLOR);
+		MGL_PrintFloatTinyR(vaw.watt, 4, 1, VAW_WATTAGE_X, VAW_WATTAGE_Y, FONT_12x16_FP);
+		MGL_DrawBar(&watt_bar);
+	}
+
+	if (sflags.dac_val_draw) {
+		sflags.dac_val_draw = 0;
+		MGL_SET_BUF_COLOR(FONT_COLOR);
+		MGL_PrintIntL(vaw.dac_u, 50, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
+		MGL_PrintIntL(vaw.dac_i, 50, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void UART_PrintFloatTinyR(uint16_t fake_f, uint8_t num_quant, uint8_t num_aft_comma) {
+	char str[num_quant + 2];	//create array for PrintStr, quantity of numbers+"\0"
+	char *str_ptr = str; //ptr to scroll array
+	uint16_t div_buf;	//buffer to hold digit for division
+	uint16_t div_mask[] = { 1, 10, 100, 1000, 10000 }; //for not to use POW function
+	uint8_t clear_flag = 1; //stop clear zeros flag
+
+	for (uint8_t i = num_quant - 1, j = 0; i > 0; i--, j++) {
+		if (num_quant > i) { //print only requireble quantitny of digits
+			div_buf = (fake_f / div_mask[i]); //extract one by one digits from input var
+			fake_f -= (div_buf) * div_mask[i]; //remove pow in num
+			if (div_buf > 0 || j >= num_quant - num_aft_comma - 1)
+				clear_flag = 0; //wait untill num starts(xx12.3)
+			if (clear_flag == 0)
+				*str_ptr++ = div_buf + '0'; //or untill zero before comma (0.12)
+			else
+				*str_ptr++ = ' '; //remove zero before num in string
+			if (num_aft_comma == i)
+				*str_ptr++ = '.';
+		} else
+			*str_ptr++ = ' ';
+	}
+	*str_ptr++ = fake_f + '0';	//last digit
+	*str_ptr++ = '\0'; //add end of string to finish printing in PrintStr function
+//HAL_UART_Transmit(&huart1, (const uint8_t*)str_ptr, num_quant+2, 0xFF);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* USER CODE END 4 */
+
+/**
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void Error_Handler(void) {
+	/* USER CODE BEGIN Error_Handler_Debug */
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+	}
+	/* USER CODE END Error_Handler_Debug */
+}
+#ifdef USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* USER CODE END 6 */
+}
+#endif /* USE_FULL_ASSERT */

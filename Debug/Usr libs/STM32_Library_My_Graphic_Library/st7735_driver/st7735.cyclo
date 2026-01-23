@@ -1,0 +1,12 @@
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:46:6:ST7735_Reset	1
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:54:6:ST7735_WriteCommand	1
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:62:6:ST7735_WriteData	1
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:71:6:ST7735_SetAddressWindow	1
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:90:6:ST7735_DrawPixel	3
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:105:6:ST7735_FillRectangle	7
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:152:6:ST7735_FillScreen	1
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:164:6:ST7735_DrawImage	5
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:177:6:ST7735_InvertColors	2
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:185:6:ST7735_SetGamma	1
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:277:13:ST7735_ExecuteCommandList	5
+../Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.c:305:6:ST7735_Init	1
