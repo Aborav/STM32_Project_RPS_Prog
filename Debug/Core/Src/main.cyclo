@@ -1,35 +1,17 @@
 ../Drivers/CMSIS/Include/core_cm4.h:2059:26:ITM_SendChar	4
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:126:6:INA_Transmit	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:133:10:INA_Receive	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:149:10:INA_GetID	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:159:6:INA_SleepMode	2
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:170:6:INA_SetCalibration	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:181:10:INA_GetCalibration	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:192:6:INA_ChangeCalibration	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:203:6:INA_SetAveraging	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:215:6:INA_SetSampleTime	3
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:231:7:INA_GetBusVoltage	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:240:7:INA_GetCurrent	2
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:254:7:INA_GetPower	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:268:7:INA_GetShuntVoltage	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:286:10:INA_GetBusVoltageTiny	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:298:10:INA_GetCurrentTiny	2
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:315:10:INA_GetShuntVoltageTiny	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:330:10:INA_GetPowerTiny	1
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_INA226/M_INA226.h:348:6:INA_Init	1
 /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_Signal_Filter/M_Filter.h:41:6:FilterMedian	2
 /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_Signal_Filter/M_Filter.h:55:6:FilterRunAverage	1
-../Core/Src/main.c:236:6:HAL_GPIO_EXTI_Callback	3
-../Core/Src/main.c:249:5:_write	2
-../Core/Src/main.c:273:5:main	12
-../Core/Src/main.c:500:6:SystemClock_Config	3
-../Core/Src/main.c:556:13:MX_DAC1_Init	4
-../Core/Src/main.c:606:13:MX_I2C1_Init	4
-../Core/Src/main.c:650:13:MX_RTC_Init	2
-../Core/Src/main.c:685:13:MX_SPI2_Init	2
-../Core/Src/main.c:723:13:MX_GPIO_Init	1
-../Core/Src/main.c:783:6:VAW_Conversion	7
-../Core/Src/main.c:816:6:StartStroke	1
-../Core/Src/main.c:828:6:MainPage	6
-../Core/Src/main.c:887:6:UART_PrintFloatTinyR	7
-../Core/Src/main.c:922:6:Error_Handler	1
+../Core/Src/main.c:225:6:HAL_GPIO_EXTI_Callback	4
+../Core/Src/main.c:241:5:_write	2
+../Core/Src/main.c:265:5:main	3
+../Core/Src/main.c:419:6:SystemClock_Config	3
+../Core/Src/main.c:479:13:MX_DAC1_Init	4
+../Core/Src/main.c:533:13:MX_I2C1_Init	4
+../Core/Src/main.c:581:13:MX_RTC_Init	2
+../Core/Src/main.c:618:13:MX_SPI2_Init	2
+../Core/Src/main.c:658:13:MX_GPIO_Init	1
+../Core/Src/main.c:738:6:VAW_Conversion	7
+../Core/Src/main.c:776:6:VAW_HMI_Inputs	12
+../Core/Src/main.c:864:6:VAW_HMI_MainPage	6
+../Core/Src/main.c:932:6:PrintFloatTiny	7
+../Core/Src/main.c:969:6:Error_Handler	1

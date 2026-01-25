@@ -1,6 +1,3 @@
-"./Core/Src/conversion.o"
-"./Core/Src/display.o"
-"./Core/Src/encoders.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32g4xx_hal_msp.o"
 "./Core/Src/stm32g4xx_it.o"
@@ -30,5 +27,6 @@
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o"
 "./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi_ex.o"
 "./Usr libs/STM32_Library_Encoder/M_ENC.o"
+"./Usr libs/STM32_Library_INA226/M_INA226.o"
 "./Usr libs/STM32_Library_My_Graphic_Library/MGL.o"
 "./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o"
