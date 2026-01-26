@@ -65,7 +65,7 @@ main-build: stm32g431cbu6_dac_tl494.elf secondary-outputs
 
 # Tool invocations
 stm32g431cbu6_dac_tl494.elf stm32g431cbu6_dac_tl494.map: $(OBJS) $(USER_OBJS) /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/STM32G431CBUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "stm32g431cbu6_dac_tl494.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32g431cbu6_dac_tl494.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "stm32g431cbu6_dac_tl494.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/STM32G431CBUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32g431cbu6_dac_tl494.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

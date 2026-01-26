@@ -2,15 +2,22 @@
 /**
  ******************************************************************************
  * @file           : main.c
- * @brief          : Main program body
+ * @brief          : Regulated power supply
  ******************************************************************************
- *TO DO LIST:
- * INA voltage calibration required:
- * 		-voltage -> liner offset (0.02 at high values)
- * 		-current -> non liner offset (0.005 max)
- * write algorithm to get voltage and current set point
- * menu settings, mode
- * divide to different files funtions
+ *WHAT I WANT FROM THIS PROJECT:
+ *algorithm which transform set point of Voltage and Current into real output
+ *current, power limitation feature
+ *self calibration of this algorithm (is it 1,5,10V)
+ *INA current calibration procedure (is it 0.1mA,1A)
+ *use INA only for calibration, use ADC to read values
+ *modes: main, soldering iron, usb (QC)
+ *graph (sliding) and logs
+ *stylish menu with sliders
+ *temperature control
+ *fun instead of buzzer
+ *alarms notification feature: high temp, current limit,
+ *FREERTOS ??
+ *CMSIS ??
  *
  ******************************************************************************
  */
@@ -113,18 +120,17 @@
 #define LOW_INF_BAR_UPP_Y 102  ///<upper string X
 #define LOW_INF_BAR_LOW_Y 112  ///<lower string X
 
-//fast functions
+//fast display functions
 /////////////////////////////////////////////////////
 #define REFRESH_MAIN_FIELD() MGL_FillRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT, BG_COLOR)
 #define DRAW_LOW_INF_BAR() MGL_DrawRectWH(LOW_ST_BAR_X, LOW_ST_BAR_Y, LOW_ST_BAR_W, LOW_ST_BAR_H, LOW_INF_BAR_STROKE_COLOR)///<lower information stroke
 #define DRAW_MAIN_FIELD_STROKE() MGL_DrawRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT - 1, MP_STROKE_INT_COLOR)///<main field stroke
 
-//NTC defines
+//TL494
 /////////////////////////////////////////////////////
-#define NTC_B_FACTOR 4090 ///< B-factor for NTC
-#define NTC_SERIAL_RESISTOR 10000 ///< Ohm, resistor in series
-#define NTC_RESISTANCE 10000 ///<NTC resistance
-#define NTC_NOMINAL_T 25 ///<NTC temperature in case of 10kOhm
+#define TL494_ON() HAL_GPIO_WritePin(TL494_DTC_GPIO_Port, TL494_DTC_Pin,0)
+#define TL494_OFF() HAL_GPIO_WritePin(TL494_DTC_GPIO_Port, TL494_DTC_Pin,1)
+#define TL494_TOGGLE() HAL_GPIO_TogglePin(TL494_DTC_GPIO_Port, TL494_DTC_Pin)
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -147,9 +153,6 @@ SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN PV */
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
 //Encoder library structures
 ////////////////////////////////////////////////////////////
 struct menc_struct_type menc1, menc2;
@@ -165,22 +168,25 @@ struct vaw_meas {
 	uint16_t volt_old;
 	uint16_t curr_old;
 	uint16_t watt_old;
-	uint16_t calib_value;
 	uint8_t t_dc;
 	uint8_t t_ps;
 	int16_t dac_u;
 	int16_t dac_i;
 } vaw;
 
+//Feedback tables
+uint16_t table_volt_dac_fb_100[42];
+uint16_t table_volt_fb_100[42];
+
 //Bits field for status flags
 ////////////////////////////////////////////////////////////
-struct {
+struct flags_type {
 	unsigned main_page_start :1; //main page constant figures draw
 
 	unsigned volt_draw :1; //volt redraw flag
 	unsigned curr_draw :1; //current redraw flag
 	unsigned watt_draw :1; //watt redraw flag
-	unsigned temp_draw :1; //temp drawing ready flag
+	unsigned tl494_on :1; ///<TL494 clocking is ON
 	unsigned dac_val_draw :1; //draw dac values at lower information bar
 } sflags;
 
@@ -192,18 +198,11 @@ struct bar_gr volt_bar, curr_bar, watt_bar; //progress bars init
 ////////////////////////////////////////////////////////////
 uint32_t millis_tmr_screen_refresh;
 
-//DAC variables
+//Debug
 ////////////////////////////////////////////////////////////
-int16_t dac_volt_value;
-int16_t dac_curr_value;
-
-//INA variables
-////////////////////////////////////////////////////////////
-uint16_t ina_cal_val;
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
+uint32_t millis_tmr_debug;
+float debug_watt;
+#define DEBUG_REFRESH 500
 
 /* USER CODE END PV */
 
@@ -215,12 +214,12 @@ static void MX_I2C1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_DAC1_Init(void);
 /* USER CODE BEGIN PFP */
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-void VAW_HMI_Input(void);
-void VAW_HMI_Display(void);
+
+////////////////////////////////////////////////////////////
+void HMI_Input(void);
+void HMI_Display(void);
 void VAW_Conversion(struct vaw_meas *m);
+void VAW_FBTableVolt(void);
 
 //Encoders IRQ
 ////////////////////////////////////////////////////////////
@@ -250,9 +249,6 @@ int _write(int file, uint8_t *ptr, int len) {
 	return len;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -261,45 +257,43 @@ int _write(int file, uint8_t *ptr, int len) {
 /* USER CODE END 0 */
 
 /**
-  * @brief  The application entry point.
-  * @retval int
-  */
-int main(void)
-{
+ * @brief  The application entry point.
+ * @retval int
+ */
+int main(void) {
 
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
+	/* USER CODE END 1 */
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_RTC_Init();
-  MX_I2C1_Init();
-  MX_SPI2_Init();
-  MX_DAC1_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_RTC_Init();
+	MX_I2C1_Init();
+	MX_SPI2_Init();
+	MX_DAC1_Init();
+	/* USER CODE BEGIN 2 */
 
 	HAL_Delay(10);
 	//////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////INT MAIN()////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
-
 
 	//Encoders init
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -319,10 +313,8 @@ int main(void)
 	menc2.key_port = 0;
 	menc2.key_exti_line = 0;
 
-	//Display
-	//////////////////////////////////////////////////////////////////////////////////////
-
 	//Display value bars filling
+	//////////////////////////////////////////////////////////////////////////////////////
 	volt_bar.num = &vaw.volt;
 	volt_bar.num_max = VAW_MAX_volt;
 	volt_bar.x = BAR_voltAGE_X;
@@ -353,15 +345,12 @@ int main(void)
 	watt_bar.bg_color = BG_COLOR;
 	watt_bar.stroke_color = BAR_STROKE_COLOR;
 
-	//INA and DAC's init
+	//INA and DAC init
 	//////////////////////////////////////////////////////////////////////////////////////
 	HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
 	HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
 	INA_Init();
 	INA_SetCalVal(INA_CALIB_VAL);
-	//INA_SetCalibration(INA_CALIBRATION_VALUE);
-	//MCP4725_DAC_EEPROM_Write(MCP_DAC_U_ADDR, 0);
-	//MCP4725_DAC_EEPROM_Write(MCP_DAC_I_ADDR, 0);
 
 	//Display
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -378,337 +367,328 @@ int main(void)
 	printf("INA status:%i\n\r", i2c_ok_flag);
 #endif
 	//////////////////////////////////////////////////////////////////////////////////////
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
 
 	while (1) {
-		VAW_HMI_Input();
+		HMI_Input();
 
 		if (HAL_GetTick() - millis_tmr_screen_refresh >= SCREEN_REFRESH_RATE) {
 			millis_tmr_screen_refresh = HAL_GetTick();
 			VAW_Conversion(&vaw);
-			VAW_HMI_Display();
+			HMI_Display();
 		}
 
+#ifdef USE_DEBUG
+		if (HAL_GetTick() - millis_tmr_debug >= DEBUG_REFRESH) {
+			millis_tmr_debug = HAL_GetTick();
 
+			debug_watt = INA_GetPower();
+			printf("Wattage:%f\n\r", debug_watt);
+
+		}
+#endif
 
 		//////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////END///////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////
 
-    /* USER CODE END WHILE */
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+		/* USER CODE BEGIN 3 */
 	}
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
-  * @brief System Clock Configuration
-  * @retval None
-  */
-void SystemClock_Config(void)
-{
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ * @brief System Clock Configuration
+ * @retval None
+ */
+void SystemClock_Config(void) {
+	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
 
-  /** Configure the main internal regulator output voltage
-  */
-  HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
+	/** Configure the main internal regulator output voltage
+	 */
+	HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
 
-  /** Configure LSE Drive Capability
-  */
-  HAL_PWR_EnableBkUpAccess();
-  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
+	/** Configure LSE Drive Capability
+	 */
+	HAL_PWR_EnableBkUpAccess();
+	__HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
-  RCC_OscInitStruct.PLL.PLLN = 85;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** Initializes the RCC Oscillators according to the specified parameters
+	 * in the RCC_OscInitTypeDef structure.
+	 */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE | RCC_OSCILLATORTYPE_LSE;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+	RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV2;
+	RCC_OscInitStruct.PLL.PLLN = 85;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+		Error_Handler();
+	}
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+	/** Initializes the CPU, AHB and APB buses clocks
+	 */
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) {
+		Error_Handler();
+	}
 
-  /** Enables the Clock Securrity System
-  */
-  HAL_RCC_EnableCSS();
+	/** Enables the Clock Securrity System
+	 */
+	HAL_RCC_EnableCSS();
 
-  /** Enables the Clock Securrity System
-  */
-  HAL_RCC_EnableLSECSS();
+	/** Enables the Clock Securrity System
+	 */
+	HAL_RCC_EnableLSECSS();
 }
 
 /**
-  * @brief DAC1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_DAC1_Init(void)
-{
+ * @brief DAC1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_DAC1_Init(void) {
 
-  /* USER CODE BEGIN DAC1_Init 0 */
+	/* USER CODE BEGIN DAC1_Init 0 */
 
-  /* USER CODE END DAC1_Init 0 */
+	/* USER CODE END DAC1_Init 0 */
 
-  DAC_ChannelConfTypeDef sConfig = {0};
+	DAC_ChannelConfTypeDef sConfig = { 0 };
 
-  /* USER CODE BEGIN DAC1_Init 1 */
+	/* USER CODE BEGIN DAC1_Init 1 */
 
-  /* USER CODE END DAC1_Init 1 */
+	/* USER CODE END DAC1_Init 1 */
 
-  /** DAC Initialization
-  */
-  hdac1.Instance = DAC1;
-  if (HAL_DAC_Init(&hdac1) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** DAC Initialization
+	 */
+	hdac1.Instance = DAC1;
+	if (HAL_DAC_Init(&hdac1) != HAL_OK) {
+		Error_Handler();
+	}
 
-  /** DAC channel OUT1 config
-  */
-  sConfig.DAC_HighFrequency = DAC_HIGH_FREQUENCY_INTERFACE_MODE_AUTOMATIC;
-  sConfig.DAC_DMADoubleDataMode = DISABLE;
-  sConfig.DAC_SignedFormat = DISABLE;
-  sConfig.DAC_SampleAndHold = DAC_SAMPLEANDHOLD_DISABLE;
-  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
-  sConfig.DAC_Trigger2 = DAC_TRIGGER_NONE;
-  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_DISABLE;
-  sConfig.DAC_ConnectOnChipPeripheral = DAC_CHIPCONNECT_EXTERNAL;
-  sConfig.DAC_UserTrimming = DAC_TRIMMING_FACTORY;
-  if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** DAC channel OUT1 config
+	 */
+	sConfig.DAC_HighFrequency = DAC_HIGH_FREQUENCY_INTERFACE_MODE_AUTOMATIC;
+	sConfig.DAC_DMADoubleDataMode = DISABLE;
+	sConfig.DAC_SignedFormat = DISABLE;
+	sConfig.DAC_SampleAndHold = DAC_SAMPLEANDHOLD_DISABLE;
+	sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
+	sConfig.DAC_Trigger2 = DAC_TRIGGER_NONE;
+	sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_DISABLE;
+	sConfig.DAC_ConnectOnChipPeripheral = DAC_CHIPCONNECT_EXTERNAL;
+	sConfig.DAC_UserTrimming = DAC_TRIMMING_FACTORY;
+	if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_1) != HAL_OK) {
+		Error_Handler();
+	}
 
-  /** DAC channel OUT2 config
-  */
-  if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN DAC1_Init 2 */
+	/** DAC channel OUT2 config
+	 */
+	if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_2) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN DAC1_Init 2 */
 
-  /* USER CODE END DAC1_Init 2 */
+	/* USER CODE END DAC1_Init 2 */
 
 }
 
 /**
-  * @brief I2C1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_I2C1_Init(void)
-{
+ * @brief I2C1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_I2C1_Init(void) {
 
-  /* USER CODE BEGIN I2C1_Init 0 */
+	/* USER CODE BEGIN I2C1_Init 0 */
 
-  /* USER CODE END I2C1_Init 0 */
+	/* USER CODE END I2C1_Init 0 */
 
-  /* USER CODE BEGIN I2C1_Init 1 */
+	/* USER CODE BEGIN I2C1_Init 1 */
 
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x40621236;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/* USER CODE END I2C1_Init 1 */
+	hi2c1.Instance = I2C1;
+	hi2c1.Init.Timing = 0x40621236;
+	hi2c1.Init.OwnAddress1 = 0;
+	hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+	hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+	hi2c1.Init.OwnAddress2 = 0;
+	hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+	if (HAL_I2C_Init(&hi2c1) != HAL_OK) {
+		Error_Handler();
+	}
 
-  /** Configure Analogue filter
-  */
-  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	/** Configure Analogue filter
+	 */
+	if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK) {
+		Error_Handler();
+	}
 
-  /** Configure Digital filter
-  */
-  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN I2C1_Init 2 */
+	/** Configure Digital filter
+	 */
+	if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN I2C1_Init 2 */
 
-  /* USER CODE END I2C1_Init 2 */
+	/* USER CODE END I2C1_Init 2 */
 
 }
 
 /**
-  * @brief RTC Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_RTC_Init(void)
-{
+ * @brief RTC Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_RTC_Init(void) {
 
-  /* USER CODE BEGIN RTC_Init 0 */
+	/* USER CODE BEGIN RTC_Init 0 */
 
-  /* USER CODE END RTC_Init 0 */
+	/* USER CODE END RTC_Init 0 */
 
-  /* USER CODE BEGIN RTC_Init 1 */
+	/* USER CODE BEGIN RTC_Init 1 */
 
-  /* USER CODE END RTC_Init 1 */
+	/* USER CODE END RTC_Init 1 */
 
-  /** Initialize RTC Only
-  */
-  hrtc.Instance = RTC;
-  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
-  hrtc.Init.AsynchPrediv = 127;
-  hrtc.Init.SynchPrediv = 255;
-  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
-  hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
-  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
-  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-  hrtc.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
-  if (HAL_RTC_Init(&hrtc) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN RTC_Init 2 */
+	/** Initialize RTC Only
+	 */
+	hrtc.Instance = RTC;
+	hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+	hrtc.Init.AsynchPrediv = 127;
+	hrtc.Init.SynchPrediv = 255;
+	hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+	hrtc.Init.OutPutRemap = RTC_OUTPUT_REMAP_NONE;
+	hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+	hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+	hrtc.Init.OutPutPullUp = RTC_OUTPUT_PULLUP_NONE;
+	if (HAL_RTC_Init(&hrtc) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN RTC_Init 2 */
 
-  /* USER CODE END RTC_Init 2 */
+	/* USER CODE END RTC_Init 2 */
 
 }
 
 /**
-  * @brief SPI2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI2_Init(void)
-{
+ * @brief SPI2 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_SPI2_Init(void) {
 
-  /* USER CODE BEGIN SPI2_Init 0 */
+	/* USER CODE BEGIN SPI2_Init 0 */
 
-  /* USER CODE END SPI2_Init 0 */
+	/* USER CODE END SPI2_Init 0 */
 
-  /* USER CODE BEGIN SPI2_Init 1 */
+	/* USER CODE BEGIN SPI2_Init 1 */
 
-  /* USER CODE END SPI2_Init 1 */
-  /* SPI2 parameter configuration*/
-  hspi2.Instance = SPI2;
-  hspi2.Init.Mode = SPI_MODE_MASTER;
-  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi2.Init.NSS = SPI_NSS_SOFT;
-  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
-  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi2.Init.CRCPolynomial = 7;
-  hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-  hspi2.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-  if (HAL_SPI_Init(&hspi2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI2_Init 2 */
+	/* USER CODE END SPI2_Init 1 */
+	/* SPI2 parameter configuration*/
+	hspi2.Instance = SPI2;
+	hspi2.Init.Mode = SPI_MODE_MASTER;
+	hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+	hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+	hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+	hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+	hspi2.Init.NSS = SPI_NSS_SOFT;
+	hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+	hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+	hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	hspi2.Init.CRCPolynomial = 7;
+	hspi2.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+	hspi2.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
+	if (HAL_SPI_Init(&hspi2) != HAL_OK) {
+		Error_Handler();
+	}
+	/* USER CODE BEGIN SPI2_Init 2 */
 
-  /* USER CODE END SPI2_Init 2 */
+	/* USER CODE END SPI2_Init 2 */
 
 }
 
 /**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_GPIO_Init(void)
-{
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  /* USER CODE BEGIN MX_GPIO_Init_1 */
+ * @brief GPIO Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_GPIO_Init(void) {
+	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+	/* USER CODE BEGIN MX_GPIO_Init_1 */
 
-  /* USER CODE END MX_GPIO_Init_1 */
+	/* USER CODE END MX_GPIO_Init_1 */
 
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
+	/* GPIO Ports Clock Enable */
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOF_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, ST7735_DC_Pin|ST7735_RST_Pin|TL494_DTC_Pin|ST7735_CS_Pin, GPIO_PIN_SET);
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOA, ST7735_DC_Pin | ST7735_RST_Pin | TL494_DTC_Pin | ST7735_CS_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin : ENC1_KEY_Pin */
-  GPIO_InitStruct.Pin = ENC1_KEY_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(ENC1_KEY_GPIO_Port, &GPIO_InitStruct);
+	/*Configure GPIO pin : ENC1_KEY_Pin */
+	GPIO_InitStruct.Pin = ENC1_KEY_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(ENC1_KEY_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC2_S1_Pin ENC1_S1_Pin */
-  GPIO_InitStruct.Pin = ENC2_S1_Pin|ENC1_S1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	/*Configure GPIO pins : ENC2_S1_Pin ENC1_S1_Pin */
+	GPIO_InitStruct.Pin = ENC2_S1_Pin | ENC1_S1_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ST7735_DC_Pin ST7735_RST_Pin ST7735_CS_Pin */
-  GPIO_InitStruct.Pin = ST7735_DC_Pin|ST7735_RST_Pin|ST7735_CS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	/*Configure GPIO pins : ST7735_DC_Pin ST7735_RST_Pin ST7735_CS_Pin */
+	GPIO_InitStruct.Pin = ST7735_DC_Pin | ST7735_RST_Pin | ST7735_CS_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : TL494_DTC_Pin */
-  GPIO_InitStruct.Pin = TL494_DTC_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(TL494_DTC_GPIO_Port, &GPIO_InitStruct);
+	/*Configure GPIO pin : TL494_DTC_Pin */
+	GPIO_InitStruct.Pin = TL494_DTC_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(TL494_DTC_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : ENC2_S2_Pin ENC1_S2_Pin */
-  GPIO_InitStruct.Pin = ENC2_S2_Pin|ENC1_S2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	/*Configure GPIO pins : ENC2_S2_Pin ENC1_S2_Pin */
+	GPIO_InitStruct.Pin = ENC2_S2_Pin | ENC1_S2_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+	/* EXTI interrupt init*/
+	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+	HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+	HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
-  /* USER CODE BEGIN MX_GPIO_Init_2 */
+	/* USER CODE BEGIN MX_GPIO_Init_2 */
 
-  /* USER CODE END MX_GPIO_Init_2 */
+	/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -717,14 +697,15 @@ static void MX_GPIO_Init(void)
  * @brief Function to maintain clicks and turns response
  */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_HMI_Input(void) {
+void HMI_Input(void) {
 	MENC_MainHandler(&menc1);
 	MENC_MainHandler(&menc2);
 
 	//turn on/off TL494 clocking
 	//////////////////////////////////////////////////////////////
 	if (MENC_Click(&menc1)) {
-		HAL_GPIO_TogglePin(TL494_DTC_GPIO_Port, TL494_DTC_Pin);
+		TL494_TOGGLE();
+		sflags.tl494_on = ~sflags.tl494_on;
 	}
 
 	//voltage trim
@@ -799,52 +780,10 @@ void VAW_HMI_Input(void) {
 }
 
 /*
- * @brief measurements function
- * rises redraw flag
- * @param[in/out] *m -> struct pointer
- */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_Conversion(struct vaw_meas *m) {
-	int16_t diff = 0; ///<differance between new and old val
-	static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
-
-	m->volt_old = m->volt;
-	m->curr_old = m->curr;
-	m->watt_old = m->watt;
-
-	m->volt = INA_GetBusVoltageTiny();
-	FilterMedian(&vaw.volt, med_fil_volt_buf);
-
-	m->curr = INA_GetCurrentTiny();
-	FilterMedian(&vaw.curr, med_fil_curr_buf);
-
-	m->watt = INA_GetPowerTiny();
-
-	diff = m->volt_old - m->volt;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > 1)
-		sflags.volt_draw = 1;
-
-	diff = m->curr_old - m->curr;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > 1)
-		sflags.curr_draw = 1;
-
-	diff = m->watt_old - m->watt;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > 1)
-		sflags.curr_draw = 1;
-}
-
-
-/*
  * @brief Main display drawing function
  */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_HMI_Display(void) {
+void HMI_Display(void) {
 	if (sflags.main_page_start) {
 		sflags.main_page_start = 0;
 		REFRESH_MAIN_FIELD();
@@ -902,32 +841,67 @@ void VAW_HMI_Display(void) {
 	}
 }
 
+/*
+ * @brief measurements function
+ * rises redraw flag
+ * @param[in/out] *m -> struct pointer
+ */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void UART_PrintFloatTinyR(uint16_t fake_f, uint8_t num_quant, uint8_t num_aft_comma) {
-	char str[num_quant + 2];	//create array for PrintStr, quantity of numbers+"\0"
-	char *str_ptr = str; //ptr to scroll array
-	uint16_t div_buf;	//buffer to hold digit for division
-	uint16_t div_mask[] = { 1, 10, 100, 1000, 10000 }; //for not to use POW function
-	uint8_t clear_flag = 1; //stop clear zeros flag
+void VAW_Conversion(struct vaw_meas *m) {
+	int16_t diff = 0; ///<differance between new and old val
+	//static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
 
-	for (uint8_t i = num_quant - 1, j = 0; i > 0; i--, j++) {
-		if (num_quant > i) { //print only requireble quantitny of digits
-			div_buf = (fake_f / div_mask[i]); //extract one by one digits from input var
-			fake_f -= (div_buf) * div_mask[i]; //remove pow in num
-			if (div_buf > 0 || j >= num_quant - num_aft_comma - 1)
-				clear_flag = 0; //wait untill num starts(xx12.3)
-			if (clear_flag == 0)
-				*str_ptr++ = div_buf + '0'; //or untill zero before comma (0.12)
-			else
-				*str_ptr++ = ' '; //remove zero before num in string
-			if (num_aft_comma == i)
-				*str_ptr++ = '.';
-		} else
-			*str_ptr++ = ' ';
+	m->volt_old = m->volt;
+	m->curr_old = m->curr;
+	m->watt_old = m->watt;
+
+	m->volt = INA_GetBusVoltageTiny();
+	//FilterMedian(&vaw.volt, med_fil_volt_buf);
+
+	m->curr = INA_GetCurrentTiny();
+	//FilterMedian(&vaw.curr, med_fil_curr_buf);
+
+	m->watt = INA_GetPowerTiny();
+
+	diff = m->volt_old - m->volt;
+	if (diff < 0)
+		diff *= -1; //no matter is a old value bigger or smaller than a new one
+	if (diff > sflags.tl494_on ? 1 : 0) //eliminate fluctuation of the value
+		sflags.volt_draw = 1; //show to the display function that we are ready to redraw measurement
+
+	diff = m->curr_old - m->curr;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > sflags.tl494_on ? 1 : 0)
+		sflags.curr_draw = 1;
+
+	diff = m->watt_old - m->watt;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > sflags.tl494_on ? 1 : 0)
+		sflags.watt_draw = 1;
+}
+
+void VAW_FBTableVolt(void) {
+	uint16_t val = 0;
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 4095); //get current on maximum to eliminate affect from it
+	TL494_ON();
+
+	//increase DAC value +100 until max and put voltage feedback and DAC values in the arrays
+	for (uint8_t i = 0; i <= 41; i++) {
+		val = i * 100;
+		if (val > 4095)
+			val = 4095;
+		HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, val); //voltage increasing
+		vaw.dac_u = val;
+		*(table_volt_dac_fb_100 + i) = val;
+		*(table_volt_fb_100 + i) = INA_GetBusVoltageTiny();
+		HAL_Delay(10);
 	}
-	*str_ptr++ = fake_f + '0';	//last digit
-	*str_ptr++ = '\0'; //add end of string to finish printing in PrintStr function
-//HAL_UART_Transmit(&huart1, (const uint8_t*)str_ptr, num_quant+2, 0xFF);
+
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
+	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
+	TL494_OFF();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -935,17 +909,16 @@ void UART_PrintFloatTinyR(uint16_t fake_f, uint8_t num_quant, uint8_t num_aft_co
 /* USER CODE END 4 */
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
-void Error_Handler(void)
-{
-  /* USER CODE BEGIN Error_Handler_Debug */
+ * @brief  This function is executed in case of error occurrence.
+ * @retval None
+ */
+void Error_Handler(void) {
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1) {
 	}
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT
 /**

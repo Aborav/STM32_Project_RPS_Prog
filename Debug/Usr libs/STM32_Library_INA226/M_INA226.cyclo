@@ -13,6 +13,6 @@
 ../Usr libs/STM32_Library_INA226/M_INA226.c:161:7:INA_GetShuntVoltage	1
 ../Usr libs/STM32_Library_INA226/M_INA226.c:179:10:INA_GetBusVoltageTiny	1
 ../Usr libs/STM32_Library_INA226/M_INA226.c:191:10:INA_GetCurrentTiny	2
-../Usr libs/STM32_Library_INA226/M_INA226.c:208:10:INA_GetShuntVoltageTiny	1
-../Usr libs/STM32_Library_INA226/M_INA226.c:225:10:INA_GetPowerTiny	1
-../Usr libs/STM32_Library_INA226/M_INA226.c:243:6:INA_Init	1
+../Usr libs/STM32_Library_INA226/M_INA226.c:207:10:INA_GetShuntVoltageTiny	1
+../Usr libs/STM32_Library_INA226/M_INA226.c:224:10:INA_GetPowerTiny	1
+../Usr libs/STM32_Library_INA226/M_INA226.c:237:6:INA_Init	1
