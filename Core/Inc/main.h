@@ -57,6 +57,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define ENC1_KEY_Pin GPIO_PIN_2
+#define ENC1_KEY_GPIO_Port GPIOA
+#define ENC1_KEY_EXTI_IRQn EXTI2_IRQn
 #define ENC2_S1_Pin GPIO_PIN_0
 #define ENC2_S1_GPIO_Port GPIOB
 #define ENC2_S1_EXTI_IRQn EXTI0_IRQn
@@ -67,6 +70,8 @@ void Error_Handler(void);
 #define ST7735_DC_GPIO_Port GPIOA
 #define ST7735_RST_Pin GPIO_PIN_10
 #define ST7735_RST_GPIO_Port GPIOA
+#define TL494_DTC_Pin GPIO_PIN_11
+#define TL494_DTC_GPIO_Port GPIOA
 #define ST7735_CS_Pin GPIO_PIN_12
 #define ST7735_CS_GPIO_Port GPIOA
 #define ENC2_S2_Pin GPIO_PIN_4

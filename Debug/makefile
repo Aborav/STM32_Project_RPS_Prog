@@ -11,6 +11,7 @@ RM := rm -rf
 -include sources.mk
 -include Usr\ libs/STM32_Library_My_Graphic_Library/st7735_driver/subdir.mk
 -include Usr\ libs/STM32_Library_My_Graphic_Library/subdir.mk
+-include Usr\ libs/STM32_Library_INA226/subdir.mk
 -include Usr\ libs/STM32_Library_Encoder/subdir.mk
 -include Drivers/STM32G4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
