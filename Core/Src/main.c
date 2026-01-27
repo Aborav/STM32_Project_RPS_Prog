@@ -132,6 +132,9 @@
 #define TL494_OFF() HAL_GPIO_WritePin(TL494_DTC_GPIO_Port, TL494_DTC_Pin,1)
 #define TL494_TOGGLE() HAL_GPIO_TogglePin(TL494_DTC_GPIO_Port, TL494_DTC_Pin)
 
+#define VAW_DAC_U_SET(x) HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, x);
+#define VAW_DAC_I_SET(x) HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, x);
+
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -172,10 +175,11 @@ struct vaw_meas {
 	uint8_t t_ps;
 	int16_t dac_u;
 	int16_t dac_i;
+	uint16_t sp_u_val;
 } vaw;
 
 //Feedback tables
-uint16_t table_volt_dac_fb_100[42];
+uint16_t table_volt_dac_100[42];
 uint16_t table_volt_fb_100[42];
 
 //Bits field for status flags
@@ -183,11 +187,12 @@ uint16_t table_volt_fb_100[42];
 struct flags_type {
 	unsigned main_page_start :1; //main page constant figures draw
 
-	unsigned volt_draw :1; //volt redraw flag
-	unsigned curr_draw :1; //current redraw flag
-	unsigned watt_draw :1; //watt redraw flag
+	unsigned volt_draw :1; ///<volt redraw flag
+	unsigned curr_draw :1; ///<current redraw flag
+	unsigned watt_draw :1; ///<watt redraw flag
 	unsigned tl494_on :1; ///<TL494 clocking is ON
-	unsigned dac_val_draw :1; //draw dac values at lower information bar
+	unsigned dac_val_draw :1; ///<draw dac values at lower information bar
+	unsigned sp_val_draw:1; ///<draw set point value for voltage
 } sflags;
 
 //Progress bars struct init
@@ -197,6 +202,24 @@ struct bar_gr volt_bar, curr_bar, watt_bar; //progress bars init
 //Timers
 ////////////////////////////////////////////////////////////
 uint32_t millis_tmr_screen_refresh;
+
+//Error variable
+////////////////////////////////////////////////////////////
+uint8_t vaw_error_var; ///<errors holding variable
+/*
+ 0
+ b
+ 8 -
+ 7
+ 6
+ 5
+ 4
+ 3
+ 2
+ 1
+ */
+#define VAW_ERR_SHIFT_SPREACH 0
+#define VAW_ERR_SET_NUM(x) vaw_error_var|=1<<(x);
 
 //Debug
 ////////////////////////////////////////////////////////////
@@ -220,6 +243,7 @@ void HMI_Input(void);
 void HMI_Display(void);
 void VAW_Conversion(struct vaw_meas *m);
 void VAW_FBTableVolt(void);
+void VAW_U_SPReach(uint16_t sp_val);
 
 //Encoders IRQ
 ////////////////////////////////////////////////////////////
@@ -366,6 +390,9 @@ int main(void) {
 	i2c_ok_flag = HAL_I2C_IsDeviceReady(&hi2c1, INA_I2C_ADDRESS, 1, 0xff);
 	printf("INA status:%i\n\r", i2c_ok_flag);
 #endif
+
+	VAW_FBTableVolt();
+	__NOP();
 	//////////////////////////////////////////////////////////////////////////////////////
 	/* USER CODE END 2 */
 
@@ -704,22 +731,28 @@ void HMI_Input(void) {
 	//turn on/off TL494 clocking
 	//////////////////////////////////////////////////////////////
 	if (MENC_Click(&menc1)) {
-		TL494_TOGGLE();
 		sflags.tl494_on = ~sflags.tl494_on;
+		if(sflags.tl494_on){
+			VAW_U_SPReach(vaw.sp_u_val);
+		} else {
+			VAW_DAC_U_SET(0);
+		}
+		TL494_TOGGLE();
+		sflags.dac_val_draw = 1;
 	}
 
 	//voltage trim
 	//////////////////////////////////////////////////////////////
 	if (MENC_TurnRight(&menc1)) {
-		vaw.dac_u += 100;
-		if (vaw.dac_u >= 4095)
-			vaw.dac_u = 4095;
+		vaw.sp_u_val += 10;
+		if (vaw.sp_u_val >= 4095)
+			vaw.sp_u_val = 4095;
 	}
 
 	if (MENC_TurnLeft(&menc1)) {
-		vaw.dac_u -= 100;
-		if (vaw.dac_u < 0)
-			vaw.dac_u = 0;
+		vaw.sp_u_val -= 10;
+		if (vaw.sp_u_val < 0)
+			vaw.sp_u_val = 0;
 	}
 
 	//current trim
@@ -740,12 +773,12 @@ void HMI_Input(void) {
 	//////////////////////////////////////////////////////////////
 	if (flag_enc1_turn_all_dir) {
 		flag_enc1_turn_all_dir = 0;
-		HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, vaw.dac_u);
-		sflags.dac_val_draw = 1;
+		VAW_DAC_U_SET(vaw.dac_u);
+		sflags.sp_val_draw = 1;
 	}
 	if (flag_enc2_turn_all_dir) {
 		flag_enc2_turn_all_dir = 0;
-		HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, vaw.dac_i);
+		VAW_DAC_I_SET(vaw.dac_i);
 		sflags.dac_val_draw = 1;
 	}
 	//		//fast turn
@@ -793,6 +826,7 @@ void HMI_Display(void) {
 		sflags.curr_draw = 1;
 		sflags.watt_draw = 1;
 		sflags.dac_val_draw = 1;
+		sflags.sp_val_draw = 1;;
 
 		//not redrawing stack
 		MGL_SET_BUF_COLOR(volt_COLOR);
@@ -810,6 +844,8 @@ void HMI_Display(void) {
 		MGL_SET_BUF_COLOR(FONT_COLOR);
 		MGL_PrintStr_5x8("DAC_U:\0", 10, LOW_INF_BAR_UPP_Y);
 		MGL_PrintStr_5x8("DAC_I:\0", 10, LOW_INF_BAR_LOW_Y);
+
+		MGL_PrintStr_5x8("SP_U:\0", 80, LOW_INF_BAR_UPP_Y);
 	}
 
 	if (sflags.volt_draw) {
@@ -838,6 +874,13 @@ void HMI_Display(void) {
 		MGL_SET_BUF_COLOR(FONT_COLOR);
 		MGL_PrintIntL(vaw.dac_u, 50, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
 		MGL_PrintIntL(vaw.dac_i, 50, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
+	}
+
+	if (sflags.sp_val_draw) {
+		sflags.sp_val_draw = 0;
+		MGL_SET_BUF_COLOR(FONT_COLOR);
+		MGL_PrintIntL(vaw.sp_u_val, 120, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
+		//MGL_PrintIntL(vaw.dac_i, 50, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
 	}
 }
 
@@ -882,26 +925,57 @@ void VAW_Conversion(struct vaw_meas *m) {
 		sflags.watt_draw = 1;
 }
 
+/*
+ * @brief Function to make DAC to voltage related table
+ */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void VAW_FBTableVolt(void) {
 	uint16_t val = 0;
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 4095); //get current on maximum to eliminate affect from it
+	VAW_DAC_I_SET(4095); //get current on maximum to eliminate affect from it
 	TL494_ON();
 
-	//increase DAC value +100 until max and put voltage feedback and DAC values in the arrays
+	//increase DAC value +100 until max and put voltage feedback and appropriate DAC values in the arrays
 	for (uint8_t i = 0; i <= 41; i++) {
 		val = i * 100;
 		if (val > 4095)
 			val = 4095;
-		HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, val); //voltage increasing
+		VAW_DAC_U_SET(val); //voltage increasing
+		HAL_Delay(100); //wait until capacitor is charged
 		vaw.dac_u = val;
-		*(table_volt_dac_fb_100 + i) = val;
+		*(table_volt_dac_100 + i) = val;
 		*(table_volt_fb_100 + i) = INA_GetBusVoltageTiny();
-		HAL_Delay(10);
+
 	}
 
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, 0);
-	HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
+	//turn off everything
+	VAW_DAC_U_SET(0);
+	VAW_DAC_I_SET(0);
 	TL494_OFF();
+}
+
+/*
+ * @brief Function to reach voltage by setting a set point
+ * @param sp_val-> set point
+ */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void VAW_U_SPReach(uint16_t sp_val) {
+	if (sp_val == 0) {
+		vaw.dac_u = 0; //mix
+	} else if (sp_val == *(table_volt_fb_100 + 41)) {
+		vaw.dac_u = *(table_volt_dac_100 + 41); //max
+	} else {
+		for (uint8_t i = 0; i <= 41; i++) {
+			//compare voltage from the feedback voltage table and a set point.
+			//to find a table pointer with closest to SP voltage but smaller than it
+			if (*(table_volt_fb_100 + i) > sp_val) {
+				vaw.dac_u = *(table_volt_dac_100 + i - 1); //use this pointer but in the DAC values table
+				//here must be some protection from pointer miss read. But my first value in the tables are 0
+				//nothing is smaller than 0 in uint16_t
+				break;
+			}
+		}
+	}
+	VAW_DAC_U_SET(vaw.dac_u);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
