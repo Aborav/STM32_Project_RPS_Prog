@@ -1,6 +1,3 @@
-"./Core/Src/conversion.o"
-"./Core/Src/display.o"
-"./Core/Src/encoders.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32g4xx_hal_msp.o"
 "./Core/Src/stm32g4xx_it.o"
