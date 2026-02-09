@@ -1,5 +1,7 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
+Usr libs/STM32_Library_Flashprom/M_Flashprom.o: \
+ ../Usr\ libs/STM32_Library_Flashprom/M_Flashprom.c \
+ /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Flashprom/M_Flashprom.h \
+ ../Core/Inc/main.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h \
@@ -31,14 +33,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rtc.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rtc_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h \
- /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Encoder/M_ENC.h \
- /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_INA226/M_INA226.h \
- /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_My_Graphic_Library/MGL.h \
- /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_My_Graphic_Library/color565.h \
- /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.h \
- /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Signal_Filter/M_Filter.h \
- /media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Flashprom/M_Flashprom.h
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h
+/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Flashprom/M_Flashprom.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:
@@ -73,10 +69,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rtc_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h:
-/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Encoder/M_ENC.h:
-/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_INA226/M_INA226.h:
-/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_My_Graphic_Library/MGL.h:
-/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_My_Graphic_Library/color565.h:
-/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.h:
-/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Signal_Filter/M_Filter.h:
-/media/aborav/Seagate\ Expansion\ Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr\ libs/STM32_Library_Flashprom/M_Flashprom.h:

@@ -19,6 +19,17 @@
  *FREERTOS ??
  *CMSIS ??
  *
+ *
+ *
+ *
+ *WHAT I FOUND:
+ *current can be regulated only from 300 mA
+ *voltage rising from 0 to 20 V - 80ms
+ *voltage rising from 0 to 1V - 80ms due to overshoot
+ *voltage rising from 0 to 3 V - 20ms
+ *overshoot from 0 to 1 V - 1.8V
+ *overshoot from 0 to 3 V - 3.6V
+ *overshoot from 0 to 5 V - 5.2V
  ******************************************************************************
  */
 /* USER CODE END Header */
@@ -32,6 +43,7 @@
 #include "STM32_Library_INA226/M_INA226.h"
 #include "STM32_Library_My_Graphic_Library/MGL.h"
 #include "STM32_Library_Signal_Filter/M_Filter.h"
+#include "STM32_Library_Flashprom/M_Flashprom.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -140,7 +152,21 @@
 
 //VAW configuration
 /////////////////////////////////////////////////////
-#define VAW_DB_TABLE_DELAY 100 //this is delay between DAC step when the FB table is filling up (min 70ms)
+#define VAW_TABLE_DELAY 100 //this is delay between DAC step when the FB table is filling up (min 70ms)
+#define VAW_TABLE_DAC_STEP 100
+#define VAW_TABLE_SIZE 42
+
+#define VAW_TIMEOUT_THRESHOLD 100000000
+
+//Errors
+/////////////////////////////////////////////////////
+#define VAW_ERR_TIMEOUT 0
+#define VAW_ERR_SET_NUM(x) vaw_error_var|=1<<(x);
+
+//Write to flash function defines
+/////////////////////////////////////////////////////
+//last page start No
+#define FLASHROM_BOLT_TABLE_ADDR 0x0801F800
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -162,6 +188,9 @@ RTC_HandleTypeDef hrtc;
 SPI_HandleTypeDef hspi2;
 
 /* USER CODE BEGIN PV */
+//Flash erase structure
+////////////////////////////////////////////////////////////
+FLASH_EraseInitTypeDef pflash;
 
 //Encoder library structures
 ////////////////////////////////////////////////////////////
@@ -178,10 +207,8 @@ struct vaw_meas {
 	int16_t dac_u;
 	int16_t dac_i;
 	int16_t sp_u_val;
+	int16_t sp_i_val;
 } vaw;
-
-#define VAW_TABLE_DAC_STEP 100
-#define VAW_TABLE_SIZE 42
 
 //Feedback tables
 uint16_t table_dac_step[VAW_TABLE_SIZE]; ///<DAC from 0 to 4095
@@ -196,14 +223,7 @@ uint16_t vaw_dac_i_max; ///<maximum current after calibration DAC to current
 //Bits field for status flags
 ////////////////////////////////////////////////////////////
 struct flags_type {
-	unsigned main_page_start :1; //main page constant figures draw
-
-	unsigned volt_draw :1; ///<volt redraw flag
-	unsigned curr_draw :1; ///<current redraw flag
-	unsigned watt_draw :1; ///<watt redraw flag
 	unsigned tl494_on :1; ///<TL494 clocking is ON
-	unsigned dac_val_draw :1; ///<draw dac values at lower information bar
-	unsigned sp_val_draw :1; ///<draw set point value for voltage
 } sflags;
 
 //Progress bars struct init
@@ -220,7 +240,6 @@ uint8_t vaw_error_var; ///<errors holding variable
 /*
  0
  b
- 8 -
  7
  6
  5
@@ -228,14 +247,18 @@ uint8_t vaw_error_var; ///<errors holding variable
  3
  2
  1
+ 0 -> cycles timeout
  */
-#define VAW_ERR_SHIFT_SPREACH 0
-#define VAW_ERR_SET_NUM(x) vaw_error_var|=1<<(x);
+
+//Timeout counter variable
+////////////////////////////////////////////////////////////
+uint32_t vaw_timeout_cnt; ///<counts till threshold, then abort cycle
 
 //Debug
 ////////////////////////////////////////////////////////////
 uint32_t millis_tmr_debug;
 float debug_watt;
+uint32_t flash_err;
 
 /* USER CODE END PV */
 
@@ -247,15 +270,17 @@ static void MX_I2C1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_DAC1_Init(void);
 /* USER CODE BEGIN PFP */
-
 ////////////////////////////////////////////////////////////
+void FLASH_EraseInit(void);
+
 void HMI_Input(void);
 void HMI_Display_StartPage(void);
 void HMI_Display_MeasPage(void);
 void VAW_Conversion(void);
 void VAW_FBTableVolt(void);
 void VAW_FBTableCurr(void);
-void VAW_U_SPReach(uint16_t sp_val);
+void VAW_U_SPReach(uint16_t set_point);
+void VAW_I_SPReach(uint16_t set_point);
 
 //Encoders IRQ
 ////////////////////////////////////////////////////////////
@@ -325,6 +350,7 @@ int main(void) {
 	MX_SPI2_Init();
 	MX_DAC1_Init();
 	/* USER CODE BEGIN 2 */
+	FLASH_EraseInit();
 
 	HAL_Delay(10);
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -395,17 +421,30 @@ int main(void) {
 //	MGL_FillScreen(MP_STROKE_COLOR); //basic fill
 //	MGL_DrawRectWH(0, 0, 160, 128, MP_STROKE_INT_COLOR); //full screen stroke
 
-	//Display drawing flags
-	sflags.volt_draw = 1;
-	sflags.curr_draw = 1;
-	sflags.watt_draw = 1;
-	sflags.dac_val_draw = 1;
-	sflags.sp_val_draw = 1;
-
 	HMI_Display_StartPage();
 	VAW_FBTableVolt();
 	volt_bar.num_max = vaw_dac_u_max; //renew maximum value after calibration
+
+
+
+	HAL_FLASH_Unlock();
+	HAL_FLASHEx_Erase(&pflash, &flash_err);
+	HAL_FLASH_Lock();
 	__NOP();
+	flash_err = HAL_FLASH_Unlock();
+	__NOP();
+	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, (uint32_t) 0x0801F800, (uint64_t) 0x111111111111) != 0) {
+		flash_err = HAL_FLASH_GetError();
+	}
+	HAL_FLASH_Lock();
+
+	__NOP(); //0xa8
+	//FLASHPROM_WriteArray(FLASHROM_BOLT_TABLE_ADDR, table_volt_fb, VAW_TABLE_SIZE);
+
+
+
+
+
 	VAW_FBTableCurr();
 	curr_bar.num_max = vaw_dac_i_max;
 	__NOP();
@@ -743,6 +782,14 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
+/*
+ * @brief Function fill up HAL erase structure
+ */
+void FLASH_EraseInit(void) {
+	pflash.TypeErase = FLASH_TYPEERASE_PAGES;
+	pflash.NbPages = 1;
+	pflash.Page = 63;
+}
 
 /*
  * @brief Function to maintain clicks and turns response
@@ -756,38 +803,57 @@ void HMI_Input(void) {
 	//////////////////////////////////////////////////////////////
 	if (MENC_Click(&menc1)) {
 		sflags.tl494_on = ~sflags.tl494_on;
-		if (sflags.tl494_on) {
-			VAW_U_SPReach(vaw.sp_u_val);
-		} else {
-			VAW_DAC_U_SET(0);
-		}
+//		if (sflags.tl494_on) {
+//			VAW_U_SPReach(vaw.sp_u_val);
+//			VAW_I_SPReach(vaw.sp_i_val);
+//			VAW_DAC_U_SET(vaw.sp_u_val);
+//			VAW_DAC_I_SET(vaw.sp_i_val);
+//		} else {
+//			VAW_DAC_U_SET(0);
+//			VAW_DAC_I_SET(0);
+//			vaw.dac_i = 0;
+//			vaw.dac_u = 0;
+//		}
+		VAW_DAC_U_SET(vaw.dac_u);
+		VAW_DAC_I_SET(vaw.dac_i);
 		TL494_TOGGLE();
-		sflags.dac_val_draw = 1;
 	}
 
 	//voltage trim
 	//////////////////////////////////////////////////////////////
 	if (MENC_TurnRight(&menc1)) {
-		vaw.sp_u_val += 10;
-		if (vaw.sp_u_val >= vaw_dac_u_max)
-			vaw.sp_u_val = vaw_dac_u_max;
+//		vaw.sp_u_val += 10;
+//		if (vaw.sp_u_val >= vaw_dac_u_max)
+//			vaw.sp_u_val = vaw_dac_u_max;
+		vaw.dac_u += 10;
+		if (vaw.dac_u >= 4095)
+			vaw.dac_u = 4095;
 	}
 
 	if (MENC_TurnLeft(&menc1)) {
-		vaw.sp_u_val -= 10;
-		if (vaw.sp_u_val < 0)
-			vaw.sp_u_val = 0;
+//		vaw.sp_u_val -= 10;
+//		if (vaw.sp_u_val < 0)
+//			vaw.sp_u_val = 0;
+		vaw.dac_u -= 10;
+		if (vaw.dac_u < 0)
+			vaw.dac_u = 0;
 	}
 
 	//current trim
 	//////////////////////////////////////////////////////////////
 	if (MENC_TurnRight(&menc2)) {
+//		vaw.sp_i_val += 10;
+//		if (vaw.sp_i_val >= vaw_dac_i_max)
+//			vaw.sp_i_val = vaw_dac_i_max;
 		vaw.dac_i += 10;
 		if (vaw.dac_i >= 4095)
 			vaw.dac_i = 4095;
 	}
 
 	if (MENC_TurnLeft(&menc2)) {
+//		vaw.sp_i_val -= 10;
+//		if (vaw.sp_i_val < 0)
+//			vaw.sp_i_val = 0;
 		vaw.dac_i -= 10;
 		if (vaw.dac_i < 0)
 			vaw.dac_i = 0;
@@ -797,13 +863,19 @@ void HMI_Input(void) {
 	//////////////////////////////////////////////////////////////
 	if (flag_enc1_turn_all_dir) {
 		flag_enc1_turn_all_dir = 0;
-		VAW_DAC_U_SET(vaw.dac_u);
-		sflags.sp_val_draw = 1;
+
+		if (sflags.tl494_on) {
+			//VAW_U_SPReach(vaw.sp_u_val);
+			VAW_DAC_U_SET(vaw.dac_u);
+		}
 	}
 	if (flag_enc2_turn_all_dir) {
 		flag_enc2_turn_all_dir = 0;
-		VAW_DAC_I_SET(vaw.dac_i);
-		sflags.dac_val_draw = 1;
+
+		if (sflags.tl494_on) {
+//			VAW_I_SPReach(vaw.sp_i_val);
+			VAW_DAC_I_SET(vaw.dac_i);
+		}
 	}
 	//		//fast turn
 	//		//////////////////////////////////////////////////////////////////////////////
@@ -864,6 +936,7 @@ void HMI_Display_StartPage(void) {
 	MGL_PrintStr_5x8("DAC_I:\0", 5, LOW_INF_BAR_LOW_Y);
 
 	MGL_PrintStr_5x8("SP_U:\0", 80, LOW_INF_BAR_UPP_Y);
+	MGL_PrintStr_5x8("SP_I:\0", 80, LOW_INF_BAR_LOW_Y);
 }
 
 /*
@@ -872,8 +945,10 @@ void HMI_Display_StartPage(void) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void HMI_Display_MeasPage(void) {
 	static uint16_t volt_old, curr_old, watt_old;
+	static uint16_t sp_u_old, sp_i_old, dac_u_old, dac_i_old;
 	int16_t diff = 0; ///<differance between new and old values
 
+	//voltage
 	diff = volt_old - vaw.volt;
 	if (diff < 0)
 		diff *= -1; //no matter is old value bigger or smaller than a new one
@@ -883,6 +958,7 @@ void HMI_Display_MeasPage(void) {
 		MGL_DrawBar(&volt_bar);
 	}
 
+	//current
 	diff = curr_old - vaw.curr;
 	if (diff < 0)
 		diff *= -1;
@@ -892,6 +968,7 @@ void HMI_Display_MeasPage(void) {
 		MGL_DrawBar(&curr_bar);
 	}
 
+	//wattage
 	diff = watt_old - vaw.watt;
 	if (diff < 0)
 		diff *= -1;
@@ -901,23 +978,49 @@ void HMI_Display_MeasPage(void) {
 		MGL_DrawBar(&watt_bar);
 	}
 
-	if (sflags.dac_val_draw) {
-		sflags.dac_val_draw = 0;
-		MGL_SET_BUF_COLOR(FONT_COLOR);
+	MGL_SET_BUF_COLOR(FONT_COLOR);
+
+	//voltage DAC value
+
+	diff = dac_u_old - vaw.dac_u;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > 0) {
 		MGL_PrintUintR(vaw.dac_u, 4, 45, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
+		MGL_DrawBar(&watt_bar);
+	}
+
+	//current dac value
+	diff = dac_i_old - vaw.dac_i;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > 0) {
 		MGL_PrintUintR(vaw.dac_i, 4, 45, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
 	}
 
-	if (sflags.sp_val_draw) {
-		sflags.sp_val_draw = 0;
-		MGL_SET_BUF_COLOR(FONT_COLOR);
+	//voltage set point
+	diff = sp_u_old - vaw.sp_u_val;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > 0) {
 		MGL_PrintFloatTinyR(vaw.sp_u_val, 4, 2, 120, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
-//MGL_PrintIntL(vaw.dac_i, 50, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
+	}
+
+	//current set point
+	diff = sp_i_old - vaw.sp_i_val;
+	if (diff < 0)
+		diff *= -1;
+	if (diff > 0) {
+		MGL_PrintFloatTinyR(vaw.sp_i_val, 4, 3, 120, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
 	}
 
 	volt_old = vaw.volt;
 	curr_old = vaw.curr;
 	watt_old = vaw.watt;
+	sp_u_old = vaw.sp_u_val;
+	sp_i_old = vaw.sp_i_val;
+	dac_u_old = vaw.dac_u;
+	dac_i_old = vaw.dac_i;
 }
 
 /*
@@ -938,12 +1041,14 @@ void VAW_Conversion(void) {
 
 }
 
+
 /*
  * @brief Function to make DAC to voltage related table
  */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void VAW_FBTableVolt(void) {
 	uint16_t val = 0;
+
 	VAW_DAC_I_SET(4095); //get current on maximum to eliminate affect from it
 	TL494_ON();
 
@@ -953,14 +1058,12 @@ void VAW_FBTableVolt(void) {
 		if (val > 4095)
 			val = 4095;
 		VAW_DAC_U_SET(val); //voltage increasing
-		HAL_Delay(VAW_DB_TABLE_DELAY); //wait until capacitor is charged
+		HAL_Delay(VAW_TABLE_DELAY); //wait until capacitor is charged
 		vaw.dac_u = val;
 		*(table_dac_step + i) = val;
 		VAW_Conversion();
 		*(table_volt_fb + i) = vaw.volt;
-		sflags.dac_val_draw = 1;
 		HMI_Display_MeasPage();
-
 	}
 
 	//turn off everything
@@ -971,11 +1074,17 @@ void VAW_FBTableVolt(void) {
 	vaw_dac_u_min = *(table_volt_fb + 0);
 	vaw_dac_u_max = *(table_volt_fb + VAW_TABLE_SIZE - 1);
 
+	vaw_timeout_cnt = 0; //reset saving counter
+
 	//wait until capacitor is discharged
 	while (vaw.volt != 0) {
 		VAW_Conversion();
-		sflags.dac_val_draw = 1;
 		HMI_Display_MeasPage();
+		if (vaw_timeout_cnt >= VAW_TIMEOUT_THRESHOLD) {
+			VAW_ERR_SET_NUM(VAW_ERR_TIMEOUT);
+			return;
+		}
+		vaw_timeout_cnt++;
 	}
 }
 
@@ -985,7 +1094,7 @@ void VAW_FBTableVolt(void) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void VAW_FBTableCurr(void) {
 	uint16_t val = 0;
-	uint16_t old_curr = 0;
+	int16_t old_curr = 0;
 	VAW_DAC_U_SET(4095); //get voltage on maximum to eliminate affect from it
 	TL494_ON();
 
@@ -995,24 +1104,12 @@ void VAW_FBTableCurr(void) {
 		if (val > 4095)
 			val = 4095;
 		VAW_DAC_I_SET(val); //voltage increasing
-		HAL_Delay(VAW_DB_TABLE_DELAY); //wait until output capacitor is charged
+		HAL_Delay(VAW_TABLE_DELAY); //wait until output capacitor is charged
 		vaw.dac_i = val;
-		//*(table_dac_step + i) = val; //there is the same procedure in voltage table function
+		*(table_dac_step + i) = val;
 		VAW_Conversion();
-		//if DAC stepped one more time but current feedback value is the same
-		if (old_curr - vaw.curr == 0) {
-			vaw_dac_i_max = *(table_curr_fb + i - 1); //write maximum current
-			break;
-		} else {
-			//if current is still rising after a DAC step
-			*(table_curr_fb + i) = vaw.curr;
-			sflags.dac_val_draw = 1;
-			HMI_Display_MeasPage();
-			old_curr = vaw.curr;
-		}
-		if (i == VAW_TABLE_SIZE - 1) {
-			vaw_dac_i_max = *(table_curr_fb + i - 1); //write maximum current
-		}
+		*(table_curr_fb + i) = vaw.curr;
+		HMI_Display_MeasPage();
 	}
 
 	//turn off everything
@@ -1022,11 +1119,54 @@ void VAW_FBTableCurr(void) {
 	vaw.dac_i = 0;
 	vaw_dac_i_min = *(table_curr_fb + 0);
 
-	while (vaw.curr != 0) {
-		VAW_Conversion();
-		sflags.dac_val_draw = 1;
-		HMI_Display_MeasPage();
+	//if DAC stepped one more time but current feedback value is the same
+	for (uint8_t i = 0; i <= VAW_TABLE_SIZE - 1; i++) {
+		if (*(table_curr_fb + i) - old_curr == 0) {
+			vaw_dac_i_max = *(table_curr_fb + i - 1); //write maximum current
+			break;
+		}
+		if (i == VAW_TABLE_SIZE - 1) {
+			vaw_dac_i_max = *(table_curr_fb + i - 1); //write maximum current
+		}
+		old_curr = vaw.curr;
 	}
+
+	vaw_timeout_cnt = 0; //reset saving counter
+
+	while (vaw.volt != 0) {
+		VAW_Conversion();
+		HMI_Display_MeasPage();
+		if (vaw_timeout_cnt >= VAW_TIMEOUT_THRESHOLD) {
+			VAW_ERR_SET_NUM(VAW_ERR_TIMEOUT);
+			return;
+		}
+		vaw_timeout_cnt++;
+	}
+}
+
+/*
+ * @brief In the power supply current can be controlled only from 300mA
+ * This function controls current increasing voltage DAC
+ */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void VAW_I_SPReach(uint16_t set_point) {
+	if (set_point == 0) {
+		vaw.dac_i = 0; //mix
+	} else if (set_point == vaw_dac_i_max) {
+		vaw.dac_i = 4095; //max
+	} else {
+		for (uint8_t i = 0; i <= 41; i++) {
+			//compare voltage from the feedback voltage table and a set point.
+			//to find a table pointer with closest to SP voltage but smaller than it
+			if (*(table_curr_fb + i) > set_point) {
+				vaw.dac_i = *(table_dac_step + i - 1); //use this pointer but in the DAC values table
+				//here must be some protection from pointer miss read. But my first value in the tables are 0
+				//nothing is smaller than 0 in uint16_t
+				break;
+			}
+		}
+	}
+	VAW_DAC_I_SET(vaw.dac_i);
 }
 
 /*
@@ -1034,16 +1174,16 @@ void VAW_FBTableCurr(void) {
  * @param sp_val-> set point
  */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_U_SPReach(uint16_t sp_val) {
-	if (sp_val == 0) {
+void VAW_U_SPReach(uint16_t set_point) {
+	if (set_point == 0) {
 		vaw.dac_u = 0; //mix
-	} else if (sp_val == vaw_dac_u_max) {
-		vaw.dac_u = vaw_dac_u_max; //max
+	} else if (set_point == vaw_dac_u_max) {
+		vaw.dac_u = 4095; //max
 	} else {
 		for (uint8_t i = 0; i <= 41; i++) {
 			//compare voltage from the feedback voltage table and a set point.
 			//to find a table pointer with closest to SP voltage but smaller than it
-			if (*(table_volt_fb + i) > sp_val) {
+			if (*(table_volt_fb + i) > set_point) {
 				vaw.dac_u = *(table_dac_step + i - 1); //use this pointer but in the DAC values table
 				//here must be some protection from pointer miss read. But my first value in the tables are 0
 				//nothing is smaller than 0 in uint16_t

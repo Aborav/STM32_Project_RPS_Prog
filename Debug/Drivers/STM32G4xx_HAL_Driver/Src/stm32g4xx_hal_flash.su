@@ -1,4 +1,4 @@
-../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c:173:19:HAL_FLASH_Program	32	static
+../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c:173:19:HAL_FLASH_Program	32	static,ignoring_inline_asm
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c:255:19:HAL_FLASH_Program_IT	32	static
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c:327:6:HAL_FLASH_IRQHandler	24	static
 ../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c:467:13:HAL_FLASH_EndOfOperationCallback	16	static
