@@ -147,26 +147,28 @@
 
 //DAC fast function
 /////////////////////////////////////////////////////
-#define VAW_DAC_U_SET(x) HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, x);
-#define VAW_DAC_I_SET(x) HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, x);
+#define RPS_DAC_U_SET(x) HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, x);
+#define RPS_DAC_I_SET(x) HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_2, DAC_ALIGN_12B_R, x);
 
-//VAW configuration
+//RPS configuration
 /////////////////////////////////////////////////////
-#define VAW_TABLE_DELAY 100 //this is delay between DAC step when the FB table is filling up (min 70ms)
-#define VAW_TABLE_DAC_STEP 100
-#define VAW_TABLE_SIZE 42
+#define RPS_TABLE_DELAY 100 //this is delay between DAC step when the FB table is filling up (min 70ms)
+#define RPS_TABLE_DAC_STEP 100
+#define RPS_TABLE_SIZE 42
 
-#define VAW_TIMEOUT_THRESHOLD 100000000
+#define RPS_TIMEOUT_THRESHOLD 100000000
 
 //Errors
 /////////////////////////////////////////////////////
-#define VAW_ERR_TIMEOUT 0
-#define VAW_ERR_SET_NUM(x) vaw_error_var|=1<<(x);
+#define RPS_ERR_SET_NUM(x) rps_error_var|=1<<(x);
+
+#define RPS_ERR_TIMEOUT 0
+#define RPS_ERR_INA 1
+#define RPS_ERR_FLASH 2
 
 //Write to flash function defines
 /////////////////////////////////////////////////////
-//last page start No
-#define FLASHROM_BOLT_TABLE_ADDR 0x0801F800
+#define FLASHROM_VOLT_TABLE_ADDR 0x0801F800 //last page start No
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -211,9 +213,9 @@ struct vaw_meas {
 } vaw;
 
 //Feedback tables
-uint16_t table_dac_step[VAW_TABLE_SIZE]; ///<DAC from 0 to 4095
-uint16_t table_volt_fb[VAW_TABLE_SIZE]; ///<ralated to DAC step voltage
-uint16_t table_curr_fb[VAW_TABLE_SIZE]; ///<ralated to DAC step current
+uint16_t table_dac_step[RPS_TABLE_SIZE]; ///<DAC from 0 to 4095
+uint16_t table_volt_fb[RPS_TABLE_SIZE]; ///<ralated to DAC step voltage
+uint16_t table_curr_fb[RPS_TABLE_SIZE]; ///<ralated to DAC step current
 
 uint16_t vaw_dac_u_min; ///<minimum voltage after calibration DAC to current
 uint16_t vaw_dac_u_max; ///<maximum voltage after calibration DAC to current
@@ -233,10 +235,11 @@ struct bar_gr volt_bar, curr_bar, watt_bar; //progress bars init
 //Timers
 ////////////////////////////////////////////////////////////
 uint32_t millis_tmr_screen_refresh;
+uint32_t millis_tmr_rst_display;
 
 //Error variable
 ////////////////////////////////////////////////////////////
-uint8_t vaw_error_var; ///<errors holding variable
+uint8_t rps_error_var; ///<errors holding variable
 /*
  0
  b
@@ -245,19 +248,18 @@ uint8_t vaw_error_var; ///<errors holding variable
  5
  4
  3
- 2
- 1
+ 2 -> Flash erase error
+ 1 -> INA226 no response
  0 -> cycles timeout
  */
 
 //Timeout counter variable
 ////////////////////////////////////////////////////////////
-uint32_t vaw_timeout_cnt; ///<counts till threshold, then abort cycle
+uint32_t rps_timeout_cnt; ///<counts till threshold, then abort cycle
 
 //Debug
 ////////////////////////////////////////////////////////////
 uint32_t millis_tmr_debug;
-float debug_watt;
 uint32_t flash_err;
 
 /* USER CODE END PV */
@@ -271,16 +273,20 @@ static void MX_SPI2_Init(void);
 static void MX_DAC1_Init(void);
 /* USER CODE BEGIN PFP */
 ////////////////////////////////////////////////////////////
-void FLASH_EraseInit(void);
+void SERV_Flash_EraseStructInit(void);
 
+void HMI_Input_EncodersStructInit(void);
 void HMI_Input(void);
+
+void HMI_Display_GraphBarsStructInit(void);
 void HMI_Display_StartPage(void);
 void HMI_Display_MeasPage(void);
-void VAW_Conversion(void);
-void VAW_FBTableVolt(void);
-void VAW_FBTableCurr(void);
-void VAW_U_SPReach(uint16_t set_point);
-void VAW_I_SPReach(uint16_t set_point);
+
+void RPS_VAW_Conversion(void);
+void RPS_Save_FBTableVolt(void);
+void RPS_Save_FBTableCurr(void);
+void RPS_Ctrl_U_SPReach(uint16_t set_point);
+void RPS_Ctrl_I_SPReach(uint16_t set_point);
 
 //Encoders IRQ
 ////////////////////////////////////////////////////////////
@@ -350,110 +356,60 @@ int main(void) {
 	MX_SPI2_Init();
 	MX_DAC1_Init();
 	/* USER CODE BEGIN 2 */
-	FLASH_EraseInit();
-
-	HAL_Delay(10);
 	//////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////INT MAIN()////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
+	HAL_Delay(10); //some delay after periphery initialization
 
-	//Encoders init
+
+	//Service
 	//////////////////////////////////////////////////////////////////////////////////////
-	menc1.s1_pin = ENC1_S1_Pin;
-	menc1.s2_pin = ENC1_S2_Pin;
-	menc1.key_pin = ENC1_KEY_Pin;
-	menc1.s1_port = ENC1_S1_GPIO_Port;
-	menc1.s2_port = ENC1_S2_GPIO_Port;
-	menc1.key_port = ENC1_KEY_GPIO_Port;
-	menc1.key_exti_line = EXTI2_IRQn;
+	SERV_Flash_EraseStructInit();
 
-	menc2.s1_pin = ENC2_S1_Pin;
-	menc2.s2_pin = ENC2_S2_Pin;
-	menc2.key_pin = 0;
-	menc2.s1_port = GPIOB;
-	menc2.s2_port = GPIOB;
-	menc2.key_port = 0;
-	menc2.key_exti_line = 0;
-
-	//Display value bars filling
-	//////////////////////////////////////////////////////////////////////////////////////
-	volt_bar.num = &vaw.volt;
-	volt_bar.num_max = VAW_MAX_VOLT;
-	volt_bar.x = BAR_VOLTAGE_X;
-	volt_bar.y = BAR_VOLTAGE_Y;
-	volt_bar.width = BAR_WIDTH;
-	volt_bar.length = BAR_LENGTH;
-	volt_bar.color = VOLT_COLOR;
-	volt_bar.bg_color = BG_COLOR;
-	volt_bar.stroke_color = BAR_STROKE_COLOR;
-
-	curr_bar.num = &vaw.curr;
-	curr_bar.num_max = VAW_MAX_CURR;
-	curr_bar.x = BAR_CURRENT_X;
-	curr_bar.y = BAR_CURRENT_Y;
-	curr_bar.width = BAR_WIDTH;
-	curr_bar.length = BAR_LENGTH;
-	curr_bar.color = CURR_COLOR;
-	curr_bar.bg_color = BG_COLOR;
-	curr_bar.stroke_color = BAR_STROKE_COLOR;
-
-	watt_bar.num = &vaw.watt;
-	watt_bar.num_max = VAW_MAX_WATT;
-	watt_bar.x = BAR_WATTAGE_X;
-	watt_bar.y = BAR_WATTAGE_Y;
-	watt_bar.width = BAR_WIDTH;
-	watt_bar.length = BAR_LENGTH;
-	watt_bar.color = WATT_COLOR;
-	watt_bar.bg_color = BG_COLOR;
-	watt_bar.stroke_color = BAR_STROKE_COLOR;
-
-	//INA and DAC init
+	//RPS and VAW
 	//////////////////////////////////////////////////////////////////////////////////////
 	HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
 	HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
 	INA_Init();
+	if(HAL_I2C_IsDeviceReady(&hi2c1, INA_I2C_ADDRESS, 1, 0xff)!=0){
+		RPS_ERR_SET_NUM(RPS_ERR_INA);
+	}
 	INA_SetCalVal(INA_CALIB_VAL);
 
-	//Display
+	//HMI
 	//////////////////////////////////////////////////////////////////////////////////////
+	HMI_Input_EncodersStructInit();
+	HMI_Display_GraphBarsStructInit();
 	MGL_DriverInit();
 	MGL_SET_BUF_BG_COLOR(COLOR_BLACK); //background for text
-//	MGL_FillScreen(MP_STROKE_COLOR); //basic fill
-//	MGL_DrawRectWH(0, 0, 160, 128, MP_STROKE_INT_COLOR); //full screen stroke
-
 	HMI_Display_StartPage();
-	VAW_FBTableVolt();
+
+	//filling tables
+	RPS_Save_FBTableVolt();
 	volt_bar.num_max = vaw_dac_u_max; //renew maximum value after calibration
 
+	RPS_Save_FBTableCurr();
+	curr_bar.num_max = vaw_dac_i_max;
 
-
+	//flash writing
+	/*STM32G431:
+	 quantity of pages: 63
+	 last Flash page -> 0x0801 F800 - 0x0801 FFFF
+	 quantity of banks -> only 1
+	 only 64 bit double word can be programmed
+	 */
 	HAL_FLASH_Unlock();
 	HAL_FLASHEx_Erase(&pflash, &flash_err);
-	HAL_FLASH_Lock();
-	__NOP();
-	flash_err = HAL_FLASH_Unlock();
-	__NOP();
-	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, (uint32_t) 0x0801F800, (uint64_t) 0x111111111111) != 0) {
-		flash_err = HAL_FLASH_GetError();
+	if(flash_err!=0xffffffff){
+		RPS_ERR_SET_NUM(RPS_ERR_FLASH);
 	}
 	HAL_FLASH_Lock();
-
-	__NOP(); //0xa8
-	//FLASHPROM_WriteArray(FLASHROM_BOLT_TABLE_ADDR, table_volt_fb, VAW_TABLE_SIZE);
+	MFLPR_WriteArray(FLASHROM_VOLT_TABLE_ADDR, table_volt_fb, RPS_TABLE_SIZE);
 
 
-
-
-
-	VAW_FBTableCurr();
-	curr_bar.num_max = vaw_dac_i_max;
-	__NOP();
 
 #ifdef USE_DEBUG
-	printf("Start program\n\r");
-	uint8_t i2c_ok_flag;
-	i2c_ok_flag = HAL_I2C_IsDeviceReady(&hi2c1, INA_I2C_ADDRESS, 1, 0xff);
-	printf("INA status:%i\n\r", i2c_ok_flag);
+	printf("Program start\n\r");
 #endif
 
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -467,16 +423,21 @@ int main(void) {
 
 		if (HAL_GetTick() - millis_tmr_screen_refresh >= SCREEN_REFRESH_RATE) {
 			millis_tmr_screen_refresh = HAL_GetTick();
-			VAW_Conversion();
+			RPS_VAW_Conversion();
 			HMI_Display_MeasPage();
+		}
+
+
+		if (HAL_GetTick() - millis_tmr_rst_display >= 20000) {
+			millis_tmr_rst_display = HAL_GetTick();
+			MGL_DriverInit();
+			MGL_SET_BUF_BG_COLOR(COLOR_BLACK); //background for text
+			HMI_Display_StartPage();
 		}
 
 #ifdef USE_DEBUG
 		if (HAL_GetTick() - millis_tmr_debug >= DEBUG_REFRESH) {
 			millis_tmr_debug = HAL_GetTick();
-
-			debug_watt = INA_GetPower();
-			printf("Wattage:%f\n\r", debug_watt);
 
 		}
 #endif
@@ -781,26 +742,88 @@ static void MX_GPIO_Init(void) {
 	/* USER CODE END MX_GPIO_Init_2 */
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 /* USER CODE BEGIN 4 */
 /*
  * @brief Function fill up HAL erase structure
  */
-void FLASH_EraseInit(void) {
+void SERV_Flash_EraseStructInit(void) {
 	pflash.TypeErase = FLASH_TYPEERASE_PAGES;
 	pflash.NbPages = 1;
 	pflash.Page = 63;
 }
 
+/////////////////////////////////////////////////////////////////////////
+/*
+ * @brief Function to fill up encoders structures
+ */
+void HMI_Input_EncodersStructInit(void){
+	menc1.s1_pin = ENC1_S1_Pin;
+	menc1.s2_pin = ENC1_S2_Pin;
+	menc1.key_pin = ENC1_KEY_Pin;
+	menc1.s1_port = ENC1_S1_GPIO_Port;
+	menc1.s2_port = ENC1_S2_GPIO_Port;
+	menc1.key_port = ENC1_KEY_GPIO_Port;
+	menc1.key_exti_line = EXTI2_IRQn;
+
+	menc2.s1_pin = ENC2_S1_Pin;
+	menc2.s2_pin = ENC2_S2_Pin;
+	menc2.key_pin = 0;
+	menc2.s1_port = GPIOB;
+	menc2.s2_port = GPIOB;
+	menc2.key_port = 0;
+	menc2.key_exti_line = 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////////
+/*
+ * @brief Function to fill up graph bars for display
+ */
+void HMI_Display_GraphBarsStructInit(void) {
+	volt_bar.num = &vaw.volt;
+	volt_bar.num_max = VAW_MAX_VOLT;
+	volt_bar.x = BAR_VOLTAGE_X;
+	volt_bar.y = BAR_VOLTAGE_Y;
+	volt_bar.width = BAR_WIDTH;
+	volt_bar.length = BAR_LENGTH;
+	volt_bar.color = VOLT_COLOR;
+	volt_bar.bg_color = BG_COLOR;
+	volt_bar.stroke_color = BAR_STROKE_COLOR;
+
+	curr_bar.num = &vaw.curr;
+	curr_bar.num_max = VAW_MAX_CURR;
+	curr_bar.x = BAR_CURRENT_X;
+	curr_bar.y = BAR_CURRENT_Y;
+	curr_bar.width = BAR_WIDTH;
+	curr_bar.length = BAR_LENGTH;
+	curr_bar.color = CURR_COLOR;
+	curr_bar.bg_color = BG_COLOR;
+	curr_bar.stroke_color = BAR_STROKE_COLOR;
+
+	watt_bar.num = &vaw.watt;
+	watt_bar.num_max = VAW_MAX_WATT;
+	watt_bar.x = BAR_WATTAGE_X;
+	watt_bar.y = BAR_WATTAGE_Y;
+	watt_bar.width = BAR_WIDTH;
+	watt_bar.length = BAR_LENGTH;
+	watt_bar.color = WATT_COLOR;
+	watt_bar.bg_color = BG_COLOR;
+	watt_bar.stroke_color = BAR_STROKE_COLOR;
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to maintain clicks and turns response
  */
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void HMI_Input(void) {
 	MENC_MainHandler(&menc1);
 	MENC_MainHandler(&menc2);
 
 	//turn on/off TL494 clocking
-	//////////////////////////////////////////////////////////////
 	if (MENC_Click(&menc1)) {
 		sflags.tl494_on = ~sflags.tl494_on;
 //		if (sflags.tl494_on) {
@@ -814,13 +837,12 @@ void HMI_Input(void) {
 //			vaw.dac_i = 0;
 //			vaw.dac_u = 0;
 //		}
-		VAW_DAC_U_SET(vaw.dac_u);
-		VAW_DAC_I_SET(vaw.dac_i);
+		RPS_DAC_U_SET(vaw.dac_u);
+		RPS_DAC_I_SET(vaw.dac_i);
 		TL494_TOGGLE();
 	}
 
 	//voltage trim
-	//////////////////////////////////////////////////////////////
 	if (MENC_TurnRight(&menc1)) {
 //		vaw.sp_u_val += 10;
 //		if (vaw.sp_u_val >= vaw_dac_u_max)
@@ -840,7 +862,6 @@ void HMI_Input(void) {
 	}
 
 	//current trim
-	//////////////////////////////////////////////////////////////
 	if (MENC_TurnRight(&menc2)) {
 //		vaw.sp_i_val += 10;
 //		if (vaw.sp_i_val >= vaw_dac_i_max)
@@ -860,25 +881,23 @@ void HMI_Input(void) {
 	}
 
 	//if any turn
-	//////////////////////////////////////////////////////////////
 	if (flag_enc1_turn_all_dir) {
 		flag_enc1_turn_all_dir = 0;
 
 		if (sflags.tl494_on) {
-			//VAW_U_SPReach(vaw.sp_u_val);
-			VAW_DAC_U_SET(vaw.dac_u);
+			//RPS_U_SPReach(vaw.sp_u_val);
+			RPS_DAC_U_SET(vaw.dac_u);
 		}
 	}
 	if (flag_enc2_turn_all_dir) {
 		flag_enc2_turn_all_dir = 0;
 
 		if (sflags.tl494_on) {
-//			VAW_I_SPReach(vaw.sp_i_val);
-			VAW_DAC_I_SET(vaw.dac_i);
+//			RPS_I_SPReach(vaw.sp_i_val);
+			RPS_DAC_I_SET(vaw.dac_i);
 		}
 	}
 	//		//fast turn
-	//		//////////////////////////////////////////////////////////////////////////////
 	//		if (MENC_TurnFastRight(&menc1)) {
 	//			dac_volt_value += 20;
 	//			if (dac_volt_value > 4095) dac_volt_value = 4095;
@@ -908,10 +927,11 @@ void HMI_Input(void) {
 	//		}
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 /*
  * @brief starting page drawing function
  */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void HMI_Display_StartPage(void) {
 //	REFRESH_MAIN_FIELD();
 //	DRAW_MAIN_FIELD_STROKE();
@@ -939,10 +959,11 @@ void HMI_Display_StartPage(void) {
 	MGL_PrintStr_5x8("SP_I:\0", 80, LOW_INF_BAR_LOW_Y);
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 /*
  * @brief draw redrawing stack of the main page
  */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void HMI_Display_MeasPage(void) {
 	static uint16_t volt_old, curr_old, watt_old;
 	static uint16_t sp_u_old, sp_i_old, dac_u_old, dac_i_old;
@@ -981,7 +1002,6 @@ void HMI_Display_MeasPage(void) {
 	MGL_SET_BUF_COLOR(FONT_COLOR);
 
 	//voltage DAC value
-
 	diff = dac_u_old - vaw.dac_u;
 	if (diff < 0)
 		diff *= -1;
@@ -1023,11 +1043,11 @@ void HMI_Display_MeasPage(void) {
 	dac_i_old = vaw.dac_i;
 }
 
+/////////////////////////////////////////////////////////////////////////
 /*
  * @brief measurements function
  */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_Conversion(void) {
+void RPS_VAW_Conversion(void) {
 
 	//static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
 
@@ -1042,114 +1062,117 @@ void VAW_Conversion(void) {
 }
 
 
+
+/////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to make DAC to voltage related table
  */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_FBTableVolt(void) {
+void RPS_Save_FBTableVolt(void) {
 	uint16_t val = 0;
 
-	VAW_DAC_I_SET(4095); //get current on maximum to eliminate affect from it
+	RPS_DAC_I_SET(4095); //get current on maximum to eliminate affect from it
 	TL494_ON();
 
 	//increase DAC value +100 until max and put voltage feedback and appropriate DAC values in the arrays
-	for (uint8_t i = 0; i <= VAW_TABLE_SIZE - 1; i++) {
+	for (uint8_t i = 0; i <= RPS_TABLE_SIZE - 1; i++) {
 		val = i * 100;
 		if (val > 4095)
 			val = 4095;
-		VAW_DAC_U_SET(val); //voltage increasing
-		HAL_Delay(VAW_TABLE_DELAY); //wait until capacitor is charged
+		RPS_DAC_U_SET(val); //voltage increasing
+		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
 		vaw.dac_u = val;
 		*(table_dac_step + i) = val;
-		VAW_Conversion();
+		RPS_VAW_Conversion();
 		*(table_volt_fb + i) = vaw.volt;
 		HMI_Display_MeasPage();
 	}
 
 	//turn off everything
 	TL494_OFF();
-	VAW_DAC_U_SET(0);
-	VAW_DAC_I_SET(0);
+	RPS_DAC_U_SET(0);
+	RPS_DAC_I_SET(0);
 	vaw.dac_u = 0;
 	vaw_dac_u_min = *(table_volt_fb + 0);
-	vaw_dac_u_max = *(table_volt_fb + VAW_TABLE_SIZE - 1);
+	vaw_dac_u_max = *(table_volt_fb + RPS_TABLE_SIZE - 1);
 
-	vaw_timeout_cnt = 0; //reset saving counter
+	rps_timeout_cnt = 0; //reset saving counter
 
 	//wait until capacitor is discharged
 	while (vaw.volt != 0) {
-		VAW_Conversion();
+		RPS_VAW_Conversion();
 		HMI_Display_MeasPage();
-		if (vaw_timeout_cnt >= VAW_TIMEOUT_THRESHOLD) {
-			VAW_ERR_SET_NUM(VAW_ERR_TIMEOUT);
+		if (rps_timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
+			RPS_ERR_SET_NUM(RPS_ERR_TIMEOUT);
 			return;
 		}
-		vaw_timeout_cnt++;
+		rps_timeout_cnt++;
 	}
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to make DAC to current related table
  */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_FBTableCurr(void) {
+void RPS_Save_FBTableCurr(void) {
 	uint16_t val = 0;
 	int16_t old_curr = 0;
-	VAW_DAC_U_SET(4095); //get voltage on maximum to eliminate affect from it
+	RPS_DAC_U_SET(4095); //get voltage on maximum to eliminate affect from it
 	TL494_ON();
 
 	//increase DAC value +100 until max and put current feedback and appropriate DAC values in the arrays
-	for (uint8_t i = 0; i <= VAW_TABLE_SIZE - 1; i++) {
+	for (uint8_t i = 0; i <= RPS_TABLE_SIZE - 1; i++) {
 		val = i * 100;
 		if (val > 4095)
 			val = 4095;
-		VAW_DAC_I_SET(val); //voltage increasing
-		HAL_Delay(VAW_TABLE_DELAY); //wait until output capacitor is charged
+		RPS_DAC_I_SET(val); //voltage increasing
+		HAL_Delay(RPS_TABLE_DELAY); //wait until output capacitor is charged
 		vaw.dac_i = val;
 		*(table_dac_step + i) = val;
-		VAW_Conversion();
+		RPS_VAW_Conversion();
 		*(table_curr_fb + i) = vaw.curr;
 		HMI_Display_MeasPage();
 	}
 
 	//turn off everything
 	TL494_OFF();
-	VAW_DAC_U_SET(0);
-	VAW_DAC_I_SET(0);
+	RPS_DAC_U_SET(0);
+	RPS_DAC_I_SET(0);
 	vaw.dac_i = 0;
 	vaw_dac_i_min = *(table_curr_fb + 0);
 
 	//if DAC stepped one more time but current feedback value is the same
-	for (uint8_t i = 0; i <= VAW_TABLE_SIZE - 1; i++) {
+	for (uint8_t i = 0; i <= RPS_TABLE_SIZE - 1; i++) {
 		if (*(table_curr_fb + i) - old_curr == 0) {
 			vaw_dac_i_max = *(table_curr_fb + i - 1); //write maximum current
 			break;
 		}
-		if (i == VAW_TABLE_SIZE - 1) {
+		if (i == RPS_TABLE_SIZE - 1) {
 			vaw_dac_i_max = *(table_curr_fb + i - 1); //write maximum current
 		}
 		old_curr = vaw.curr;
 	}
 
-	vaw_timeout_cnt = 0; //reset saving counter
+	rps_timeout_cnt = 0; //reset saving counter
 
 	while (vaw.volt != 0) {
-		VAW_Conversion();
+		RPS_VAW_Conversion();
 		HMI_Display_MeasPage();
-		if (vaw_timeout_cnt >= VAW_TIMEOUT_THRESHOLD) {
-			VAW_ERR_SET_NUM(VAW_ERR_TIMEOUT);
+		if (rps_timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
+			RPS_ERR_SET_NUM(RPS_ERR_TIMEOUT);
 			return;
 		}
-		vaw_timeout_cnt++;
+		rps_timeout_cnt++;
 	}
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 /*
- * @brief In the power supply current can be controlled only from 300mA
- * This function controls current increasing voltage DAC
+ * @brief Function to reach current by setting a set point
+ * This function controls current increasing current DAC
  */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_I_SPReach(uint16_t set_point) {
+void RPS_Ctrl_I_SPReach(uint16_t set_point) {
 	if (set_point == 0) {
 		vaw.dac_i = 0; //mix
 	} else if (set_point == vaw_dac_i_max) {
@@ -1166,15 +1189,16 @@ void VAW_I_SPReach(uint16_t set_point) {
 			}
 		}
 	}
-	VAW_DAC_I_SET(vaw.dac_i);
+	RPS_DAC_I_SET(vaw.dac_i);
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to reach voltage by setting a set point
  * @param sp_val-> set point
  */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void VAW_U_SPReach(uint16_t set_point) {
+void RPS_Ctrl_U_SPReach(uint16_t set_point) {
 	if (set_point == 0) {
 		vaw.dac_u = 0; //mix
 	} else if (set_point == vaw_dac_u_max) {
@@ -1191,7 +1215,7 @@ void VAW_U_SPReach(uint16_t set_point) {
 			}
 		}
 	}
-	VAW_DAC_U_SET(vaw.dac_u);
+	RPS_DAC_U_SET(vaw.dac_u);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
