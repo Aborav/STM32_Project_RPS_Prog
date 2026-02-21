@@ -57,25 +57,25 @@
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 #define USE_DEBUG
-#define DEBUG_REFRESH 500
+#define DEBUG_REFRESH 500u
 
 //INA settings
 /////////////////////////////////////////////////////
 //#define INA_CALIB_MODE
-#define INA_CALIB_VAL 2450
+#define INA_CALIB_VAL 2450u
 
 //VAW settings
 /////////////////////////////////////////////////////
-#define VAW_MAX_VOLT 2400
-#define VAW_MAX_CURR 5000
-#define VAW_MAX_WATT 1200
+#define VAW_MAX_VOLT 2400u
+#define VAW_MAX_CURR 5000u
+#define VAW_MAX_WATT 1200u
 
 //Graphic settings
 /////////////////////////////////////////////////////
 //SCREEN RESOLUTION : 160x128
 
 /////////////////////////////////////////////////////
-#define SCREEN_REFRESH_RATE 30 ///<ms
+#define SCREEN_REFRESH_RATE 30u ///<ms
 
 //Main field rectengle
 /////////////////////////////////////////////////////
@@ -152,23 +152,25 @@
 
 //RPS configuration
 /////////////////////////////////////////////////////
-#define RPS_TABLE_DELAY 100 //this is delay between DAC step when the FB table is filling up (min 70ms)
-#define RPS_TABLE_DAC_STEP 100
-#define RPS_TABLE_SIZE 42
+#define RPS_TABLE_DELAY 100u //this is delay between DAC step when the FB table is filling up (min 70ms)
+#define RPS_TABLE_DAC_STEP 100u
+#define RPS_TABLE_SIZE 42u
 
-#define RPS_TIMEOUT_THRESHOLD 100000000
+#define RPS_TIMEOUT_THRESHOLD 100000000u
 
 //Errors
 /////////////////////////////////////////////////////
 #define RPS_ERR_SET_NUM(x) rps_error_var|=1<<(x);
 
-#define RPS_ERR_TIMEOUT 0
-#define RPS_ERR_INA 1
-#define RPS_ERR_FLASH 2
+#define RPS_ERR_TIMEOUT 0u
+#define RPS_ERR_INA 1u
+#define RPS_ERR_FLASH_ERASE 2u
+#define RPS_ERR_FLASH_WRITE 3u
 
 //Write to flash function defines
 /////////////////////////////////////////////////////
-#define FLASHROM_VOLT_TABLE_ADDR 0x0801F800 //last page start No
+#define TABLE_VOLT_ADDR 0x0801F800 //voltage to DAC table address in flash
+#define TABLE_CURR_ADDR (0x0801F800+1024) //current to DAC table address in flash
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -262,6 +264,9 @@ uint32_t rps_timeout_cnt; ///<counts till threshold, then abort cycle
 uint32_t millis_tmr_debug;
 uint32_t flash_err;
 
+uint16_t *table_ptr_u = (uint16_t*) TABLE_VOLT_ADDR;
+uint16_t *table_ptr_i = (uint16_t*) TABLE_CURR_ADDR;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -283,7 +288,7 @@ void HMI_Display_StartPage(void);
 void HMI_Display_MeasPage(void);
 
 void RPS_VAW_Conversion(void);
-void RPS_Save_FBTableVolt(void);
+uint8_t RPS_Save_FBTableVolt(void);
 void RPS_Save_FBTableCurr(void);
 void RPS_Ctrl_U_SPReach(uint16_t set_point);
 void RPS_Ctrl_I_SPReach(uint16_t set_point);
@@ -361,7 +366,6 @@ int main(void) {
 	//////////////////////////////////////////////////////////////////////////////////////
 	HAL_Delay(10); //some delay after periphery initialization
 
-
 	//Service
 	//////////////////////////////////////////////////////////////////////////////////////
 	SERV_Flash_EraseStructInit();
@@ -371,7 +375,7 @@ int main(void) {
 	HAL_DAC_Start(&hdac1, DAC_CHANNEL_1);
 	HAL_DAC_Start(&hdac1, DAC_CHANNEL_2);
 	INA_Init();
-	if(HAL_I2C_IsDeviceReady(&hi2c1, INA_I2C_ADDRESS, 1, 0xff)!=0){
+	if (HAL_I2C_IsDeviceReady(&hi2c1, INA_I2C_ADDRESS, 1, 0xff) != 0) {
 		RPS_ERR_SET_NUM(RPS_ERR_INA);
 	}
 	INA_SetCalVal(INA_CALIB_VAL);
@@ -400,13 +404,11 @@ int main(void) {
 	 */
 	HAL_FLASH_Unlock();
 	HAL_FLASHEx_Erase(&pflash, &flash_err);
-	if(flash_err!=0xffffffff){
-		RPS_ERR_SET_NUM(RPS_ERR_FLASH);
+	if (flash_err != 0xffffffff) {
+		RPS_ERR_SET_NUM(RPS_ERR_FLASH_ERASE);
 	}
 	HAL_FLASH_Lock();
-	MFLPR_WriteArray(FLASHROM_VOLT_TABLE_ADDR, table_volt_fb, RPS_TABLE_SIZE);
-
-
+	//MFLPR_WriteArray(TABLE_VOLT_ADDR, table_volt_fb, RPS_TABLE_SIZE);
 
 #ifdef USE_DEBUG
 	printf("Program start\n\r");
@@ -424,21 +426,15 @@ int main(void) {
 		if (HAL_GetTick() - millis_tmr_screen_refresh >= SCREEN_REFRESH_RATE) {
 			millis_tmr_screen_refresh = HAL_GetTick();
 			RPS_VAW_Conversion();
-			HMI_Display_MeasPage();
-		}
-
-
-		if (HAL_GetTick() - millis_tmr_rst_display >= 20000) {
-			millis_tmr_rst_display = HAL_GetTick();
-			MGL_DriverInit();
-			MGL_SET_BUF_BG_COLOR(COLOR_BLACK); //background for text
-			HMI_Display_StartPage();
+			//HMI_Display_MeasPage();
 		}
 
 #ifdef USE_DEBUG
 		if (HAL_GetTick() - millis_tmr_debug >= DEBUG_REFRESH) {
 			millis_tmr_debug = HAL_GetTick();
-
+			printf("U:%u\r\n", vaw.volt);
+			printf("I:%u\r\n", vaw.curr);
+			printf("P:%u\r\n", vaw.watt);
 		}
 #endif
 
@@ -742,7 +738,6 @@ static void MX_GPIO_Init(void) {
 	/* USER CODE END MX_GPIO_Init_2 */
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /* USER CODE BEGIN 4 */
 /*
@@ -758,7 +753,7 @@ void SERV_Flash_EraseStructInit(void) {
 /*
  * @brief Function to fill up encoders structures
  */
-void HMI_Input_EncodersStructInit(void){
+void HMI_Input_EncodersStructInit(void) {
 	menc1.s1_pin = ENC1_S1_Pin;
 	menc1.s2_pin = ENC1_S2_Pin;
 	menc1.key_pin = ENC1_KEY_Pin;
@@ -775,7 +770,6 @@ void HMI_Input_EncodersStructInit(void){
 	menc2.key_port = 0;
 	menc2.key_exti_line = 0;
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -812,8 +806,6 @@ void HMI_Display_GraphBarsStructInit(void) {
 	watt_bar.bg_color = BG_COLOR;
 	watt_bar.stroke_color = BAR_STROKE_COLOR;
 }
-
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -927,7 +919,6 @@ void HMI_Input(void) {
 	//		}
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief starting page drawing function
@@ -958,7 +949,6 @@ void HMI_Display_StartPage(void) {
 	MGL_PrintStr_5x8("SP_U:\0", 80, LOW_INF_BAR_UPP_Y);
 	MGL_PrintStr_5x8("SP_I:\0", 80, LOW_INF_BAR_LOW_Y);
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -1061,20 +1051,24 @@ void RPS_VAW_Conversion(void) {
 
 }
 
-
-
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to make DAC to voltage related table
  */
-void RPS_Save_FBTableVolt(void) {
-	uint16_t val = 0;
+uint8_t RPS_Save_FBTableVolt(void) {
+	uint16_t val = 0; ///<buffer
+	uint32_t timeout_cnt = 0; ///<against infinite while
+	uint64_t *buf64_ptr; ///<HAL_FLASH_Program buffer pointer
+	uint16_t buf16[4]; ///<16 bit buffer to assemble 64 bit data then
+	uint8_t buf16_cnt = 0; ///<counter to make 64 bit variable from 4 16 bit
+	uint16_t addr_cnt = 0; ///<flash address shifter
 
 	RPS_DAC_I_SET(4095); //get current on maximum to eliminate affect from it
 	TL494_ON();
+	HAL_FLASH_Unlock();
 
 	//increase DAC value +100 until max and put voltage feedback and appropriate DAC values in the arrays
-	for (uint8_t i = 0; i <= RPS_TABLE_SIZE - 1; i++) {
+	for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		val = i * 100;
 		if (val > 4095)
 			val = 4095;
@@ -1084,8 +1078,24 @@ void RPS_Save_FBTableVolt(void) {
 		*(table_dac_step + i) = val;
 		RPS_VAW_Conversion();
 		*(table_volt_fb + i) = vaw.volt;
-		HMI_Display_MeasPage();
+
+		//save to flash
+		*(buf16 + buf16_cnt) = vaw.volt; //write data one by one in 4 elements array 16 bit resolution
+		//4*16bit array is full, time to pull it into flash
+		if (buf16_cnt >= 3 || i == RPS_TABLE_SIZE - 1) {
+			buf16_cnt = 0;
+			buf64_ptr = (uint64_t*) buf16; //pointer change
+			if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, TABLE_VOLT_ADDR + 8U * addr_cnt, (uint64_t) *buf64_ptr) != 0) {
+				RPS_ERR_SET_NUM(RPS_ERR_FLASH_WRITE);
+				return 1;
+			}
+			addr_cnt++;
+			__NOP();
+		} else {
+			buf16_cnt++;
+		}
 	}
+	HAL_FLASH_Lock();
 
 	//turn off everything
 	TL494_OFF();
@@ -1095,20 +1105,19 @@ void RPS_Save_FBTableVolt(void) {
 	vaw_dac_u_min = *(table_volt_fb + 0);
 	vaw_dac_u_max = *(table_volt_fb + RPS_TABLE_SIZE - 1);
 
-	rps_timeout_cnt = 0; //reset saving counter
-
 	//wait until capacitor is discharged
 	while (vaw.volt != 0) {
 		RPS_VAW_Conversion();
 		HMI_Display_MeasPage();
-		if (rps_timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
+		if (timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
 			RPS_ERR_SET_NUM(RPS_ERR_TIMEOUT);
-			return;
+			return 2;
 		}
-		rps_timeout_cnt++;
+		timeout_cnt++;
 	}
-}
 
+	return 0;
+}
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -1117,11 +1126,13 @@ void RPS_Save_FBTableVolt(void) {
 void RPS_Save_FBTableCurr(void) {
 	uint16_t val = 0;
 	int16_t old_curr = 0;
+	uint32_t timeout_cnt = 0; ///<against infinite while
+
 	RPS_DAC_U_SET(4095); //get voltage on maximum to eliminate affect from it
 	TL494_ON();
 
 	//increase DAC value +100 until max and put current feedback and appropriate DAC values in the arrays
-	for (uint8_t i = 0; i <= RPS_TABLE_SIZE - 1; i++) {
+	for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		val = i * 100;
 		if (val > 4095)
 			val = 4095;
@@ -1153,19 +1164,16 @@ void RPS_Save_FBTableCurr(void) {
 		old_curr = vaw.curr;
 	}
 
-	rps_timeout_cnt = 0; //reset saving counter
-
 	while (vaw.volt != 0) {
 		RPS_VAW_Conversion();
 		HMI_Display_MeasPage();
-		if (rps_timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
+		if (timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
 			RPS_ERR_SET_NUM(RPS_ERR_TIMEOUT);
 			return;
 		}
-		rps_timeout_cnt++;
+		timeout_cnt++;
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -1178,7 +1186,7 @@ void RPS_Ctrl_I_SPReach(uint16_t set_point) {
 	} else if (set_point == vaw_dac_i_max) {
 		vaw.dac_i = 4095; //max
 	} else {
-		for (uint8_t i = 0; i <= 41; i++) {
+		for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 			//compare voltage from the feedback voltage table and a set point.
 			//to find a table pointer with closest to SP voltage but smaller than it
 			if (*(table_curr_fb + i) > set_point) {
@@ -1192,7 +1200,6 @@ void RPS_Ctrl_I_SPReach(uint16_t set_point) {
 	RPS_DAC_I_SET(vaw.dac_i);
 }
 
-
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to reach voltage by setting a set point
@@ -1204,10 +1211,10 @@ void RPS_Ctrl_U_SPReach(uint16_t set_point) {
 	} else if (set_point == vaw_dac_u_max) {
 		vaw.dac_u = 4095; //max
 	} else {
-		for (uint8_t i = 0; i <= 41; i++) {
+		for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 			//compare voltage from the feedback voltage table and a set point.
 			//to find a table pointer with closest to SP voltage but smaller than it
-			if (*(table_volt_fb + i) > set_point) {
+			if (*(table_ptr_u + i) > set_point) {
 				vaw.dac_u = *(table_dac_step + i - 1); //use this pointer but in the DAC values table
 				//here must be some protection from pointer miss read. But my first value in the tables are 0
 				//nothing is smaller than 0 in uint16_t
