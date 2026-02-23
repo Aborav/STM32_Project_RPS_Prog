@@ -2,8 +2,9 @@
 ../Drivers/CMSIS/Include/core_cm4.h:1717:22:__NVIC_DisableIRQ	2
 ../Usr libs/STM32_Library_Encoder/M_ENC.c:16:6:MENC_ClickHandlerIRQ	2
 ../Usr libs/STM32_Library_Encoder/M_ENC.c:32:6:MENC_TurnHandlerIRQ	2
-../Usr libs/STM32_Library_Encoder/M_ENC.c:133:6:MENC_MainHandler	6
-../Usr libs/STM32_Library_Encoder/M_ENC.c:226:6:MENC_TurnRight	2
-../Usr libs/STM32_Library_Encoder/M_ENC.c:244:6:MENC_TurnLeft	2
-../Usr libs/STM32_Library_Encoder/M_ENC.c:262:6:MENC_Click	2
-../Usr libs/STM32_Library_Encoder/M_ENC.c:273:6:MENC_Hold	1
+../Usr libs/STM32_Library_Encoder/M_ENC.c:137:6:MENC_MainHandler	6
+../Usr libs/STM32_Library_Encoder/M_ENC.c:233:6:MENC_TurnRight	2
+../Usr libs/STM32_Library_Encoder/M_ENC.c:251:6:MENC_TurnLeft	2
+../Usr libs/STM32_Library_Encoder/M_ENC.c:269:6:MENC_AnyTurn	2
+../Usr libs/STM32_Library_Encoder/M_ENC.c:280:6:MENC_Click	2
+../Usr libs/STM32_Library_Encoder/M_ENC.c:291:6:MENC_Hold	1
