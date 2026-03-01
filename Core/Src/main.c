@@ -297,6 +297,7 @@ void RPS_Save_FBTableCurr(rps_type *r);
 void RPS_Save_Table(rps_type *r);
 void RPS_Save_TableInit(rps_type *r);
 void RPS_Save_PrintSavedTables(void);
+void RPS_Save_CalculateDACSteps(rps_type *r);
 void RPS_Ctrl_U_SPReach(uint16_t set_point, rps_type *r);
 void RPS_Ctrl_I_SPReach(uint16_t set_point, rps_type *r);
 
@@ -399,6 +400,7 @@ int main(void) {
 	INA_SetCalVal(INA_CALIB_VAL);
 
 	RPS_Save_TableInit(&rps);
+	RPS_Save_CalculateDACSteps(&rps);
 
 	//Input
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -414,6 +416,31 @@ int main(void) {
 #ifdef USE_DEBUG
 	printf("While start\n\r");
 	RPS_Save_PrintSavedTables();
+
+	MGL_PrintInt16_R(0, 5, 10, 10, FONT_5x8_FP);
+
+	MGL_PrintInt16_R(12345, 6, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(12345, 5, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(12345, 4, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(12345, 3, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(12345, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(12345, 1, 10, 10, FONT_5x8_FP);
+
+	MGL_PrintInt16_R(1, 1, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(1, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(1, 3, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(1, 4, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(1, 5, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(1, 6, 10, 10, FONT_5x8_FP);
+
+	MGL_PrintInt16_R(1, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(12, 3, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(123, 4, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(1234, 5, 10, 10, FONT_5x8_FP);
+	MGL_PrintInt16_R(12345, 6, 10, 10, FONT_5x8_FP);
+
+
+
 #endif
 
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -1022,7 +1049,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 		diff *= -1; //no matter is old value bigger or smaller than a new one
 	if (diff > r->fl.tl494_on ? 1 : 0) { //eliminate fluctuation of the value
 		MGL_SET_BUF_COLOR(VOLT_COLOR);
-		MGL_PrintFloatTinyR(r->val.volt, 4, 2, VAW_VOLTAGE_X, VAW_VOLTAGE_Y, FONT_17x24_FP);
+		MGL_PrintFloatTiny_R(r->val.volt, 4, 2, VAW_VOLTAGE_X, VAW_VOLTAGE_Y, FONT_17x24_FP);
 		MGL_DrawBar(&volt_bar);
 	}
 
@@ -1032,7 +1059,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 		diff *= -1;
 	if (diff > r->fl.tl494_on ? 1 : 0) {
 		MGL_SET_BUF_COLOR(CURR_COLOR);
-		MGL_PrintFloatTinyR(r->val.curr, 4, 3, VAW_CURRENT_X, VAW_CURRENT_Y, FONT_17x24_FP);
+		MGL_PrintFloatTiny_R(r->val.curr, 4, 3, VAW_CURRENT_X, VAW_CURRENT_Y, FONT_17x24_FP);
 		MGL_DrawBar(&curr_bar);
 	}
 
@@ -1042,7 +1069,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 		diff *= -1;
 	if (diff > r->fl.tl494_on ? 1 : 0) {
 		MGL_SET_BUF_COLOR(WATT_COLOR);
-		MGL_PrintFloatTinyR(r->val.watt, 4, 1, VAW_WATTAGE_X, VAW_WATTAGE_Y, FONT_17x24_FP);
+		MGL_PrintFloatTiny_R(r->val.watt, 4, 1, VAW_WATTAGE_X, VAW_WATTAGE_Y, FONT_17x24_FP);
 		MGL_DrawBar(&watt_bar);
 	}
 
@@ -1053,7 +1080,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintUintR(r->val.dac_u, 4, 45, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
+		MGL_PrintUint16_R(r->val.dac_u, 4, 45, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
 		MGL_DrawBar(&watt_bar);
 	}
 
@@ -1062,7 +1089,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintUintR(r->val.dac_i, 4, 45, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
+		MGL_PrintUint16_R(r->val.dac_i, 4, 45, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
 	}
 
 	//voltage set point
@@ -1070,7 +1097,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintFloatTinyR(r->val.sp_u_val, 4, 2, 120, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
+		MGL_PrintFloatTiny_R(r->val.sp_u_val, 4, 2, 120, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
 	}
 
 	//current set point
@@ -1078,7 +1105,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintFloatTinyR(r->val.sp_i_val, 4, 3, 120, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
+		MGL_PrintFloatTiny_R(r->val.sp_i_val, 4, 3, 120, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
 	}
 
 	volt_old = r->val.volt;
@@ -1347,29 +1374,22 @@ void RPS_Save_PrintSavedTables(void) {
  * DAC +10 -> current +?
  */
 void RPS_Save_CalculateDACSteps(rps_type *r) {
-//	uint16_t aver_buf[4]; ///<buffer to make averaging  of 3 variables
-//	uint16_t last_aver; ///<buffer to hold last averaged variable
-//	uint16_t len = RPS_TABLE_SIZE;
-//	uint8_t resid; ///<residual after quantity of 16 bit array divided 4
-//
-//	//if 16 bit array can't be equally divided by 4
-//	resid = len % 3;
-//	if (resid > 0) {
-//		len -= resid;
-//		len += 3;
-//	}
-//	len >>= 3; //len /= 4;
-//
-//	//find middle change during +100 DAC step
-//	for (uint8_t i = 0; i < len; i++) {
-//	aver_buf=&(*table_ptr_u + 4U * len);
+	uint16_t aver_buf[3] = { 0, };
+	uint16_t buf = 0;
+	//uint16_t aver_step;
 
-	uint16_t aver_buf[3];
-	uint16_t buf, i=0;
-
-	for (buf = r->val.u_min; buf <= r->val.u_max; i++) {
-		*(aver_buf+1)
+	for (uint16_t i = 0; i < RPS_TABLE_SIZE; i += 3) {
+		*aver_buf = buf;
+		*(aver_buf + 1) = *(table_ptr_u + i + 1) - *(table_ptr_u + i);
+		*(aver_buf + 2) = *(table_ptr_u + i + 2) - *(table_ptr_u + i + 1);
+		buf = (max(aver_buf[0], aver_buf[1]) == max(aver_buf[1], aver_buf[2])) ? max(aver_buf[0], aver_buf[2]) : max(aver_buf[1], min(aver_buf[0], aver_buf[2]));
 	}
+
+	//aver_step = buf;
+	__NOP();
+
+//	*(p) = (uint16_t)(buf/100);
+//	*(p+1) = (uint16_t)
 }
 
 /////////////////////////////////////////////////////////////////////////
