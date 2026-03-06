@@ -417,29 +417,44 @@ int main(void) {
 	printf("While start\n\r");
 	RPS_Save_PrintSavedTables();
 
-	MGL_PrintInt16_R(0, 5, 10, 10, FONT_5x8_FP);
+	//null check
+	MGL_PrintFloatTiny_L(0, 6, 4, 10, 10, FONT_5x8_FP);
 
-	MGL_PrintInt16_R(12345, 6, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(12345, 5, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(12345, 4, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(12345, 3, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(12345, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(12345, 1, 10, 10, FONT_5x8_FP);
+	//float check
+	MGL_PrintFloatTiny_L(12345, 6, 1, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 6, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 6, 3, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 6, 4, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 6, 5, 10, 10, FONT_5x8_FP); //no no
 
-	MGL_PrintInt16_R(1, 1, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(1, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(1, 3, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(1, 4, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(1, 5, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(1, 6, 10, 10, FONT_5x8_FP);
+	//qunatity check
+	MGL_PrintFloatTiny_L(12345, 2, 2, 10, 10, FONT_5x8_FP); //no no
+	MGL_PrintFloatTiny_L(12345, 3, 2, 10, 10, FONT_5x8_FP); // no no
+	MGL_PrintFloatTiny_L(12345, 4, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 5, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 6, 2, 10, 10, FONT_5x8_FP);
 
-	MGL_PrintInt16_R(1, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(12, 3, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(123, 4, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(1234, 5, 10, 10, FONT_5x8_FP);
-	MGL_PrintInt16_R(12345, 6, 10, 10, FONT_5x8_FP);
+	//zeros check
+	MGL_PrintFloatTiny_L(1, 2, 2, 10, 10, FONT_5x8_FP); //no
+	MGL_PrintFloatTiny_L(1, 3, 2, 10, 10, FONT_5x8_FP); //no
+	MGL_PrintFloatTiny_L(1, 4, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12, 4, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(123, 4, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(1, 5, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12, 5, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(123, 5, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(1, 6, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12, 6, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(123, 6, 2, 10, 10, FONT_5x8_FP);
 
+	//empty space
+	MGL_PrintFloatTiny_L(12, 2, 2, 10, 10, FONT_5x8_FP); //no
+	MGL_PrintFloatTiny_L(123, 3, 2, 10, 10, FONT_5x8_FP); //no
+	MGL_PrintFloatTiny_L(1234, 4, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 5, 2, 10, 10, FONT_5x8_FP);
+	MGL_PrintFloatTiny_L(12345, 6, 2, 10, 10, FONT_5x8_FP);
 
+	__NOP();
 
 #endif
 
