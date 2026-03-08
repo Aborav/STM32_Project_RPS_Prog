@@ -1,0 +1,10 @@
+../Drivers/CMSIS/Include/core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static,ignoring_inline_asm
+../Drivers/CMSIS/Include/core_cm4.h:1717:22:__NVIC_DisableIRQ	16	static,ignoring_inline_asm
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:16:6:MENC_ClickHandlerIRQ	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:32:6:MENC_TurnHandlerIRQ	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:137:6:MENC_MainHandler	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:233:6:MENC_TurnRight	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:251:6:MENC_TurnLeft	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:269:6:MENC_AnyTurn	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:280:6:MENC_Click	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder/M_ENC.c:291:6:MENC_Hold	16	static
