@@ -46,7 +46,10 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+//DEBUG
+/////////////////////////////////////////////////////
+#define USE_DEBUG
+#define DEBUG_REFRESH 300U
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

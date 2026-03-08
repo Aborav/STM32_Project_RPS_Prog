@@ -1,0 +1,15 @@
+[submodule "Libs/Encoder"]
+	path = Libs/Encoder
+	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder
+[submodule "Libs/INA226"]
+	path = Libs/INA226
+	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_INA226
+[submodule "Libs/MGL"]
+	path = Libs/MGL
+	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_My_Graphic_Library
+[submodule "Libs/SignalFilter"]
+	path = Libs/SignalFilter
+	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Signal_Filter
+[submodule "Libs/FlashProm"]
+	path = Libs/FlashProm
+	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Flashprom
