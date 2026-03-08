@@ -1,9 +1,9 @@
 ../Drivers/CMSIS/Include/core_cm4.h:2059:26:ITM_SendChar	16	static,ignoring_inline_asm
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_My_Graphic_Library/MGL.h:174:20:MGL_SetTextCursor	16	static
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_My_Graphic_Library/MGL.h:187:20:MGL_SetTextFont	16	static
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_My_Graphic_Library/MGL.h:198:20:MGL_PrintStr	16	static
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_Signal_Filter/M_Filter.h:41:6:FilterMedian	40	static
-/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Projects/stm32g431cbu6_dac_tl494/Usr libs/STM32_Library_Signal_Filter/M_Filter.h:55:6:FilterRunAverage	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_My_Graphic_Library/MGL.h:174:20:MGL_SetTextCursor	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_My_Graphic_Library/MGL.h:187:20:MGL_SetTextFont	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_My_Graphic_Library/MGL.h:198:20:MGL_PrintStr	16	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Signal_Filter/M_Filter.h:41:6:FilterMedian	40	static
+/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Signal_Filter/M_Filter.h:55:6:FilterRunAverage	16	static
 ../Core/Src/main.c:308:6:HAL_GPIO_EXTI_Callback	16	static
 ../Core/Src/main.c:322:5:_write	32	static
 ../Core/Src/main.c:332:6:MillisDelay	16	static

@@ -37,7 +37,7 @@ Archive member included to satisfy reference by file (symbol)
 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-lock.o)
                               /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-findfp.o) (__retarget_lock_init_recursive)
 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-strlen.o)
-                              ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o (strlen)
+                              ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o (strlen)
 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-freer.o)
                               /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-wsetup.o) (_free_r)
 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-mallocr.o)
@@ -3456,632 +3456,632 @@ Discarded input sections
  .debug_frame   0x00000000       0x38 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi_ex.o
  .ARM.attributes
                 0x00000000       0x34 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi_ex.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .text          0x00000000        0x0 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .data          0x00000000        0x0 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .bss           0x00000000        0x0 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .text          0x00000000        0x0 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .data          0x00000000        0x0 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .bss           0x00000000        0x0 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
  .text.MENC_Hold
-                0x00000000       0x2c ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0xad8 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x167 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x2e ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x28 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x8e ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x51 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x103 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x6a ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x1df ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x1c ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0xfb ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000     0x1011 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x11f ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000    0x1138f ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x6d ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000     0x3558 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x190 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x5c ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000     0x141d ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x535 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x1b6 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x288 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x41d ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x18b ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x43 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x23d ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x209 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x108 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x211 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x401 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x107 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x22c ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x61 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0xa5 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x122 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x3d1 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x367 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x543 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0xeb ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x2fe ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000      0x306 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x82 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x00000000       0xd8 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .text          0x00000000        0x0 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .data          0x00000000        0x0 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .bss           0x00000000        0x0 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
+                0x00000000       0x2c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0xad8 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x167 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x2e ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x28 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x8e ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x51 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x103 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x6a ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x1df ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x1c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0xfb ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000     0x1011 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x11f ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000    0x1138f ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x6d ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000     0x3558 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x190 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x5c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000     0x141d ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x535 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x1b6 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x288 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x41d ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x18b ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x43 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x23d ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x209 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x108 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x211 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x401 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x107 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x22c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x61 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0xa5 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x122 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x3d1 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x367 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x543 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0xeb ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x2fe ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000      0x306 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x82 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x00000000       0xd8 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .text          0x00000000        0x0 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .data          0x00000000        0x0 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .bss           0x00000000        0x0 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
  .text.MFLPR_WriteArray
-                0x00000000       0x82 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_info    0x00000000      0x1d1 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_abbrev  0x00000000      0x103 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
+                0x00000000       0x82 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_info    0x00000000      0x1d1 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_abbrev  0x00000000      0x103 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
  .debug_aranges
-                0x00000000       0x20 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
+                0x00000000       0x20 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
  .debug_rnglists
-                0x00000000       0x14 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x21a ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0xad8 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x167 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x2e ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x28 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x8e ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x51 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x103 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x6a ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x1df ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x1c ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0xfb ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000     0x1011 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x11f ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000    0x1138f ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x6d ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000     0x3558 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x190 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x5c ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000     0x141d ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x535 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x1b6 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x288 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x41d ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x18b ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x43 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x23d ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x209 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x108 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x211 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x401 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x107 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x22c ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x61 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0xa5 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x122 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x3d1 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x367 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x543 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0xeb ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x2fe ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000      0x306 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_macro   0x00000000       0x82 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_line    0x00000000      0x7e8 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_str     0x00000000    0xb65ad ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .comment       0x00000000       0x44 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .debug_frame   0x00000000       0x34 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
+                0x00000000       0x14 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x21a ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0xad8 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x167 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x2e ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x28 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x8e ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x51 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x103 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x6a ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x1df ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x1c ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0xfb ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000     0x1011 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x11f ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000    0x1138f ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x6d ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000     0x3558 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x190 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x5c ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000     0x141d ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x535 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x1b6 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x288 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x41d ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x18b ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x43 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x23d ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x209 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x108 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x211 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x401 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x107 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x22c ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x61 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0xa5 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x122 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x3d1 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x367 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x543 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0xeb ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x2fe ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000      0x306 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_macro   0x00000000       0x82 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_line    0x00000000      0x7a6 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_str     0x00000000    0xb65f2 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .comment       0x00000000       0x44 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .debug_frame   0x00000000       0x34 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
  .ARM.attributes
-                0x00000000       0x34 ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_INA226/M_INA226.o
- .text          0x00000000        0x0 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .data          0x00000000        0x0 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .bss           0x00000000        0x0 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x34 ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .text          0x00000000        0x0 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .data          0x00000000        0x0 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .bss           0x00000000        0x0 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_GetID
-                0x00000000       0x10 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x10 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_SleepMode
-                0x00000000       0x3e ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x3e ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_GetCalVal
-                0x00000000       0x20 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x20 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_ChangeCalVal
-                0x00000000       0x38 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x38 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_SetAver
-                0x00000000       0x3a ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x3a ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_SetSampleTime
-                0x00000000       0x64 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x64 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_GetBusVoltage
-                0x00000000       0x30 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x30 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_GetCurrent
-                0x00000000       0x58 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x58 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_GetShuntVoltage
-                0x00000000       0x30 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000000       0x30 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_GetShuntVoltageTiny
-                0x00000000       0x3c ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0xad8 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x167 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x2e ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x28 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x8e ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x51 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x103 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x6a ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x1df ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x1c ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0xfb ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000     0x1011 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x11f ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000    0x1138f ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x6d ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000     0x3558 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x190 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x5c ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000     0x141d ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x535 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x1b6 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x288 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x41d ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x18b ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x43 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x23d ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x209 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x108 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x211 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x401 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x107 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x22c ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x61 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0xa5 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x122 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x3d1 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x367 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x543 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0xeb ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x2fe ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000      0x306 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x82 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .text          0x00000000        0x0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .data          0x00000000        0x0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .bss           0x00000000        0x0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x3c ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0xad8 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x167 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x2e ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x28 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x8e ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x51 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x103 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x6a ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x1df ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x1c ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0xfb ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000     0x1011 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x11f ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000    0x1138f ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x6d ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000     0x3558 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x190 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x5c ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000     0x141d ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x535 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x1b6 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x288 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x41d ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x18b ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x43 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x23d ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x209 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x108 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x211 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x401 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x107 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x22c ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x61 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0xa5 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x122 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x3d1 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x367 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x543 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0xeb ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x2fe ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000      0x306 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x82 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .text          0x00000000        0x0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .data          0x00000000        0x0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .bss           0x00000000        0x0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .rodata.font_7x11
-                0x00000000      0x420 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x420 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .rodata.font_12x16_ptr
-                0x00000000       0x3b ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x3b ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .rodata.font_12x16
-                0x00000000      0x3a8 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x3a8 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .rodata.font_23x32_ptr
-                0x00000000       0x38 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x38 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .rodata.font_23x32
-                0x00000000      0x508 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x508 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawPixel
-                0x00000000       0x66 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x66 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawLine
-                0x00000000      0x140 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x140 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawRoundRect
-                0x00000000      0x120 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x120 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawCircle
-                0x00000000      0x15c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x15c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_FillCircle
-                0x00000000      0x154 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x154 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawRomb
-                0x00000000       0xf8 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0xf8 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawArray
-                0x00000000      0x140 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x140 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawColorArray
-                0x00000000      0x194 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x194 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintChar_5x8_Resize
-                0x00000000      0x108 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x108 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintChar_7x11
-                0x00000000      0x100 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x100 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintChar_12x16
-                0x00000000      0x13c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x13c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintChar_23x32
-                0x00000000      0x138 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x138 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintStr_5x8_Resize
-                0x00000000       0x68 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x68 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintStr_7x11
-                0x00000000       0x70 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x70 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintStr_12x16
-                0x00000000       0x80 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x80 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintStr_23x32
-                0x00000000       0x80 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x80 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintUint8_R
-                0x00000000       0xe4 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .rodata        0x00000000       0x31 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0xe4 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .rodata        0x00000000       0x31 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintInt16_L
-                0x00000000      0x164 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x164 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintUint16_L
-                0x00000000      0x124 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x124 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintInt16_R
-                0x00000000      0x1d0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x1d0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintUint16_R
-                0x00000000      0x12c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x12c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintFloatTiny_R
-                0x00000000      0x168 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x168 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintFloatTiny_L
-                0x00000000      0x1c0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x1c0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_DrawBar
-                0x00000000      0x16c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000      0x16c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_Itoa
-                0x00000000       0xac ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0xac ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_Reverse
-                0x00000000       0x78 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x78 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_SetBufClr
-                0x00000000       0x20 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x20 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_SetBufBGClr
-                0x00000000       0x20 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000000       0x20 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .text.MGL_PrintErr
-                0x00000000       0x1c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0xad8 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x167 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x2e ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x28 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x8e ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x51 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x103 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x6a ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x1df ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x1c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0xfb ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000     0x1011 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x11f ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000    0x1138f ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x6d ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000     0x3558 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x190 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x5c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000     0x141d ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x535 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x1b6 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x288 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x41d ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x18b ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x43 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x23d ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x209 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x108 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x211 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x401 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x107 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x22c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x61 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0xa5 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x122 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x3d1 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x367 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x543 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0xeb ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x2fe ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x306 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x82 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x377 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x1d1 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x16d ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x61 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x2a ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x43 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x34 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x370 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x16 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x4a ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x34 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x10 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x58 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x8e ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x1c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x185 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x3c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x1c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x10 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000       0x16 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x00000000      0x146 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .group         0x00000000        0xc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .text          0x00000000        0x0 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .data          0x00000000        0x0 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .bss           0x00000000        0x0 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000000       0x1c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0xad8 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x167 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x2e ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x28 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x8e ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x51 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x103 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x6a ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x1df ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x1c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0xfb ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000     0x1011 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x11f ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000    0x1138f ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x6d ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000     0x3558 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x190 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x5c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000     0x141d ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x535 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x1b6 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x288 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x41d ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x18b ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x43 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x23d ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x209 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x108 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x211 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x401 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x107 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x22c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x61 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0xa5 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x122 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x3d1 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x367 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x543 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0xeb ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x2fe ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x306 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x82 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x377 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x1d1 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x16d ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x61 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x2a ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x43 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x34 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x370 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x16 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x4a ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x34 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x10 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x58 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x8e ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x1c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x185 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x3c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x1c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x10 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000       0x16 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x00000000      0x146 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .group         0x00000000        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .text          0x00000000        0x0 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .data          0x00000000        0x0 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .bss           0x00000000        0x0 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .text.ST7735_DrawPixel
-                0x00000000       0x7c ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000000       0x7c ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .text.ST7735_FillRectangle
-                0x00000000       0xf0 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000000       0xf0 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .text.ST7735_FillScreen
-                0x00000000       0x22 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000000       0x22 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .text.ST7735_DrawImage
-                0x00000000       0xb4 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000000       0xb4 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .text.ST7735_InvertColors
-                0x00000000       0x40 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000000       0x40 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .text.ST7735_SetGamma
-                0x00000000       0x3e ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0xad8 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x167 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x2e ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x28 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x8e ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x51 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x103 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x6a ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x1df ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x1c ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x22 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0xfb ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000     0x1011 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x11f ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000    0x1138f ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x6d ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000     0x3558 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x190 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x5c ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000     0x141d ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x535 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x1b6 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x288 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x41d ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x18b ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x43 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x23d ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x209 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x108 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x211 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x401 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x107 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x22c ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x61 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0xa5 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x122 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x3d1 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x367 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x543 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0xeb ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x2fe ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000      0x306 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x00000000       0x82 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000000       0x3e ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0xad8 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x167 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x2e ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x28 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x8e ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x51 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x103 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x6a ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x1df ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x1c ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x22 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0xfb ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000     0x1011 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x11f ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000    0x1138f ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x6d ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000     0x3558 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x190 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x5c ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000     0x141d ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x535 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x1b6 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x288 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x41d ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x18b ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x43 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x23d ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x209 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x108 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x211 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x401 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x107 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x22c ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x61 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0xa5 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x122 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x3d1 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x367 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x543 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0xeb ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x2fe ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000      0x306 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x00000000       0x82 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .text          0x00000000        0x0 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-exit.o)
  .data          0x00000000        0x0 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-exit.o)
  .bss           0x00000000        0x0 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-exit.o)
@@ -4323,11 +4323,11 @@ LOAD ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
 LOAD ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc_ex.o
 LOAD ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
 LOAD ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi_ex.o
-LOAD ./Usr libs/STM32_Library_Encoder/M_ENC.o
-LOAD ./Usr libs/STM32_Library_Flashprom/M_Flashprom.o
-LOAD ./Usr libs/STM32_Library_INA226/M_INA226.o
-LOAD ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
-LOAD ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+LOAD ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+LOAD ./Libraries_M/STM32_Library_Flashprom/M_Flashprom.o
+LOAD ./Libraries_M/STM32_Library_INA226/M_INA226.o
+LOAD ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+LOAD ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 START GROUP
 LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a
 LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libm.a
@@ -4754,91 +4754,91 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .text.SPI_EndRxTxTransaction
                 0x08004a5c       0x8c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
  .text.__NVIC_EnableIRQ
-                0x08004ae8       0x3c ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004ae8       0x3c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
  .text.__NVIC_DisableIRQ
-                0x08004b24       0x48 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004b24       0x48 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
  .text.MENC_ClickHandlerIRQ
-                0x08004b6c       0x42 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004b6c       0x42 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
                 0x08004b6c                MENC_ClickHandlerIRQ
  .text.MENC_TurnHandlerIRQ
-                0x08004bae       0x58 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004bae       0x58 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
                 0x08004bae                MENC_TurnHandlerIRQ
  .text.MENC_MainHandler
-                0x08004c06       0xd2 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004c06       0xd2 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
                 0x08004c06                MENC_MainHandler
  .text.MENC_TurnRight
-                0x08004cd8       0x38 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004cd8       0x38 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
                 0x08004cd8                MENC_TurnRight
  .text.MENC_TurnLeft
-                0x08004d10       0x3c ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004d10       0x3c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
                 0x08004d10                MENC_TurnLeft
  .text.MENC_AnyTurn
-                0x08004d4c       0x3c ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004d4c       0x3c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
                 0x08004d4c                MENC_AnyTurn
  .text.MENC_Click
-                0x08004d88       0x3c ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x08004d88       0x3c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
                 0x08004d88                MENC_Click
  .text.INA_Transmit
-                0x08004dc4       0x44 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004dc4       0x44 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_Receive
-                0x08004e08       0x4c ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004e08       0x4c ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .text.INA_SetCalVal
-                0x08004e54       0x28 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004e54       0x28 ./Libraries_M/STM32_Library_INA226/M_INA226.o
                 0x08004e54                INA_SetCalVal
  .text.INA_GetPower
-                0x08004e7c       0x3c ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004e7c       0x3c ./Libraries_M/STM32_Library_INA226/M_INA226.o
                 0x08004e7c                INA_GetPower
  .text.INA_GetBusVoltageTiny
-                0x08004eb8       0x1e ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004eb8       0x1e ./Libraries_M/STM32_Library_INA226/M_INA226.o
                 0x08004eb8                INA_GetBusVoltageTiny
  *fill*         0x08004ed6        0x2 
  .text.INA_GetCurrentTiny
-                0x08004ed8       0x6c ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004ed8       0x6c ./Libraries_M/STM32_Library_INA226/M_INA226.o
                 0x08004ed8                INA_GetCurrentTiny
  .text.INA_GetPowerTiny
-                0x08004f44       0x34 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004f44       0x34 ./Libraries_M/STM32_Library_INA226/M_INA226.o
                 0x08004f44                INA_GetPowerTiny
  .text.INA_Init
-                0x08004f78       0x64 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x08004f78       0x64 ./Libraries_M/STM32_Library_INA226/M_INA226.o
                 0x08004f78                INA_Init
  .text.MGL_FillRect
-                0x08004fdc       0x9c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08004fdc       0x9c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x08004fdc                MGL_FillRect
  .text.MGL_DrawRect
-                0x08005078       0xc0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08005078       0xc0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x08005078                MGL_DrawRect
  .text.MGL_PrintChar_5x8
-                0x08005138       0xf0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08005138       0xf0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x08005138                MGL_PrintChar_5x8
  .text.MGL_PrintChar_17x24
-                0x08005228      0x138 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08005228      0x138 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x08005228                MGL_PrintChar_17x24
  .text.MGL_PrintStr_5x8
-                0x08005360       0x6c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08005360       0x6c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x08005360                MGL_PrintStr_5x8
  .text.MGL_PrintStr_17x24
-                0x080053cc       0x80 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x080053cc       0x80 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x080053cc                MGL_PrintStr_17x24
  .text.MGL_SetErr
-                0x0800544c       0x32 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x0800544c       0x32 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x0800544c                MGL_SetErr
  .text.ST7735_Reset
-                0x0800547e       0x2a ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x0800547e       0x2a ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
                 0x0800547e                ST7735_Reset
  .text.ST7735_WriteCommand
-                0x080054a8       0x34 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x080054a8       0x34 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
                 0x080054a8                ST7735_WriteCommand
  .text.ST7735_WriteData
-                0x080054dc       0x38 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x080054dc       0x38 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
                 0x080054dc                ST7735_WriteData
  .text.ST7735_SetAddressWindow
-                0x08005514       0x68 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x08005514       0x68 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
                 0x08005514                ST7735_SetAddressWindow
  .text.ST7735_ExecuteCommandList
-                0x0800557c       0x92 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x0800557c       0x92 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  *fill*         0x0800560e        0x2 
  .text.ST7735_Init
-                0x08005610       0x48 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x08005610       0x48 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
                 0x08005610                ST7735_Init
  .text.std      0x08005658       0x6c /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-findfp.o)
  .text.stdio_exit_handler
@@ -4991,20 +4991,20 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
                 0x08006660       0x10 ./Core/Src/system_stm32g4xx.o
                 0x08006660                AHBPrescTable
  .rodata.font_5x8
-                0x08006670      0x1e0 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08006670      0x1e0 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .rodata.font_17x24_ptr
-                0x08006850       0x38 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08006850       0x38 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .rodata.font_17x24
-                0x08006888      0x2fd ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x08006888      0x2fd ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  *fill*         0x08006b85        0x3 
  .rodata.init_cmds1
-                0x08006b88       0x3b ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x08006b88       0x3b ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  *fill*         0x08006bc3        0x1 
  .rodata.init_cmds2
-                0x08006bc4        0xd ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x08006bc4        0xd ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  *fill*         0x08006bd1        0x3 
  .rodata.init_cmds3
-                0x08006bd4       0x2b ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x08006bd4       0x2b ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .rodata._vfprintf_r.str1.1
                 0x08006bff       0x33 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-nano-vfprintf.o)
                                  0x11 (size before relaxing)
@@ -5132,15 +5132,15 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .bss.uwTick    0x20000260        0x4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
                 0x20000260                uwTick
  .bss.ina_calib_val
-                0x20000264        0x2 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x20000264        0x2 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .bss.mgl_buf_clr
-                0x20000266        0x2 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x20000266        0x2 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .bss.mgl_buf_bg_clr
-                0x20000268        0x2 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x20000268        0x2 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .bss.mgl_err_var
-                0x2000026a        0x1 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x2000026a        0x1 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  *fill*         0x2000026b        0x1 
- .bss.mgl_t     0x2000026c        0xc ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+ .bss.mgl_t     0x2000026c        0xc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
                 0x2000026c                mgl_t
  .bss.__sf      0x20000278      0x138 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-findfp.o)
                 0x20000278                __sf
@@ -5230,13 +5230,13 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .ARM.attributes
                 0x000003eb       0x34 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
  .ARM.attributes
-                0x0000041f       0x34 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x0000041f       0x34 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
  .ARM.attributes
-                0x00000453       0x34 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000453       0x34 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .ARM.attributes
-                0x00000487       0x34 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000487       0x34 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .ARM.attributes
-                0x000004bb       0x34 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x000004bb       0x34 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .ARM.attributes
                 0x000004ef       0x34 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-findfp.o)
  .ARM.attributes
@@ -5319,10 +5319,10 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .debug_info    0x0000c6d3      0xc15 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
  .debug_info    0x0000d2e8      0xd5b ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
  .debug_info    0x0000e043     0x1677 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .debug_info    0x0000f6ba      0x736 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_info    0x0000fdf0      0xace ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_info    0x000108be     0x1661 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_info    0x00011f1f      0xb83 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_info    0x0000f6ba      0x736 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_info    0x0000fdf0      0xace ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_info    0x000108be     0x1661 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_info    0x00011f1f      0xb83 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
 .debug_abbrev   0x00000000     0x2fce
  .debug_abbrev  0x00000000      0x4bf ./Core/Src/main.o
@@ -5344,10 +5344,10 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .debug_abbrev  0x00001fd4      0x258 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
  .debug_abbrev  0x0000222c      0x201 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
  .debug_abbrev  0x0000242d      0x25d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .debug_abbrev  0x0000268a      0x22c ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_abbrev  0x000028b6      0x235 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_abbrev  0x00002aeb      0x293 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_abbrev  0x00002d7e      0x250 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_abbrev  0x0000268a      0x22c ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_abbrev  0x000028b6      0x235 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_abbrev  0x00002aeb      0x293 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_abbrev  0x00002d7e      0x250 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
 .debug_aranges  0x00000000     0x1228
  .debug_aranges
@@ -5389,13 +5389,13 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .debug_aranges
                 0x00000d90      0x1d8 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
  .debug_aranges
-                0x00000f68       0x68 ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x00000f68       0x68 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
  .debug_aranges
-                0x00000fd0       0xa8 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000fd0       0xa8 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .debug_aranges
-                0x00001078      0x138 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00001078      0x138 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .debug_aranges
-                0x000011b0       0x78 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x000011b0       0x78 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
 .debug_rnglists
                 0x00000000      0xddc
@@ -5438,13 +5438,13 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .debug_rnglists
                 0x00000a49      0x178 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
  .debug_rnglists
-                0x00000bc1       0x4a ./Usr libs/STM32_Library_Encoder/M_ENC.o
+                0x00000bc1       0x4a ./Libraries_M/STM32_Library_Encoder/M_ENC.o
  .debug_rnglists
-                0x00000c0b       0x79 ./Usr libs/STM32_Library_INA226/M_INA226.o
+                0x00000c0b       0x79 ./Libraries_M/STM32_Library_INA226/M_INA226.o
  .debug_rnglists
-                0x00000c84      0x100 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
+                0x00000c84      0x100 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
  .debug_rnglists
-                0x00000d84       0x58 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+                0x00000d84       0x58 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
 .debug_macro    0x00000000    0x209a6
  .debug_macro   0x00000000      0x4a3 ./Core/Src/main.o
@@ -5563,66 +5563,66 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .debug_macro   0x0001f709      0x22b ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
  .debug_macro   0x0001f934      0x202 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
  .debug_macro   0x0001fb36      0x209 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .debug_macro   0x0001fd3f      0x228 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_macro   0x0001ff67      0x228 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x0002018f       0x8a ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_macro   0x00020219      0x351 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x0002056a       0x10 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x0002057a       0x20 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x0002059a       0x1c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_macro   0x000205b6      0x225 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
- .debug_macro   0x000207db      0x1cb ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x0001fd3f      0x228 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_macro   0x0001ff67      0x228 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x0002018f       0x8a ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_macro   0x00020219      0x351 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x0002056a       0x10 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x0002057a       0x20 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x0002059a       0x1c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_macro   0x000205b6      0x225 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_macro   0x000207db      0x1cb ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
-.debug_line     0x00000000    0x14940
- .debug_line    0x00000000     0x17b3 ./Core/Src/main.o
- .debug_line    0x000017b3      0x867 ./Core/Src/stm32g4xx_hal_msp.o
- .debug_line    0x0000201a      0x800 ./Core/Src/stm32g4xx_it.o
- .debug_line    0x0000281a      0x7e1 ./Core/Src/syscalls.o
- .debug_line    0x00002ffb      0x4bd ./Core/Src/sysmem.o
- .debug_line    0x000034b8      0x773 ./Core/Src/system_stm32g4xx.o
- .debug_line    0x00003c2b       0x7b ./Core/Startup/startup_stm32g431cbux.o
- .debug_line    0x00003ca6      0xb3f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_line    0x000047e5      0xca4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_line    0x00005489      0xcaf ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac.o
- .debug_line    0x00006138      0xb18 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_line    0x00006c50     0x36d3 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c.o
- .debug_line    0x0000a323      0x86c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c_ex.o
- .debug_line    0x0000ab8f      0x8d4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
- .debug_line    0x0000b463      0xc9e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_line    0x0000c101      0xfc2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_line    0x0000d0c3     0x10ee ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
- .debug_line    0x0000e1b1     0x1049 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
- .debug_line    0x0000f1fa     0x1fed ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .debug_line    0x000111e7      0x8e5 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_line    0x00011acc      0xa61 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_line    0x0001252d     0x1aa7 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_line    0x00013fd4      0x96c ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+.debug_line     0x00000000    0x148fc
+ .debug_line    0x00000000     0x16ff ./Core/Src/main.o
+ .debug_line    0x000016ff      0x867 ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_line    0x00001f66      0x800 ./Core/Src/stm32g4xx_it.o
+ .debug_line    0x00002766      0x7e1 ./Core/Src/syscalls.o
+ .debug_line    0x00002f47      0x4bd ./Core/Src/sysmem.o
+ .debug_line    0x00003404      0x773 ./Core/Src/system_stm32g4xx.o
+ .debug_line    0x00003b77       0x7b ./Core/Startup/startup_stm32g431cbux.o
+ .debug_line    0x00003bf2      0xb3f ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_line    0x00004731      0xca4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_line    0x000053d5      0xcaf ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac.o
+ .debug_line    0x00006084      0xb18 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_line    0x00006b9c     0x36d3 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c.o
+ .debug_line    0x0000a26f      0x86c ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c_ex.o
+ .debug_line    0x0000aadb      0x8d4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
+ .debug_line    0x0000b3af      0xc9e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_line    0x0000c04d      0xfc2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_line    0x0000d00f     0x10ee ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+ .debug_line    0x0000e0fd     0x1049 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
+ .debug_line    0x0000f146     0x1fed ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
+ .debug_line    0x00011133      0x92a ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_line    0x00011a5d      0xa22 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_line    0x0001247f     0x1acc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_line    0x00013f4b      0x9b1 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
-.debug_str      0x00000000    0xc3e6e
- .debug_str     0x00000000    0xc3e6e ./Core/Src/main.o
+.debug_str      0x00000000    0xc3f82
+ .debug_str     0x00000000    0xc3f82 ./Core/Src/main.o
                               0xbe301 (size before relaxing)
- .debug_str     0x000c3e6e    0xb739b ./Core/Src/stm32g4xx_hal_msp.o
- .debug_str     0x000c3e6e    0xb65c5 ./Core/Src/stm32g4xx_it.o
- .debug_str     0x000c3e6e     0x9a10 ./Core/Src/syscalls.o
- .debug_str     0x000c3e6e     0x77ae ./Core/Src/sysmem.o
- .debug_str     0x000c3e6e    0xb64b8 ./Core/Src/system_stm32g4xx.o
- .debug_str     0x000c3e6e       0xb0 ./Core/Startup/startup_stm32g431cbux.o
- .debug_str     0x000c3e6e    0xb6ff7 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
- .debug_str     0x000c3e6e    0xb6cb3 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
- .debug_str     0x000c3e6e    0xb6b8d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac.o
- .debug_str     0x000c3e6e    0xb6643 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
- .debug_str     0x000c3e6e    0xb77c2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c.o
- .debug_str     0x000c3e6e    0xb6ad7 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c_ex.o
- .debug_str     0x000c3e6e    0xb6828 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
- .debug_str     0x000c3e6e    0xb69a6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
- .debug_str     0x000c3e6e    0xb6bb1 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
- .debug_str     0x000c3e6e    0xb6bb2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
- .debug_str     0x000c3e6e    0xb691e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
- .debug_str     0x000c3e6e    0xb6dea ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .debug_str     0x000c3e6e    0xb6f81 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_str     0x000c3e6e    0xb6f71 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_str     0x000c3e6e    0xbbe87 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_str     0x000c3e6e    0xb72f7 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_str     0x000c3f82    0xb739b ./Core/Src/stm32g4xx_hal_msp.o
+ .debug_str     0x000c3f82    0xb65c5 ./Core/Src/stm32g4xx_it.o
+ .debug_str     0x000c3f82     0x9a10 ./Core/Src/syscalls.o
+ .debug_str     0x000c3f82     0x77ae ./Core/Src/sysmem.o
+ .debug_str     0x000c3f82    0xb64b8 ./Core/Src/system_stm32g4xx.o
+ .debug_str     0x000c3f82       0xb0 ./Core/Startup/startup_stm32g431cbux.o
+ .debug_str     0x000c3f82    0xb6ff7 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.o
+ .debug_str     0x000c3f82    0xb6cb3 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.o
+ .debug_str     0x000c3f82    0xb6b8d ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dac.o
+ .debug_str     0x000c3f82    0xb6643 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.o
+ .debug_str     0x000c3f82    0xb77c2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c.o
+ .debug_str     0x000c3f82    0xb6ad7 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_i2c_ex.o
+ .debug_str     0x000c3f82    0xb6828 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.o
+ .debug_str     0x000c3f82    0xb69a6 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.o
+ .debug_str     0x000c3f82    0xb6bb1 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.o
+ .debug_str     0x000c3f82    0xb6bb2 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
+ .debug_str     0x000c3f82    0xb691e ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
+ .debug_str     0x000c3f82    0xb6dea ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
+ .debug_str     0x000c3f82    0xb6fc6 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_str     0x000c3f82    0xb6fb6 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_str     0x000c3f82    0xbbecc ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_str     0x000c3f82    0xb733c ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
 .comment        0x00000000       0x43
  .comment       0x00000000       0x43 ./Core/Src/main.o
@@ -5644,10 +5644,10 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .comment       0x00000043       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
  .comment       0x00000043       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
  .comment       0x00000043       0x44 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .comment       0x00000043       0x44 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .comment       0x00000043       0x44 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .comment       0x00000043       0x44 ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .comment       0x00000043       0x44 ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .comment       0x00000043       0x44 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .comment       0x00000043       0x44 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .comment       0x00000043       0x44 ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .comment       0x00000043       0x44 ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
 
 .debug_frame    0x00000000     0x51cc
  .debug_frame   0x00000000      0x4cc ./Core/Src/main.o
@@ -5668,10 +5668,10 @@ LOAD /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.
  .debug_frame   0x00002fc4      0x2ac ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.o
  .debug_frame   0x00003270      0x3f4 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rtc.o
  .debug_frame   0x00003664      0x860 ./Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_spi.o
- .debug_frame   0x00003ec4      0x194 ./Usr libs/STM32_Library_Encoder/M_ENC.o
- .debug_frame   0x00004058      0x288 ./Usr libs/STM32_Library_INA226/M_INA226.o
- .debug_frame   0x000042e0      0x55c ./Usr libs/STM32_Library_My_Graphic_Library/MGL.o
- .debug_frame   0x0000483c      0x1bc ./Usr libs/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
+ .debug_frame   0x00003ec4      0x194 ./Libraries_M/STM32_Library_Encoder/M_ENC.o
+ .debug_frame   0x00004058      0x288 ./Libraries_M/STM32_Library_INA226/M_INA226.o
+ .debug_frame   0x000042e0      0x55c ./Libraries_M/STM32_Library_My_Graphic_Library/MGL.o
+ .debug_frame   0x0000483c      0x1bc ./Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/st7735.o
  .debug_frame   0x000049f8      0x144 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-findfp.o)
  .debug_frame   0x00004b3c       0x34 /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-fwalk.o)
  .debug_frame   0x00004b70       0x6c /opt/st/stm32cubeide_1.19.0/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.linux64_1.0.0.202410170706/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard/libc_nano.a(libc_a-printf.o)

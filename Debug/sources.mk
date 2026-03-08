@@ -25,9 +25,9 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32G4xx_HAL_Driver/Src \
-Usr\ libs/STM32_Library_Encoder \
-Usr\ libs/STM32_Library_Flashprom \
-Usr\ libs/STM32_Library_INA226 \
-Usr\ libs/STM32_Library_My_Graphic_Library \
-Usr\ libs/STM32_Library_My_Graphic_Library/st7735_driver \
+Libraries_M/STM32_Library_Encoder \
+Libraries_M/STM32_Library_Flashprom \
+Libraries_M/STM32_Library_INA226 \
+Libraries_M/STM32_Library_My_Graphic_Library \
+Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver \
 

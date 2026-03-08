@@ -29,4 +29,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Libraries_M</name>
+			<type>2</type>
+			<location>/media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M</location>
+		</link>
+	</linkedResources>
 </projectDescription>

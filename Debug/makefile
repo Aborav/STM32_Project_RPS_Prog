@@ -9,11 +9,11 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
--include Usr\ libs/STM32_Library_My_Graphic_Library/st7735_driver/subdir.mk
--include Usr\ libs/STM32_Library_My_Graphic_Library/subdir.mk
--include Usr\ libs/STM32_Library_INA226/subdir.mk
--include Usr\ libs/STM32_Library_Flashprom/subdir.mk
--include Usr\ libs/STM32_Library_Encoder/subdir.mk
+-include Libraries_M/STM32_Library_My_Graphic_Library/st7735_driver/subdir.mk
+-include Libraries_M/STM32_Library_My_Graphic_Library/subdir.mk
+-include Libraries_M/STM32_Library_INA226/subdir.mk
+-include Libraries_M/STM32_Library_Flashprom/subdir.mk
+-include Libraries_M/STM32_Library_Encoder/subdir.mk
 -include Drivers/STM32G4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
