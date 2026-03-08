@@ -140,9 +140,11 @@
 
 //fast display functions
 /////////////////////////////////////////////////////
-#define REFRESH_MAIN_FIELD() MGL_FillRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT, BG_COLOR)
-#define DRAW_LOW_INF_BAR() MGL_DrawRectWH(LOW_ST_BAR_X, LOW_ST_BAR_Y, LOW_ST_BAR_W, LOW_ST_BAR_H, LOW_INF_BAR_STROKE_COLOR)///<lower information stroke
-#define DRAW_MAIN_FIELD_STROKE() MGL_DrawRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT - 1, MP_STROKE_INT_COLOR)///<main field stroke
+//#define REFRESH_MAIN_FIELD() MGL_FillRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT, BG_COLOR)
+//#define DRAW_LOW_INF_BAR() MGL_DrawRectWH(LOW_ST_BAR_X, LOW_ST_BAR_Y, LOW_ST_BAR_W, LOW_ST_BAR_H, LOW_INF_BAR_STROKE_COLOR)///<lower information stroke
+//#define DRAW_MAIN_FIELD_STROKE() MGL_DrawRectWH(MAIN_FIELD_X, MAIN_FIELD_Y, MAIN_FIELD_WIDTH, MAIN_FIELD_HEIGHT - 1, MP_STROKE_INT_COLOR)///<main field stroke
+
+
 
 //PERIF_TL494
 /////////////////////////////////////////////////////
@@ -408,57 +410,18 @@ int main(void) {
 
 	//Display
 	//////////////////////////////////////////////////////////////////////////////////////
+
 	HMI_Display_GraphBarsStructInit(&rps);
 	MGL_DriverInit();
-	MGL_SET_BUF_BG_COLOR(COLOR_BLACK); //background for text
+	MGL_SET_TEXT_BG_CLR(COLOR_BLACK); //background for text
 	HMI_Display_StartPage();
 
 #ifdef USE_DEBUG
 	printf("While start\n\r");
 	RPS_Save_PrintSavedTables();
-
-	//null check
-	MGL_PrintFloatTiny_L(0, 6, 4, 10, 10, FONT_5x8_FP);
-
-	//float check
-	MGL_PrintFloatTiny_L(12345, 6, 1, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 6, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 6, 3, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 6, 4, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 6, 5, 10, 10, FONT_5x8_FP); //no no
-
-	//qunatity check
-	MGL_PrintFloatTiny_L(12345, 2, 2, 10, 10, FONT_5x8_FP); //no no
-	MGL_PrintFloatTiny_L(12345, 3, 2, 10, 10, FONT_5x8_FP); // no no
-	MGL_PrintFloatTiny_L(12345, 4, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 5, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 6, 2, 10, 10, FONT_5x8_FP);
-
-	//zeros check
-	MGL_PrintFloatTiny_L(1, 2, 2, 10, 10, FONT_5x8_FP); //no
-	MGL_PrintFloatTiny_L(1, 3, 2, 10, 10, FONT_5x8_FP); //no
-	MGL_PrintFloatTiny_L(1, 4, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12, 4, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(123, 4, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(1, 5, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12, 5, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(123, 5, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(1, 6, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12, 6, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(123, 6, 2, 10, 10, FONT_5x8_FP);
-
-	//empty space
-	MGL_PrintFloatTiny_L(12, 2, 2, 10, 10, FONT_5x8_FP); //no
-	MGL_PrintFloatTiny_L(123, 3, 2, 10, 10, FONT_5x8_FP); //no
-	MGL_PrintFloatTiny_L(1234, 4, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 5, 2, 10, 10, FONT_5x8_FP);
-	MGL_PrintFloatTiny_L(12345, 6, 2, 10, 10, FONT_5x8_FP);
-
-	__NOP();
-
 #endif
 
-	//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -922,7 +885,7 @@ void HMI_Input(rps_type *r) {
 	MENC_MainHandler(&menc1);
 	MENC_MainHandler(&menc2);
 
-	//turn on/off PERIF_TL494 clocking
+//turn on/off PERIF_TL494 clocking
 	if (MENC_Click(&menc1)) {
 		r->fl.tl494_on = ~r->fl.tl494_on;
 		if (r->fl.tl494_on) {
@@ -936,7 +899,7 @@ void HMI_Input(rps_type *r) {
 		//		PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
 	}
 
-	//voltage trim
+//voltage trim
 	if (MENC_TurnRight(&menc1)) {
 		r->val.sp_u_val += 10;
 		if (r->val.sp_u_val >= r->val.u_max)
@@ -955,7 +918,7 @@ void HMI_Input(rps_type *r) {
 //			r->val.dac_u = 0;
 	}
 
-	//current trim
+//current trim
 	if (MENC_TurnRight(&menc2)) {
 		r->val.sp_i_val += 10;
 		if (r->val.sp_i_val >= r->val.i_max)
@@ -974,7 +937,7 @@ void HMI_Input(rps_type *r) {
 //			r->val.dac_i = 0;
 	}
 
-	//if any turn
+//if any turn
 	if (MENC_AnyTurn(&menc1)) {
 		if (r->fl.tl494_on) {
 			RPS_Ctrl_U_SPReach(r->val.sp_u_val, r);
@@ -987,34 +950,34 @@ void HMI_Input(rps_type *r) {
 			//PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
 		}
 	}
-	//		//fast turn
-	//		if (MENC_TurnFastRight(&menc1)) {
-	//			dac_volt_value += 20;
-	//			if (dac_volt_value > 4095) dac_volt_value = 4095;
-	//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_volt_value);
-	//			sf.volt_draw = 1;
-	//		}
-	//
-	//		if (MENC_TurnFastRight(&menc2)) {
-	//			dac_curr_value += 20;
-	//			if (dac_curr_value > 4095) dac_curr_value = 4095;
-	//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_curr_value);
-	//			sf.curr_draw = 1;
-	//
-	//		}
-	//		if (MENC_TurnFastLeft(&menc1)) {
-	//			dac_volt_value -= 20;
-	//			if (dac_volt_value < 0) dac_volt_value = 0;
-	//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_volt_value);
-	//			sf.volt_draw = 1;
-	//		}
-	//
-	//		if (MENC_TurnFastLeft(&menc2)) {
-	//			dac_curr_value -= 20;
-	//			if (dac_curr_value < 0) dac_curr_value = 0;
-	//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_curr_value);
-	//			sf.curr_draw = 1;
-	//		}
+//		//fast turn
+//		if (MENC_TurnFastRight(&menc1)) {
+//			dac_volt_value += 20;
+//			if (dac_volt_value > 4095) dac_volt_value = 4095;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_volt_value);
+//			sf.volt_draw = 1;
+//		}
+//
+//		if (MENC_TurnFastRight(&menc2)) {
+//			dac_curr_value += 20;
+//			if (dac_curr_value > 4095) dac_curr_value = 4095;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_curr_value);
+//			sf.curr_draw = 1;
+//
+//		}
+//		if (MENC_TurnFastLeft(&menc1)) {
+//			dac_volt_value -= 20;
+//			if (dac_volt_value < 0) dac_volt_value = 0;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_volt_value);
+//			sf.volt_draw = 1;
+//		}
+//
+//		if (MENC_TurnFastLeft(&menc2)) {
+//			dac_curr_value -= 20;
+//			if (dac_curr_value < 0) dac_curr_value = 0;
+//			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_curr_value);
+//			sf.curr_draw = 1;
+//		}
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -1022,30 +985,38 @@ void HMI_Input(rps_type *r) {
  * @brief starting page drawing function
  */
 void HMI_Display_StartPage(void) {
-//	REFRESH_MAIN_FIELD();
-//	DRAW_MAIN_FIELD_STROKE();
-	//DRAW_LOW_INF_BAR();
-	MGL_FillScreen(COLOR_BLACK);
+	MGL_FILL_SCREEN(COLOR_BLACK);
 
-	//not redrawing stack
-	MGL_SET_BUF_COLOR(VOLT_COLOR);
-	MGL_PrintStr_17x24("U\0", 108, VAW_VOLTAGE_Y);
-	MGL_DrawRectWH(VAW_VOLTAGE_X+FONT_17x24_WIDTH*2+4, VAW_VOLTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, VOLT_COLOR);
+	MGL_SET_TEXT_FONT(FONT_17x24_FP);
 
-	MGL_SET_BUF_COLOR(CURR_COLOR);
-	MGL_PrintStr_17x24("A\0", 108, VAW_CURRENT_Y);
-	MGL_DrawRectWH(VAW_CURRENT_X+FONT_17x24_WIDTH*1+4, VAW_CURRENT_Y+FONT_17x24_HEIGHT-2, 2, 2, CURR_COLOR);
+//not redrawing stack
+	MGL_SET_TEXT_CLR(VOLT_COLOR);
+	MGL_SetTextCursor(108, VAW_VOLTAGE_Y,&mgl_t);
+	MGL_PrintStr("U\0", &mgl_t);
+	MGL_DRAW_RECT_WH(VAW_VOLTAGE_X+FONT_17x24_WIDTH*2+4, VAW_VOLTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, VOLT_COLOR);
 
-	MGL_SET_BUF_COLOR(WATT_COLOR);
-	MGL_PrintStr_17x24("W\0", 108, VAW_WATTAGE_Y);
-	MGL_DrawRectWH(VAW_WATTAGE_X+FONT_17x24_WIDTH*3+4, VAW_WATTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, WATT_COLOR);
+	MGL_SET_TEXT_CLR(CURR_COLOR);
+	MGL_SetTextCursor(108, VAW_CURRENT_Y,&mgl_t);
+	MGL_PrintStr("A\0", &mgl_t);
+	MGL_DRAW_RECT_WH(VAW_CURRENT_X+FONT_17x24_WIDTH*1+4, VAW_CURRENT_Y+FONT_17x24_HEIGHT-2, 2, 2, CURR_COLOR);
 
-	MGL_SET_BUF_COLOR(FONT_COLOR);
-	MGL_PrintStr_5x8("DAC_U:\0", 5, LOW_INF_BAR_UPP_Y);
-	MGL_PrintStr_5x8("DAC_I:\0", 5, LOW_INF_BAR_LOW_Y);
+	MGL_SET_TEXT_CLR(WATT_COLOR);
+	MGL_SetTextCursor(108, VAW_WATTAGE_Y,&mgl_t);
+	MGL_PrintStr("W\0", &mgl_t);
+	MGL_DRAW_RECT_WH(VAW_WATTAGE_X+FONT_17x24_WIDTH*3+4, VAW_WATTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, WATT_COLOR);
 
-	MGL_PrintStr_5x8("SP_U:\0", 80, LOW_INF_BAR_UPP_Y);
-	MGL_PrintStr_5x8("SP_I:\0", 80, LOW_INF_BAR_LOW_Y);
+	MGL_SET_TEXT_CLR(FONT_COLOR);
+
+	MGL_SET_TEXT_FONT(FONT_5x8_FP);
+	MGL_SetTextCursor(5, LOW_INF_BAR_UPP_Y,&mgl_t);
+	MGL_PrintStr("DAC_U:\0", &mgl_t);
+	MGL_SetTextCursor(5, LOW_INF_BAR_LOW_Y,&mgl_t);
+	MGL_PrintStr("DAC_I:\0", &mgl_t);
+
+	MGL_SetTextCursor(80, LOW_INF_BAR_UPP_Y,&mgl_t);
+	MGL_PrintStr("SP_U:\0", &mgl_t);
+	MGL_SetTextCursor(80, LOW_INF_BAR_LOW_Y,&mgl_t);
+	MGL_PrintStr("SP_I:\0", &mgl_t);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -1058,69 +1029,77 @@ void HMI_Display_MeasPage(rps_type *r) {
 	static uint16_t sp_u_old, sp_i_old, dac_u_old, dac_i_old;
 	int16_t diff = 0; ///<differance between new and old values
 
-	//voltage
+	MGL_SET_TEXT_FONT(FONT_17x24_FP);
+//voltage
 	diff = volt_old - r->val.volt;
 	if (diff < 0)
 		diff *= -1; //no matter is old value bigger or smaller than a new one
 	if (diff > r->fl.tl494_on ? 1 : 0) { //eliminate fluctuation of the value
-		MGL_SET_BUF_COLOR(VOLT_COLOR);
-		MGL_PrintFloatTiny_R(r->val.volt, 4, 2, VAW_VOLTAGE_X, VAW_VOLTAGE_Y, FONT_17x24_FP);
+		MGL_SET_TEXT_CLR(VOLT_COLOR);
+		MGL_SetTextCursor(VAW_VOLTAGE_X, VAW_VOLTAGE_Y,&mgl_t);
+		MGL_PrintFloatTiny_R(r->val.volt, 4, 2, &mgl_t);
 		MGL_DrawBar(&volt_bar);
 	}
 
-	//current
+//current
 	diff = curr_old - r->val.curr;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > r->fl.tl494_on ? 1 : 0) {
-		MGL_SET_BUF_COLOR(CURR_COLOR);
-		MGL_PrintFloatTiny_R(r->val.curr, 4, 3, VAW_CURRENT_X, VAW_CURRENT_Y, FONT_17x24_FP);
+		MGL_SET_TEXT_CLR(CURR_COLOR);
+		MGL_SetTextCursor(VAW_CURRENT_X, VAW_CURRENT_Y,&mgl_t);
+		MGL_PrintFloatTiny_R(r->val.curr, 4, 3, &mgl_t);
 		MGL_DrawBar(&curr_bar);
 	}
 
-	//wattage
+//wattage
 	diff = watt_old - r->val.watt;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > r->fl.tl494_on ? 1 : 0) {
-		MGL_SET_BUF_COLOR(WATT_COLOR);
-		MGL_PrintFloatTiny_R(r->val.watt, 4, 1, VAW_WATTAGE_X, VAW_WATTAGE_Y, FONT_17x24_FP);
+		MGL_SET_TEXT_CLR(WATT_COLOR);
+		MGL_SetTextCursor(VAW_WATTAGE_X, VAW_WATTAGE_Y,&mgl_t);
+		MGL_PrintFloatTiny_R(r->val.watt, 4, 1, &mgl_t);
 		MGL_DrawBar(&watt_bar);
 	}
 
-	MGL_SET_BUF_COLOR(FONT_COLOR);
+	MGL_SET_TEXT_CLR(FONT_COLOR);
 
-	//voltage DAC value
+//voltage DAC value
 	diff = dac_u_old - r->val.dac_u;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintUint16_R(r->val.dac_u, 4, 45, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
+		MGL_SetTextCursor(45, LOW_INF_BAR_UPP_Y,&mgl_t);
+		MGL_PrintUint16_R(r->val.dac_u, 4, &mgl_t);
 		MGL_DrawBar(&watt_bar);
 	}
 
-	//current dac value
+//current dac value
 	diff = dac_i_old - r->val.dac_i;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintUint16_R(r->val.dac_i, 4, 45, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
+		MGL_SetTextCursor(45, LOW_INF_BAR_LOW_Y,&mgl_t);
+		MGL_PrintUint16_R(r->val.dac_i, 4, &mgl_t);
 	}
 
-	//voltage set point
+//voltage set point
 	diff = sp_u_old - r->val.sp_u_val;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintFloatTiny_R(r->val.sp_u_val, 4, 2, 120, LOW_INF_BAR_UPP_Y, FONT_5x8_FP);
+		MGL_SetTextCursor(120, LOW_INF_BAR_UPP_Y,&mgl_t);
+		MGL_PrintFloatTiny_R(r->val.sp_u_val, 4, 2, &mgl_t);
 	}
 
-	//current set point
+//current set point
 	diff = sp_i_old - r->val.sp_i_val;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0) {
-		MGL_PrintFloatTiny_R(r->val.sp_i_val, 4, 3, 120, LOW_INF_BAR_LOW_Y, FONT_5x8_FP);
+		MGL_SetTextCursor(120, LOW_INF_BAR_LOW_Y,&mgl_t);
+		MGL_PrintFloatTiny_R(r->val.sp_i_val, 4, 3, &mgl_t);
 	}
 
 	volt_old = r->val.volt;
@@ -1139,13 +1118,13 @@ void HMI_Display_MeasPage(rps_type *r) {
  */
 void RPS_VAW_Conversion(rps_type *r) {
 
-	//static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
+//static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
 
 	r->val.volt = INA_GetBusVoltageTiny();
-	//FilterMedian(&r->val.volt, med_fil_volt_buf);
+//FilterMedian(&r->val.volt, med_fil_volt_buf);
 
 	r->val.curr = INA_GetCurrentTiny();
-	//FilterMedian(&r->val.curr, med_fil_curr_buf);
+//FilterMedian(&r->val.curr, med_fil_curr_buf);
 
 	r->val.watt = INA_GetPowerTiny();
 
@@ -1173,7 +1152,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 	PERIF_TL494_ON();
 	HAL_FLASH_Unlock();
 
-	//increase DAC value +100 until max and put voltage feedback and appropriate DAC values in the arrays
+//increase DAC value +100 until max and put voltage feedback and appropriate DAC values in the arrays
 	for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		val = *(table_dac_step + i);
 		PERIF_DAC_SET(val, DAC_VOLT_CH); //voltage increasing
@@ -1205,13 +1184,13 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 
 	HAL_FLASH_Lock();
 
-	//turn off everything
+//turn off everything
 	PERIF_TL494_OFF();
 	PERIF_DAC_SET(0, DAC_VOLT_CH);
 	PERIF_DAC_SET(0, DAC_CURR_CH);
 	r->val.dac_u = 0; //clear global structure variable
 
-	//wait until capacitor is discharged
+//wait until capacitor is discharged
 	while (r->val.volt != 0) {
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
@@ -1250,7 +1229,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 
 	HAL_FLASH_Unlock();
 
-	//increase DAC value +100 until max and put current feedback and appropriate DAC values in the arrays
+//increase DAC value +100 until max and put current feedback and appropriate DAC values in the arrays
 	for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		val = *(table_dac_step + i);
 		PERIF_DAC_SET(val, DAC_CURR_CH); //voltage increasing
@@ -1282,7 +1261,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 
 	HAL_FLASH_Lock();
 
-	//turn off everything
+//turn off everything
 	PERIF_TL494_OFF();
 	PERIF_DAC_SET(0, DAC_VOLT_CH);
 	PERIF_DAC_SET(0, DAC_CURR_CH);
@@ -1313,7 +1292,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 void RPS_Save_Table(rps_type *r) {
 	SERV_Flash_EraseTable(r); //clear last page in FLASH
 
-	//filling tables
+//filling tables
 	RPS_Save_FBTableVolt(r);
 	volt_bar.num_max = r->val.u_max; //renew maximum value after calibration
 
@@ -1339,15 +1318,15 @@ void RPS_Save_TableInit(rps_type *r) {
 			val = 4095;
 		*(table_dac_step + i) = val;
 	}
-	//min and max voltage
+//min and max voltage
 	r->val.dac_u = 0;
 	r->val.u_min = *(table_ptr_u + 0);
 	r->val.u_max = *(table_ptr_u + RPS_TABLE_SIZE - 1);
 
-	//min and max voltage
+//min and max voltage
 	r->val.i_min = *(table_ptr_i + 0);
 
-	//just maximum current in the table
+//just maximum current in the table
 	for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		debug_buf = *(table_ptr_i + i);
 		if (buf_curr > debug_buf) {
@@ -1391,7 +1370,7 @@ void RPS_Save_PrintSavedTables(void) {
 void RPS_Save_CalculateDACSteps(rps_type *r) {
 	uint16_t aver_buf[3] = { 0, };
 	uint16_t buf = 0;
-	//uint16_t aver_step;
+//uint16_t aver_step;
 
 	for (uint16_t i = 0; i < RPS_TABLE_SIZE; i += 3) {
 		*aver_buf = buf;
@@ -1400,7 +1379,7 @@ void RPS_Save_CalculateDACSteps(rps_type *r) {
 		buf = (max(aver_buf[0], aver_buf[1]) == max(aver_buf[1], aver_buf[2])) ? max(aver_buf[0], aver_buf[2]) : max(aver_buf[1], min(aver_buf[0], aver_buf[2]));
 	}
 
-	//aver_step = buf;
+//aver_step = buf;
 	__NOP();
 
 //	*(p) = (uint16_t)(buf/100);
