@@ -103,7 +103,7 @@ extern menc_struct_type menc1, menc2; //Encoder library structures
 void HMI_Input_EncodersStructInit(void);
 void HMI_Input(rps_type *r);
 void HMI_Display_GraphBarsStructInit(rps_type *r);
-void HMI_Display_StartPage(void);
+void HMI_Display_StartPage(rps_type *r);
 void HMI_Display_MeasPage(rps_type *r);
 void HMI_Display_DebugMeasPage(rps_type *r);
 

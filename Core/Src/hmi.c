@@ -59,7 +59,7 @@ void HMI_Display_GraphBarsStructInit(rps_type *r) {
 /*
  * @brief starting page drawing function
  */
-void HMI_Display_StartPage(void) {
+void HMI_Display_StartPage(rps_type *r) {
 	MGL_FILL_SCREEN(COLOR_BLACK);
 
 	MGL_SET_TEXT_FONT(FONT_17x24_FP);
@@ -68,17 +68,17 @@ void HMI_Display_StartPage(void) {
 	MGL_SET_TEXT_CLR(VOLT_COLOR);
 	MGL_SetTextCursor(108, VAW_VOLTAGE_Y, &mgl_t);
 	MGL_PrintStr("U\0", &mgl_t);
-	MGL_DRAW_RECT_WH(VAW_VOLTAGE_X+FONT_17x24_WIDTH*2+4, VAW_VOLTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, VOLT_COLOR);
+	MGL_FILL_RECT_WH(VAW_VOLTAGE_X+FONT_17x24_WIDTH*2+4, VAW_VOLTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, VOLT_COLOR);
 
 	MGL_SET_TEXT_CLR(CURR_COLOR);
 	MGL_SetTextCursor(108, VAW_CURRENT_Y, &mgl_t);
 	MGL_PrintStr("A\0", &mgl_t);
-	MGL_DRAW_RECT_WH(VAW_CURRENT_X+FONT_17x24_WIDTH*1+4, VAW_CURRENT_Y+FONT_17x24_HEIGHT-2, 2, 2, CURR_COLOR);
+	MGL_FILL_RECT_WH(VAW_CURRENT_X+FONT_17x24_WIDTH*1+4, VAW_CURRENT_Y+FONT_17x24_HEIGHT-2, 2, 2, CURR_COLOR);
 
 	MGL_SET_TEXT_CLR(WATT_COLOR);
 	MGL_SetTextCursor(108, VAW_WATTAGE_Y, &mgl_t);
 	MGL_PrintStr("W\0", &mgl_t);
-	MGL_DRAW_RECT_WH(VAW_WATTAGE_X+FONT_17x24_WIDTH*3+4, VAW_WATTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, WATT_COLOR);
+	MGL_FILL_RECT_WH(VAW_WATTAGE_X+FONT_17x24_WIDTH*3+4, VAW_WATTAGE_Y+FONT_17x24_HEIGHT-2, 2, 2, WATT_COLOR);
 
 	MGL_SET_TEXT_CLR(FONT_COLOR);
 
@@ -92,6 +92,8 @@ void HMI_Display_StartPage(void) {
 	MGL_PrintStr("SP_U:\0", &mgl_t);
 	MGL_SetTextCursor(80, LOW_INF_BAR_LOW_Y, &mgl_t);
 	MGL_PrintStr("SP_I:\0", &mgl_t);
+
+	r->fl.start_draw = 1;
 }
 
 
@@ -112,7 +114,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	diff = volt_old - r->val.volt;
 	if (diff < 0)
 		diff *= -1; //no matter is old value bigger or smaller than a new one
-	if (diff > r->fl.tl494_on ? 1 : 0) { //eliminate fluctuation of the value
+	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) { //eliminate fluctuation of the value
 		MGL_SET_TEXT_CLR(VOLT_COLOR);
 		MGL_SetTextCursor(VAW_VOLTAGE_X, VAW_VOLTAGE_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.volt, 4, 2, &mgl_t);
@@ -123,7 +125,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	diff = curr_old - r->val.curr;
 	if (diff < 0)
 		diff *= -1;
-	if (diff > r->fl.tl494_on ? 1 : 0) {
+	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) {
 		MGL_SET_TEXT_CLR(CURR_COLOR);
 		MGL_SetTextCursor(VAW_CURRENT_X, VAW_CURRENT_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.curr, 4, 3, &mgl_t);
@@ -134,7 +136,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	diff = watt_old - r->val.watt;
 	if (diff < 0)
 		diff *= -1;
-	if (diff > r->fl.tl494_on ? 1 : 0) {
+	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) {
 		MGL_SET_TEXT_CLR(WATT_COLOR);
 		MGL_SetTextCursor(VAW_WATTAGE_X, VAW_WATTAGE_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.watt, 4, 1, &mgl_t);
@@ -142,22 +144,22 @@ void HMI_Display_MeasPage(rps_type *r) {
 	}
 
 	MGL_SET_TEXT_CLR(FONT_COLOR);
+	MGL_SET_TEXT_FONT(FONT_5x8_FP);
 
 //voltage DAC value
 	diff = dac_u_old - r->val.dac_u;
 	if (diff < 0)
 		diff *= -1;
-	if (diff > 0) {
+	if (diff > 0 || r->fl.start_draw) {
 		MGL_SetTextCursor(45, LOW_INF_BAR_UPP_Y, &mgl_t);
 		MGL_PrintUint16_R(r->val.dac_u, 4, &mgl_t);
-		MGL_DrawBar(&watt_bar);
 	}
 
 //current dac value
 	diff = dac_i_old - r->val.dac_i;
 	if (diff < 0)
 		diff *= -1;
-	if (diff > 0) {
+	if (diff > 0 || r->fl.start_draw) {
 		MGL_SetTextCursor(45, LOW_INF_BAR_LOW_Y, &mgl_t);
 		MGL_PrintUint16_R(r->val.dac_i, 4, &mgl_t);
 	}
@@ -166,7 +168,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	diff = sp_u_old - r->val.sp_u_val;
 	if (diff < 0)
 		diff *= -1;
-	if (diff > 0) {
+	if (diff > 0|| r->fl.start_draw) {
 		MGL_SetTextCursor(120, LOW_INF_BAR_UPP_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.sp_u_val, 4, 2, &mgl_t);
 	}
@@ -175,7 +177,7 @@ void HMI_Display_MeasPage(rps_type *r) {
 	diff = sp_i_old - r->val.sp_i_val;
 	if (diff < 0)
 		diff *= -1;
-	if (diff > 0) {
+	if (diff > 0 || r->fl.start_draw) {
 		MGL_SetTextCursor(120, LOW_INF_BAR_LOW_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.sp_i_val, 4, 3, &mgl_t);
 	}
@@ -187,6 +189,8 @@ void HMI_Display_MeasPage(rps_type *r) {
 	sp_i_old = r->val.sp_i_val;
 	dac_u_old = r->val.dac_u;
 	dac_i_old = r->val.dac_i;
+
+	r->fl.start_draw = 0;
 }
 
 /////////////////////////////////////////////////////////////////////////

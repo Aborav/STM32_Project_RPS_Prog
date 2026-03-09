@@ -28,6 +28,7 @@ typedef struct _values_type {
 ////////////////////////////////////////////////////////////
 typedef struct _flags_type {
 	unsigned tl494_on :1; ///<TL494 clocking is ON
+	unsigned start_draw:1; ///<draw object at start
 } flags_type;
 
 //Bits field for errors

@@ -49,7 +49,7 @@ extern "C" {
 //DEBUG
 /////////////////////////////////////////////////////
 #define USE_DEBUG
-#define DEBUG_REFRESH 300U
+#define DEBUG_REFRESH 1000U
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

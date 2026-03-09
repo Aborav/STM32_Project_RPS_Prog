@@ -122,20 +122,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		MENC_TurnHandlerIRQ(&menc2);
 	}
 }
-
-//Printf
-////////////////////////////////////////////////////////////
-int _write(int file, uint8_t *ptr, int len) {
-//  (void)file;
-	int DataIdx;
-
-	for (DataIdx = 0; DataIdx < len; DataIdx++) {
-		ITM_SendChar(*ptr++);
-	}
-	return len;
-}
-
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -181,7 +167,6 @@ int main(void) {
 	//////////////////////////////////////////////////////////////////////////////////////
 	HAL_Delay(10); //some delay after periphery initialization
 
-
 	//Main structure initialization
 	//////////////////////////////////////////////////////////////////////////////////////
 	rps_type rps = { 0 };
@@ -206,11 +191,15 @@ int main(void) {
 
 	//Display
 	//////////////////////////////////////////////////////////////////////////////////////
-
 	HMI_Display_GraphBarsStructInit(&rps);
 	MGL_DriverInit();
 	MGL_SET_TEXT_BG_CLR(COLOR_BLACK); //background for text
-	HMI_Display_StartPage();
+	__NOP();
+	HMI_Display_StartPage(&rps);
+	__NOP();
+	MGL_SET_TEXT_CLR(0xffff);
+	MGL_SET_TEXT_BG_CLR(0x0000);
+	MGL_SET_TEXT_FONT(FONT_5x8_FP);
 
 #ifdef USE_DEBUG
 	printf("While start\n\r");
@@ -228,28 +217,27 @@ int main(void) {
 
 		if (MillisDelay(&ms_tmr_screen_refresh, SCREEN_REFRESH_RATE)) {
 			RPS_VAW_Conversion(&rps);
-			//HMI_Display_MeasPage();
+			HMI_Display_MeasPage(&rps);
 		}
 #ifdef USE_DEBUG
 		if (MillisDelay(&ms_tmr_debug, DEBUG_REFRESH)) {
 			printf("U:");
-			SERV_Print_FakeFloat(rps.val.volt, 4, 2);
+			SERV_Print_FakeFloat(rps.val.volt, 5, 2);
 			printf("   I:");
-			SERV_Print_FakeFloat(rps.val.curr, 4, 3);
+			SERV_Print_FakeFloat(rps.val.curr, 5, 3);
 			printf("   P:");
-			SERV_Print_FakeFloat(rps.val.watt, 4, 1);
+			SERV_Print_FakeFloat(rps.val.watt, 5, 1);
 
 			printf("   U sp:");
-			SERV_Print_FakeFloat(rps.val.sp_u_val, 4, 2);
+			SERV_Print_FakeFloat(rps.val.sp_u_val, 5, 2);
 			printf("   I sp:");
-			SERV_Print_FakeFloat(rps.val.sp_i_val, 4, 3);
+			SERV_Print_FakeFloat(rps.val.sp_i_val, 5, 3);
 
 			printf("   DAC U:%u", rps.val.dac_u);
 			printf("   DAC I:%u\n", rps.val.dac_i);
 
-			if (rps.err.all_errors != 0) {
-				printf("\nError No: %x\n", rps.err.all_errors);
-			}
+			printf("RPS Error No: %x\n", rps.err.all_errors);
+			MGL_PrintErr();
 		}
 #endif
 		//////////////////////////////////////////////////////////////////////////////////////
