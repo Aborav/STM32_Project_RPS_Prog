@@ -95,7 +95,7 @@
 
 /*---------------------------------------------STRUCTURES------------------------------------------------*/
 
-extern bar_gr volt_bar, curr_bar, watt_bar; //progress bars init
+extern mgl_bar_gr_type volt_bar, curr_bar, watt_bar; //progress bars init
 extern menc_struct_type menc1, menc2; //Encoder library structures
 
 /*---------------------------------------------FUNCTIONS------------------------------------------------*/

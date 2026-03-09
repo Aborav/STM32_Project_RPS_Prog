@@ -193,13 +193,8 @@ int main(void) {
 	//////////////////////////////////////////////////////////////////////////////////////
 	HMI_Display_GraphBarsStructInit(&rps);
 	MGL_DriverInit();
-	MGL_SET_TEXT_BG_CLR(COLOR_BLACK); //background for text
-	__NOP();
 	HMI_Display_StartPage(&rps);
-	__NOP();
-	MGL_SET_TEXT_CLR(0xffff);
-	MGL_SET_TEXT_BG_CLR(0x0000);
-	MGL_SET_TEXT_FONT(FONT_5x8_FP);
+
 
 #ifdef USE_DEBUG
 	printf("While start\n\r");

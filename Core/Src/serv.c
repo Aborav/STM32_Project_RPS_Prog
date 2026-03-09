@@ -84,7 +84,7 @@ bool MillisDelay(uint32_t *counter, uint16_t delay) {
 
 /////////////////////////////////////////////////////////////////////////
 /*
- * @brief Redefinition of printf function
+ * @brief Redefinition to printf function
  */
 int _write(int file, uint8_t *ptr, int len) {
 //  (void)file;

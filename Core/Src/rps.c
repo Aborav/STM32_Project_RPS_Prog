@@ -8,7 +8,7 @@
 #include "rps.h"
 
 /*---------------------------------------------TYPES------------------------------------------------*/
-//Feedback tables
+//Feedback tables in flash
 ////////////////////////////////////////////////////////////
 const uint16_t *table_ptr_u = (uint16_t*) TABLE_VOLT_ADDR;
 const uint16_t *table_ptr_i = (uint16_t*) TABLE_CURR_ADDR;
@@ -274,6 +274,7 @@ void RPS_Save_PrintSavedTables(void) {
  * @brief Function to calculate DAC steps using tables in flash
  * DAC +1 -> voltage +?\
  * DAC +10 -> current +?
+ * @param[in/out] *r -> structure pointer
  */
 void RPS_Save_CalculateDACSteps(rps_type *r) {
 	uint16_t aver_buf[3] = { 0, };
@@ -284,7 +285,12 @@ void RPS_Save_CalculateDACSteps(rps_type *r) {
 		*aver_buf = buf;
 		*(aver_buf + 1) = *(table_ptr_u + i + 1) - *(table_ptr_u + i);
 		*(aver_buf + 2) = *(table_ptr_u + i + 2) - *(table_ptr_u + i + 1);
-		buf = (max(aver_buf[0], aver_buf[1]) == max(aver_buf[1], aver_buf[2])) ? max(aver_buf[0], aver_buf[2]) : max(aver_buf[1], min(aver_buf[0], aver_buf[2]));
+		//median average
+		if ((max(aver_buf[0], aver_buf[1]) == max(aver_buf[1], aver_buf[2]))){
+			buf = max(aver_buf[0], aver_buf[2]);
+		}else {
+			buf = max(aver_buf[1], min(aver_buf[0], aver_buf[2]));
+		}
 	}
 
 //aver_step = buf;
@@ -297,6 +303,7 @@ void RPS_Save_CalculateDACSteps(rps_type *r) {
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to reach voltage by setting a set point
+ * search for the closest DAC set point
  * @param[in] sp_val-> set point
  * @param[in/out] *r -> structure pointer
  */
@@ -323,6 +330,7 @@ void RPS_Ctrl_U_SPReach(uint16_t set_point, rps_type *r) {
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to reach current by setting a set point
+ * search for the closest DAC set point
  * @param[in] sp_val-> set point
  * @param[in/out] *r -> project structure pointer
  */
