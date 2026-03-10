@@ -11,24 +11,33 @@
 //Values structure
 ////////////////////////////////////////////////////////////
 typedef struct _values_type {
+	//VAW
 	uint16_t volt; ///<value from measuring source (INA226)
 	uint16_t curr; ///<value from measuring source (INA226)
 	uint16_t watt; ///<value from measuring source (INA226)
-	int16_t dac_u; ///<will be written into DAC register
-	int16_t dac_i; ///<will be written into DAC register
+
+	//Control
 	int16_t sp_u_val; ///<set point
 	int16_t sp_i_val; ///<set point
 	uint16_t u_min; ///<minimum voltage after calibration
 	uint16_t u_max; ///<maximum voltage after calibration
 	uint16_t i_min; ///<minimum current after calibration
 	uint16_t i_max; ///<maximum current after calibration
+
+	//DAC
+	int16_t dac_u; ///<will be written into DAC register
+	int16_t dac_i; ///<will be written into DAC register
+	uint8_t u_dac_step100;
+	uint8_t u_dac_step10;
+	uint8_t i_dac_step100;
+	uint8_t i_dac_step10;
 } values_type;
 
 //Bits field for status flags
 ////////////////////////////////////////////////////////////
 typedef struct _flags_type {
 	unsigned tl494_on :1; ///<TL494 clocking is ON
-	unsigned start_draw:1; ///<draw object at start
+	unsigned start_draw :1; ///<draw object at start
 } flags_type;
 
 //Bits field for errors
@@ -36,11 +45,12 @@ typedef struct _flags_type {
 typedef union _errors_type {
 	uint8_t all_errors;
 	struct {
-		unsigned cicle_timeout :1; ///<
-		unsigned ina226_off :1;
-		unsigned flash_erase :1;
-		unsigned flash_write :1;
-		unsigned reserved :4;
+		unsigned cicle_timeout :1; ///<we are stuck in cycle
+		unsigned ina226_off :1; ///<INA226 doesn't respond at start
+		unsigned flash_erase :1; ///<flash erase error
+		unsigned flash_write :1; ///<flash write error
+		unsigned wrong_channel:1; ///<wrong function input channel _CURR,_VOLT
+		unsigned reserved :3;
 	} bit;
 } errors_type;
 
@@ -54,12 +64,8 @@ typedef struct _rps_type {
 
 //Unions for functions
 ////////////////////////////////////////////////////////////
-typedef enum _channel_type {
+typedef enum rps_channel_type {
 	_VOLT = 0, _CURR = 1
-} channel_type;
-
-
-
-
+} rps_channel_type;
 
 #endif /* INC_APP_TYPES_H_ */

@@ -51,9 +51,8 @@ void RPS_Save_FBTableCurr(rps_type *r);
 void RPS_Save_Table(rps_type *r);
 void RPS_Save_TableInit(rps_type *r);
 void RPS_Save_PrintSavedTables(void);
-void RPS_Save_CalculateDACSteps(rps_type *r);
-void RPS_Ctrl_U_SPReach(uint16_t set_point, rps_type *r);
-void RPS_Ctrl_I_SPReach(uint16_t set_point, rps_type *r);
+void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va);
+void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va);
 
 
 #endif /* INC_RPS_H_ */

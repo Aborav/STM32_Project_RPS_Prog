@@ -234,8 +234,8 @@ void HMI_Input(rps_type *r) {
 	if (MENC_Click(&menc1)) {
 		r->fl.tl494_on = ~r->fl.tl494_on;
 		if (r->fl.tl494_on) {
-			RPS_Ctrl_U_SPReach(r->val.sp_u_val, r);
-			RPS_Ctrl_I_SPReach(r->val.sp_i_val, r);
+			RPS_Ctrl_SPReachTable(r->val.sp_u_val, r, _VOLT);
+			RPS_Ctrl_SPReachTable(r->val.sp_i_val, r, _CURR);
 			PERIF_TL494_ON();
 		} else {
 			PERIF_TL494_OFF();
@@ -285,13 +285,13 @@ void HMI_Input(rps_type *r) {
 //if any turn
 	if (MENC_AnyTurn(&menc1)) {
 		if (r->fl.tl494_on) {
-			RPS_Ctrl_U_SPReach(r->val.sp_u_val, r);
+			RPS_Ctrl_SPReachTable(r->val.sp_u_val, r, _VOLT);
 			//PERIF_DAC_SET(r->val.dac_u, DAC_VOLT_CH);
 		}
 	}
 	if (MENC_AnyTurn(&menc2)) {
 		if (r->fl.tl494_on) {
-			RPS_Ctrl_I_SPReach(r->val.sp_i_val, r);
+			RPS_Ctrl_SPReachTable(r->val.sp_i_val, r, _CURR);
 			//PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
 		}
 	}

@@ -183,7 +183,8 @@ int main(void) {
 	INA_SetCalVal(INA_CALIB_VAL);
 
 	RPS_Save_TableInit(&rps);
-	RPS_Save_CalculateDACSteps(&rps);
+	RPS_Save_CalculateDACSteps(&rps,_VOLT);
+	RPS_Save_CalculateDACSteps(&rps,_CURR);
 
 	//Input
 	//////////////////////////////////////////////////////////////////////////////////////

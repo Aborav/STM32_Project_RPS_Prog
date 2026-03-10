@@ -272,84 +272,97 @@ void RPS_Save_PrintSavedTables(void) {
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to calculate DAC steps using tables in flash
- * DAC +1 -> voltage +?\
- * DAC +10 -> current +?
+ * DAC +10 -> voltage +?\
+ * DAC +100 -> current +?
+ * function returns val.u_dac_step100/10 value in the global structure
  * @param[in/out] *r -> structure pointer
+ * @param[in] va -> voltage/current channel
  */
-void RPS_Save_CalculateDACSteps(rps_type *r) {
-	uint16_t aver_buf[3] = { 0, };
-	uint16_t buf = 0;
-//uint16_t aver_step;
+void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
+	if (r == 0)
+		return;
 
-	for (uint16_t i = 0; i < RPS_TABLE_SIZE; i += 3) {
-		*aver_buf = buf;
-		*(aver_buf + 1) = *(table_ptr_u + i + 1) - *(table_ptr_u + i);
-		*(aver_buf + 2) = *(table_ptr_u + i + 2) - *(table_ptr_u + i + 1);
-		//median average
-		if ((max(aver_buf[0], aver_buf[1]) == max(aver_buf[1], aver_buf[2]))){
-			buf = max(aver_buf[0], aver_buf[2]);
-		}else {
-			buf = max(aver_buf[1], min(aver_buf[0], aver_buf[2]));
+	uint16_t *table_ptr; ///<flash table pointer
+	filter_type fil_arr[3] = { 0, }; ///<median filter buffer
+	filter_type fil_val; ///<median filter variable
+	uint16_t buf = 0; ///<previous value holder
+	uint16_t max_val; ///<<max value in the global structure
+
+	if (va == _VOLT) {
+		table_ptr = (uint16_t*) table_ptr_u;
+		max_val = r->val.u_max;
+	} else if (va == _CURR) {
+		table_ptr = (uint16_t*) table_ptr_i;
+		max_val = r->val.i_max;
+	} else {
+		r->err.bit.wrong_channel = 1;
+		return;
+	}
+
+	//i have tried to use just summ average, but it eats about 1 kB, this is 400 B
+	for (uint16_t i = 0; i < RPS_TABLE_SIZE; i++) {
+		//if this is maximum value -> exit
+		if (table_ptr[i] == max_val) {
+			break;
+		} else {
+			if (table_ptr[i] - buf > 0) {
+				fil_val = table_ptr[i] - buf; //check different between prev and current value
+				FilterMedian(&fil_val, fil_arr); //filter it
+				buf = table_ptr[i]; //previous = current value
+			}
 		}
 	}
 
-//aver_step = buf;
-	__NOP();
-
-//	*(p) = (uint16_t)(buf/100);
-//	*(p+1) = (uint16_t)
+	if (va == _VOLT) {
+		r->val.u_dac_step100 = (uint16_t) fil_val; //calculate average step of DAC
+		r->val.u_dac_step10 = (uint16_t) fil_val / 10; //calculate average step of DAC
+	} else if (va == _CURR) {
+		r->val.i_dac_step100 = (uint16_t) fil_val; //calculate average step of DAC
+		r->val.i_dac_step10 = (uint16_t) fil_val / 10; //calculate average step of DAC
+	}
 }
-
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to reach voltage by setting a set point
  * search for the closest DAC set point
+ * function returns val.dac_u/i value in the global structure
  * @param[in] sp_val-> set point
  * @param[in/out] *r -> structure pointer
  */
-void RPS_Ctrl_U_SPReach(uint16_t set_point, rps_type *r) {
+void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va) {
+	if (r == 0)
+		return;
+
+	uint16_t dac_val; ///< DAC value, will be written in global structure
+	uint16_t max_val; ///< max value in the global structure
+	uint16_t *table_ptr; ///<flash table pointer
+
+	if (va == _VOLT) {
+		table_ptr = (uint16_t*) table_ptr_u;
+		max_val = r->val.u_max;
+	} else if (va == _CURR) {
+		table_ptr = (uint16_t*) table_ptr_i;
+		max_val = r->val.i_max;
+	} else {
+		r->err.bit.wrong_channel = 1;
+		return;
+	}
+
 	if (set_point == 0) {
-		r->val.dac_u = 0; //mix
-	} else if (set_point == r->val.u_max) {
-		r->val.dac_u = 4095; //max
+		dac_val = 0; //mix
+	} else if (set_point == max_val) {
+		dac_val = 4095; //max
 	} else {
 		for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
-			//compare voltage from the feedback voltage table and a set point.
-			//to find a table pointer with closest to SP voltage but smaller than it
-			if (*(table_ptr_u + i) > set_point) {
-				r->val.dac_u = *(table_dac_step + i - 1); //use this shift in the DAC values table
-				//here must be some protection from pointer miss read. But my first value in the tables are 0
-				//nothing is smaller than 0 in uint16_t
+			//compare voltage/current from the feedback voltage table and a set point.
+			//to find a table pointer with closest to SP value but smaller than it
+			if (*(table_ptr + i) > set_point) {
+				dac_val = *(table_dac_step + i - 1); //use this shift in the DAC values table
 				break;
 			}
 		}
 	}
-	PERIF_DAC_SET(r->val.dac_u, DAC_VOLT_CH);
+	__NOP();
+	PERIF_DAC_SET(dac_val, va==_VOLT?DAC_VOLT_CH:DAC_CURR_CH);
 }
 
-/////////////////////////////////////////////////////////////////////////
-/*
- * @brief Function to reach current by setting a set point
- * search for the closest DAC set point
- * @param[in] sp_val-> set point
- * @param[in/out] *r -> project structure pointer
- */
-void RPS_Ctrl_I_SPReach(uint16_t set_point, rps_type *r) {
-	if (set_point == 0) {
-		r->val.dac_i = 0; //min
-	} else if (set_point == r->val.i_max) {
-		r->val.dac_i = 4095; //max
-	} else {
-		for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
-			//compare voltage from the feedback voltage table and a set point.
-			//to find a table pointer with closest to SP voltage but smaller than it
-			if (*(table_ptr_i + i) > set_point) {
-				r->val.dac_i = *(table_dac_step + i - 1);
-				//here must be some protection from pointer miss read. But my first value in the tables are 0
-				//nothing is smaller than 0 in uint16_t
-				break;
-			}
-		}
-	}
-	PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
-}
