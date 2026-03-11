@@ -225,12 +225,12 @@ int main(void) {
 			SERV_Print_FakeFloat(rps.val.watt, 5, 1);
 
 			printf("   U sp:");
-			SERV_Print_FakeFloat(rps.val.sp_u_val, 5, 2);
+			SERV_Print_FakeFloat(rps.val.u_sp_val, 5, 2);
 			printf("   I sp:");
-			SERV_Print_FakeFloat(rps.val.sp_i_val, 5, 3);
+			SERV_Print_FakeFloat(rps.val.i_sp_val, 5, 3);
 
-			printf("   DAC U:%u", rps.val.dac_u);
-			printf("   DAC I:%u\n", rps.val.dac_i);
+			printf("   DAC U:%u", rps.val.u_dac);
+			printf("   DAC I:%u\n", rps.val.i_dac);
 
 			printf("RPS Error No: %x\n", rps.err.all_errors);
 			MGL_PrintErr();

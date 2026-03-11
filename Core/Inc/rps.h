@@ -53,6 +53,7 @@ void RPS_Save_TableInit(rps_type *r);
 void RPS_Save_PrintSavedTables(void);
 void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va);
 void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va);
+bool RPS_Ctrl_SPReachSteps(rps_type *r);
 
 
 #endif /* INC_RPS_H_ */

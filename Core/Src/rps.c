@@ -25,6 +25,10 @@ uint16_t table_dac_step[RPS_TABLE_SIZE]; ///<DAC from 0 to 4095
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_VAW_Conversion(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
 
 //static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
 
@@ -45,6 +49,11 @@ void RPS_VAW_Conversion(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_Save_FBTableVolt(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
+
 	uint16_t val = 0; ///<buffer
 	uint32_t timeout_cnt = 0; ///<against infinite while
 	uint64_t *buf64_ptr; ///<HAL_FLASH_Program buffer pointer
@@ -65,7 +74,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 		val = *(table_dac_step + i);
 		PERIF_DAC_SET(val, DAC_VOLT_CH); //voltage increasing
 		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
-		r->val.dac_u = val;
+		r->val.u_dac = val;
 		RPS_VAW_Conversion(r);
 		//*(table_volt_fb + i) = r->val.volt;
 
@@ -96,7 +105,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 	PERIF_TL494_OFF();
 	PERIF_DAC_SET(0, DAC_VOLT_CH);
 	PERIF_DAC_SET(0, DAC_CURR_CH);
-	r->val.dac_u = 0; //clear global structure variable
+	r->val.u_dac = 0; //clear global structure variable
 
 //wait until capacitor is discharged
 	while (r->val.volt != 0) {
@@ -121,6 +130,11 @@ void RPS_Save_FBTableVolt(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_Save_FBTableCurr(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
+
 	uint16_t val = 0;
 	uint32_t timeout_cnt = 0; ///<against infinite while
 	uint64_t *buf64_ptr; ///<HAL_FLASH_Program buffer pointer
@@ -142,7 +156,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 		val = *(table_dac_step + i);
 		PERIF_DAC_SET(val, DAC_CURR_CH); //voltage increasing
 		HAL_Delay(RPS_TABLE_DELAY); //wait until output capacitor is charged
-		r->val.dac_i = val;
+		r->val.i_dac = val;
 		RPS_VAW_Conversion(r);
 		//*(table_curr_fb + i) = r->val.curr;
 
@@ -173,7 +187,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 	PERIF_TL494_OFF();
 	PERIF_DAC_SET(0, DAC_VOLT_CH);
 	PERIF_DAC_SET(0, DAC_CURR_CH);
-	r->val.dac_i = 0; //clear global structure variable
+	r->val.i_dac = 0; //clear global structure variable
 
 	while (r->val.volt != 0) {
 		RPS_VAW_Conversion(r);
@@ -198,6 +212,10 @@ void RPS_Save_FBTableCurr(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_Save_Table(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
 	SERV_Flash_EraseTable(r); //clear last page in FLASH
 
 //filling tables
@@ -216,6 +234,10 @@ void RPS_Save_Table(rps_type *r) {
  * it's required for voltage/current control functions
  */
 void RPS_Save_TableInit(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
 	uint16_t val;
 	uint16_t buf_curr = 0; //buffer
 	uint16_t debug_buf;
@@ -227,7 +249,7 @@ void RPS_Save_TableInit(rps_type *r) {
 		*(table_dac_step + i) = val;
 	}
 //min and max voltage
-	r->val.dac_u = 0;
+	r->val.u_dac = 0;
 	r->val.u_min = *(table_ptr_u + 0);
 	r->val.u_max = *(table_ptr_u + RPS_TABLE_SIZE - 1);
 
@@ -279,8 +301,10 @@ void RPS_Save_PrintSavedTables(void) {
  * @param[in] va -> voltage/current channel
  */
 void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
-	if (r == 0)
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
 		return;
+	}
 
 	uint16_t *table_ptr; ///<flash table pointer
 	filter_type fil_arr[3] = { 0, }; ///<median filter buffer
@@ -330,8 +354,10 @@ void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
  * @param[in/out] *r -> structure pointer
  */
 void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va) {
-	if (r == 0)
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
 		return;
+	}
 
 	uint16_t dac_val; ///< DAC value, will be written in global structure
 	uint16_t max_val; ///< max value in the global structure
@@ -364,5 +390,86 @@ void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va)
 	}
 	__NOP();
 	PERIF_DAC_SET(dac_val, va==_VOLT?DAC_VOLT_CH:DAC_CURR_CH);
+}
+
+/////////////////////////////////////////////////////////////////////////
+/*
+ * @brief Function to fine adjust after RPS_Ctrl_SPReachTable
+ * Affects on both channels
+ * @param[in/out] *r -> structure pointer
+ */
+bool RPS_Ctrl_SPReachSteps(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return 1;
+	}
+
+	int16_t calc_diff; ///<difference for calculation in cycle
+	uint32_t timeout_cnt = 0;
+	bool rev_flag = 0; ///<reverse flag
+	int16_t dac_val = r->val.u_dac;
+	uint16_t dac_diff;
+	uint16_t att_buf[3]; ///<buffer to hold previous values of voltage/current
+	uint8_t ind = 0; ///<attempts buffer index
+
+	/*--------VOLTAGE PART----------*/
+
+	HAL_Delay(1000); //wait until capacitor is charged
+	RPS_VAW_Conversion(r);
+
+	while (1) {
+		calc_diff = r->val.u_sp_val - r->val.volt; //what is difference now
+		if (calc_diff < 0) {
+			calc_diff = -calc_diff;
+			rev_flag = 1;
+		}
+
+		//adjust step calculation
+		if (calc_diff > r->val.u_dac_step100) {
+			dac_diff = 100;
+		} else if (r->val.u_dac_step100 > calc_diff && calc_diff > r->val.u_dac_step10) {
+			dac_diff = 10;
+		} else if (calc_diff < r->val.u_dac_step10) {
+			dac_diff = 1;
+		} else if (calc_diff == 1) {
+			//r->val.cv_cc_ctrl = _VOLT;
+			return 0;
+		}
+
+		//direction of adjust and limits check
+		if (rev_flag == 0) {
+			dac_val += dac_diff;
+			if (dac_val > 4095)
+				dac_val = 4095;
+		} else if (rev_flag == 1) {
+			dac_val -= dac_diff;
+			if (dac_val < 0)
+				dac_val = 0;
+		}
+
+		PERIF_DAC_SET(dac_val, DAC_VOLT_CH);
+		r->val.u_dac = dac_val;
+		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
+		RPS_VAW_Conversion(r);
+		HMI_Display_MeasPage(r);
+
+		att_buf[ind > 3 ? ind = 0 : ind++] = r->val.volt; //voltage doesn't change 3 times
+		if (att_buf[0] == att_buf[1]) {
+			if (att_buf[1] == att_buf[2]) {
+				if (att_buf[0] == att_buf[2]) {
+					return 1;
+				}
+			}
+
+		}
+
+		if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {
+			r->err.bit.cicle_timeout = 1;
+			return 1;
+		}
+
+		__NOP();
+	}
+
 }
 

@@ -17,16 +17,16 @@ typedef struct _values_type {
 	uint16_t watt; ///<value from measuring source (INA226)
 
 	//Control
-	int16_t sp_u_val; ///<set point
-	int16_t sp_i_val; ///<set point
+	int16_t u_sp_val; ///<set point
+	int16_t i_sp_val; ///<set point
 	uint16_t u_min; ///<minimum voltage after calibration
 	uint16_t u_max; ///<maximum voltage after calibration
 	uint16_t i_min; ///<minimum current after calibration
 	uint16_t i_max; ///<maximum current after calibration
 
 	//DAC
-	int16_t dac_u; ///<will be written into DAC register
-	int16_t dac_i; ///<will be written into DAC register
+	int16_t u_dac; ///<will be written into DAC register
+	int16_t i_dac; ///<will be written into DAC register
 	uint8_t u_dac_step100;
 	uint8_t u_dac_step10;
 	uint8_t i_dac_step100;
@@ -50,6 +50,7 @@ typedef union _errors_type {
 		unsigned flash_erase :1; ///<flash erase error
 		unsigned flash_write :1; ///<flash write error
 		unsigned wrong_channel:1; ///<wrong function input channel _CURR,_VOLT
+		unsigned empty_ptr:1; ///<empty pointer as input
 		unsigned reserved :3;
 	} bit;
 } errors_type;

@@ -26,6 +26,11 @@ menc_struct_type menc1, menc2;
  * @param[in/out] *r -> project structure pointer
  */
 void HMI_Display_GraphBarsStructInit(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
+
 	volt_bar.num = &r->val.volt;
 	volt_bar.num_max = r->val.u_max;
 	volt_bar.x = BAR_VOLTAGE_X;
@@ -62,6 +67,11 @@ void HMI_Display_GraphBarsStructInit(rps_type *r) {
  * @brief starting page drawing function
  */
 void HMI_Display_StartPage(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
+
 	MGL_SET_BG_CLR(COLOR_BLACK); //background for text
 	MGL_SET_CLR(0xffff);
 	MGL_SET_FONT(FONT_5x8_FP);
@@ -111,6 +121,11 @@ void HMI_Display_StartPage(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void HMI_Display_MeasPage(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
+
 	static uint16_t volt_old, curr_old, watt_old;
 	static uint16_t sp_u_old, sp_i_old, dac_u_old, dac_i_old;
 	int16_t diff = 0; ///<differance between new and old values
@@ -153,48 +168,48 @@ void HMI_Display_MeasPage(rps_type *r) {
 	MGL_SET_FONT(FONT_5x8_FP);
 
 //voltage DAC value
-	diff = dac_u_old - r->val.dac_u;
+	diff = dac_u_old - r->val.u_dac;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0 || r->fl.start_draw) {
 		MGL_SetCursor(45, LOW_INF_BAR_UPP_Y, &mgl_t);
-		MGL_PrintUint16_R(r->val.dac_u, 4, &mgl_t);
+		MGL_PrintUint16_R(r->val.u_dac, 4, &mgl_t);
 	}
 
 //current dac value
-	diff = dac_i_old - r->val.dac_i;
+	diff = dac_i_old - r->val.i_dac;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0 || r->fl.start_draw) {
 		MGL_SetCursor(45, LOW_INF_BAR_LOW_Y, &mgl_t);
-		MGL_PrintUint16_R(r->val.dac_i, 4, &mgl_t);
+		MGL_PrintUint16_R(r->val.i_dac, 4, &mgl_t);
 	}
 
 //voltage set point
-	diff = sp_u_old - r->val.sp_u_val;
+	diff = sp_u_old - r->val.u_sp_val;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0|| r->fl.start_draw) {
 		MGL_SetCursor(120, LOW_INF_BAR_UPP_Y, &mgl_t);
-		MGL_PrintFloatTiny_R(r->val.sp_u_val, 4, 2, &mgl_t);
+		MGL_PrintFloatTiny_R(r->val.u_sp_val, 4, 2, &mgl_t);
 	}
 
 //current set point
-	diff = sp_i_old - r->val.sp_i_val;
+	diff = sp_i_old - r->val.i_sp_val;
 	if (diff < 0)
 		diff *= -1;
 	if (diff > 0 || r->fl.start_draw) {
 		MGL_SetCursor(120, LOW_INF_BAR_LOW_Y, &mgl_t);
-		MGL_PrintFloatTiny_R(r->val.sp_i_val, 4, 3, &mgl_t);
+		MGL_PrintFloatTiny_R(r->val.i_sp_val, 4, 3, &mgl_t);
 	}
 
 	volt_old = r->val.volt;
 	curr_old = r->val.curr;
 	watt_old = r->val.watt;
-	sp_u_old = r->val.sp_u_val;
-	sp_i_old = r->val.sp_i_val;
-	dac_u_old = r->val.dac_u;
-	dac_i_old = r->val.dac_i;
+	sp_u_old = r->val.u_sp_val;
+	sp_i_old = r->val.i_sp_val;
+	dac_u_old = r->val.u_dac;
+	dac_i_old = r->val.i_dac;
 
 	r->fl.start_draw = 0;
 }
@@ -227,6 +242,11 @@ void HMI_Input_EncodersStructInit(void) {
  * @param[in/out] *r -> project structure pointer
  */
 void HMI_Input(rps_type *r) {
+	if (r == 0) {
+		r->err.bit.empty_ptr = 1;
+		return;
+	}
+
 	MENC_MainHandler(&menc1);
 	MENC_MainHandler(&menc2);
 
@@ -234,8 +254,8 @@ void HMI_Input(rps_type *r) {
 	if (MENC_Click(&menc1)) {
 		r->fl.tl494_on = ~r->fl.tl494_on;
 		if (r->fl.tl494_on) {
-			RPS_Ctrl_SPReachTable(r->val.sp_u_val, r, _VOLT);
-			RPS_Ctrl_SPReachTable(r->val.sp_i_val, r, _CURR);
+			RPS_Ctrl_SPReachTable(r->val.u_sp_val, r, _VOLT);
+			RPS_Ctrl_SPReachTable(r->val.i_sp_val, r, _CURR);
 			PERIF_TL494_ON();
 		} else {
 			PERIF_TL494_OFF();
@@ -246,18 +266,18 @@ void HMI_Input(rps_type *r) {
 
 //voltage trim
 	if (MENC_TurnRight(&menc1)) {
-		r->val.sp_u_val += 10;
-		if (r->val.sp_u_val >= r->val.u_max)
-			r->val.sp_u_val = r->val.u_max;
+		r->val.u_sp_val += 10;
+		if (r->val.u_sp_val >= r->val.u_max)
+			r->val.u_sp_val = r->val.u_max;
 //		r->val.dac_u += 10;
 //		if (r->val.dac_u >= 4095)
 //			r->val.dac_u = 4095;
 	}
 
 	if (MENC_TurnLeft(&menc1)) {
-		r->val.sp_u_val -= 10;
-		if (r->val.sp_u_val < r->val.u_min)
-			r->val.sp_u_val = r->val.u_min;
+		r->val.u_sp_val -= 10;
+		if (r->val.u_sp_val < r->val.u_min)
+			r->val.u_sp_val = r->val.u_min;
 //		r->val.dac_u -= 10;
 //		if (r->val.dac_u < 0)
 //			r->val.dac_u = 0;
@@ -265,18 +285,18 @@ void HMI_Input(rps_type *r) {
 
 //current trim
 	if (MENC_TurnRight(&menc2)) {
-		r->val.sp_i_val += 10;
-		if (r->val.sp_i_val >= r->val.i_max)
-			r->val.sp_i_val = r->val.i_max;
+		r->val.i_sp_val += 10;
+		if (r->val.i_sp_val >= r->val.i_max)
+			r->val.i_sp_val = r->val.i_max;
 //		r->val.dac_i += 10;
 //		if (r->val.dac_i >= 4095)
 //			r->val.dac_i = 4095;
 	}
 
 	if (MENC_TurnLeft(&menc2)) {
-		r->val.sp_i_val -= 10;
-		if (r->val.sp_i_val < r->val.i_min)
-			r->val.sp_i_val = r->val.i_min;
+		r->val.i_sp_val -= 10;
+		if (r->val.i_sp_val < r->val.i_min)
+			r->val.i_sp_val = r->val.i_min;
 //		r->val.dac_i -= 10;
 //		if (r->val.dac_i < 0)
 //			r->val.dac_i = 0;
@@ -285,13 +305,13 @@ void HMI_Input(rps_type *r) {
 //if any turn
 	if (MENC_AnyTurn(&menc1)) {
 		if (r->fl.tl494_on) {
-			RPS_Ctrl_SPReachTable(r->val.sp_u_val, r, _VOLT);
+			RPS_Ctrl_SPReachTable(r->val.u_sp_val, r, _VOLT);
 			//PERIF_DAC_SET(r->val.dac_u, DAC_VOLT_CH);
 		}
 	}
 	if (MENC_AnyTurn(&menc2)) {
 		if (r->fl.tl494_on) {
-			RPS_Ctrl_SPReachTable(r->val.sp_i_val, r, _CURR);
+			RPS_Ctrl_SPReachTable(r->val.i_sp_val, r, _CURR);
 			//PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
 		}
 	}
