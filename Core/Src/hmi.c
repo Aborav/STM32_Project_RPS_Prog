@@ -168,37 +168,25 @@ void HMI_Display_MeasPage(rps_type *r) {
 	MGL_SET_FONT(FONT_5x8_FP);
 
 //voltage DAC value
-	diff = dac_u_old - r->val.u_dac;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > 0 || r->fl.start_draw) {
+	if(dac_u_old - r->val.u_dac != 0 || r->fl.start_draw){
 		MGL_SetCursor(45, LOW_INF_BAR_UPP_Y, &mgl_t);
 		MGL_PrintUint16_R(r->val.u_dac, 4, &mgl_t);
 	}
 
 //current dac value
-	diff = dac_i_old - r->val.i_dac;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > 0 || r->fl.start_draw) {
+	if(dac_i_old - r->val.i_dac != 0 || r->fl.start_draw){
 		MGL_SetCursor(45, LOW_INF_BAR_LOW_Y, &mgl_t);
 		MGL_PrintUint16_R(r->val.i_dac, 4, &mgl_t);
 	}
 
 //voltage set point
-	diff = sp_u_old - r->val.u_sp_val;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > 0|| r->fl.start_draw) {
+	if(sp_u_old - r->val.u_sp_val != 0 || r->fl.start_draw) {
 		MGL_SetCursor(120, LOW_INF_BAR_UPP_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.u_sp_val, 4, 2, &mgl_t);
 	}
 
 //current set point
-	diff = sp_i_old - r->val.i_sp_val;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > 0 || r->fl.start_draw) {
+	if(sp_i_old - r->val.i_sp_val != 0 || r->fl.start_draw) {
 		MGL_SetCursor(120, LOW_INF_BAR_LOW_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.i_sp_val, 4, 3, &mgl_t);
 	}
