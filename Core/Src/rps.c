@@ -477,7 +477,7 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 			return 1;
 		}
 
-		__NOP();
+		//__NOP();
 	}
 
 }
