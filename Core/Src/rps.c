@@ -353,7 +353,7 @@ void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
  * @param[in] sp_val-> set point
  * @param[in/out] *r -> structure pointer
  */
-void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va) {
+void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
 	if (r == 0) {
 		r->err.bit.empty_ptr = 1;
 		return;
@@ -362,13 +362,16 @@ void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va)
 	uint16_t dac_val; ///< DAC value, will be written in global structure
 	uint16_t max_val; ///< max value in the global structure
 	uint16_t *table_ptr; ///<flash table pointer
+	uint16_t set_point; ///<set point for this function
 
 	if (va == _VOLT) {
 		table_ptr = (uint16_t*) table_ptr_u;
 		max_val = r->val.u_max;
+		set_point = r->val.u_sp_val;
 	} else if (va == _CURR) {
 		table_ptr = (uint16_t*) table_ptr_i;
 		max_val = r->val.i_max;
+		set_point = r->val.i_sp_val;
 	} else {
 		r->err.bit.wrong_channel = 1;
 		return;
@@ -389,7 +392,13 @@ void RPS_Ctrl_SPReachTable(uint16_t set_point, rps_type *r, rps_channel_type va)
 		}
 	}
 	__NOP();
-	PERIF_DAC_SET(dac_val, va==_VOLT?DAC_VOLT_CH:DAC_CURR_CH);
+	if (va == _VOLT) {
+		r->val.u_dac = dac_val;
+		PERIF_DAC_SET(dac_val, DAC_VOLT_CH);
+	} else if (va == _CURR) {
+		r->val.i_dac = dac_val;
+		PERIF_DAC_SET(dac_val, DAC_CURR_CH);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////

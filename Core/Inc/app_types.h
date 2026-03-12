@@ -45,7 +45,7 @@ typedef struct _flags_type {
 typedef union _errors_type {
 	uint8_t all_errors;
 	struct {
-		unsigned cicle_timeout :1; ///<we are stuck in cycle
+		unsigned cicle_timeout :1; ///<we are stuck in a cycle
 		unsigned ina226_off :1; ///<INA226 doesn't respond at start
 		unsigned flash_erase :1; ///<flash erase error
 		unsigned flash_write :1; ///<flash write error

@@ -254,14 +254,14 @@ void HMI_Input(rps_type *r) {
 	if (MENC_Click(&menc1)) {
 		r->fl.tl494_on = ~r->fl.tl494_on;
 		if (r->fl.tl494_on) {
-			RPS_Ctrl_SPReachTable(r->val.u_sp_val, r, _VOLT);
-			RPS_Ctrl_SPReachTable(r->val.i_sp_val, r, _CURR);
+			RPS_Ctrl_SPReachTable(r, _VOLT);
+			RPS_Ctrl_SPReachTable(r, _CURR);
 			PERIF_TL494_ON();
 		} else {
 			PERIF_TL494_OFF();
+			PERIF_DAC_SET(r->val.u_dac = 0, DAC_VOLT_CH);
+			PERIF_DAC_SET(r->val.i_dac = 0, DAC_CURR_CH);
 		}
-		//		PERIF_DAC_SET(r->val.dac_u, DAC_VOLT_CH);
-		//		PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
 	}
 
 //voltage trim
@@ -304,16 +304,16 @@ void HMI_Input(rps_type *r) {
 
 //if any turn
 	if (MENC_AnyTurn(&menc1)) {
-		if (r->fl.tl494_on) {
-			RPS_Ctrl_SPReachTable(r->val.u_sp_val, r, _VOLT);
-			//PERIF_DAC_SET(r->val.dac_u, DAC_VOLT_CH);
-		}
+//		if (r->fl.tl494_on) {
+//			RPS_Ctrl_SPReachTable(r->val.u_sp_val, r, _VOLT);
+//			//PERIF_DAC_SET(r->val.dac_u, DAC_VOLT_CH);
+//		}
 	}
 	if (MENC_AnyTurn(&menc2)) {
-		if (r->fl.tl494_on) {
-			RPS_Ctrl_SPReachTable(r->val.i_sp_val, r, _CURR);
-			//PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
-		}
+//		if (r->fl.tl494_on) {
+//			RPS_Ctrl_SPReachTable(r->val.i_sp_val, r, _CURR);
+//			//PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
+//		}
 	}
 //		//fast turn
 //		if (MENC_TurnFastRight(&menc1)) {
