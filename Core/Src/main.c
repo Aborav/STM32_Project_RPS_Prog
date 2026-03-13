@@ -200,6 +200,7 @@ int main(void) {
 #ifdef USE_DEBUG
 	printf("While start\n\r");
 	RPS_Save_PrintSavedTables();
+	rps.val.i_sp_val = rps.val.i_max;
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -216,25 +217,25 @@ int main(void) {
 			HMI_Display_MeasPage(&rps);
 		}
 #ifdef USE_DEBUG
-		if (MillisDelay(&ms_tmr_debug, DEBUG_REFRESH)) {
-			printf("U:");
-			SERV_Print_FakeFloat(rps.val.volt, 5, 2);
-			printf("   I:");
-			SERV_Print_FakeFloat(rps.val.curr, 5, 3);
-			printf("   P:");
-			SERV_Print_FakeFloat(rps.val.watt, 5, 1);
-
-			printf("   U sp:");
-			SERV_Print_FakeFloat(rps.val.u_sp_val, 5, 2);
-			printf("   I sp:");
-			SERV_Print_FakeFloat(rps.val.i_sp_val, 5, 3);
-
-			printf("   DAC U:%u", rps.val.u_dac);
-			printf("   DAC I:%u\n", rps.val.i_dac);
-
-			printf("RPS Error No: %x\n", rps.err.all_errors);
-			MGL_PrintErr();
-		}
+//		if (MillisDelay(&ms_tmr_debug, DEBUG_REFRESH)) {
+//			printf("U:");
+//			SERV_Print_FakeFloat(rps.val.volt, 5, 2);
+//			printf("   I:");
+//			SERV_Print_FakeFloat(rps.val.curr, 5, 3);
+//			printf("   P:");
+//			SERV_Print_FakeFloat(rps.val.watt, 5, 1);
+//
+//			printf("   U sp:");
+//			SERV_Print_FakeFloat(rps.val.u_sp_val, 5, 2);
+//			printf("   I sp:");
+//			SERV_Print_FakeFloat(rps.val.i_sp_val, 5, 3);
+//
+//			printf("   DAC U:%u", rps.val.u_dac);
+//			printf("   DAC I:%u\n", rps.val.i_dac);
+//
+//			printf("RPS Error No: %x\n", rps.err.all_errors);
+//			MGL_PrintErr();
+//		}
 #endif
 		//////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////END///////////////////////////////////////////////

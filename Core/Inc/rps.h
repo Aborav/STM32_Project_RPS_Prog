@@ -10,6 +10,7 @@
 #define INC_RPS_H_
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "main.h"
 #include "app_types.h"
 #include "Encoder/M_ENC.h"
@@ -38,7 +39,7 @@
 #define RPS_TABLE_DAC_STEP 100U
 #define RPS_TABLE_SIZE 42U
 
-#define RPS_TIMEOUT_THRESHOLD 100000000U
+#define RPS_TIMEOUT_THRESHOLD 10000000U
 
 /*---------------------------------------------TYPES------------------------------------------------*/
 extern DAC_HandleTypeDef hdac1;

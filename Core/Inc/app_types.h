@@ -29,8 +29,10 @@ typedef struct _values_type {
 	int16_t i_dac; ///<will be written into DAC register
 	uint8_t u_dac_step100;
 	uint8_t u_dac_step10;
+	uint8_t u_dac_step5;
 	uint8_t i_dac_step100;
 	uint8_t i_dac_step10;
+	uint8_t i_dac_step5;
 } values_type;
 
 //Bits field for status flags

@@ -340,9 +340,11 @@ void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
 	if (va == _VOLT) {
 		r->val.u_dac_step100 = (uint16_t) fil_val; //calculate average step of DAC
 		r->val.u_dac_step10 = (uint16_t) fil_val / 10; //calculate average step of DAC
+		r->val.u_dac_step5 = (uint16_t) fil_val / 20; //calculate average step of DAC
 	} else if (va == _CURR) {
 		r->val.i_dac_step100 = (uint16_t) fil_val; //calculate average step of DAC
 		r->val.i_dac_step10 = (uint16_t) fil_val / 10; //calculate average step of DAC
+		r->val.u_dac_step5 = (uint16_t) fil_val / 20; //calculate average step of DAC
 	}
 }
 /////////////////////////////////////////////////////////////////////////
@@ -421,27 +423,56 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 	uint16_t att_buf[3]; ///<buffer to hold previous values of voltage/current
 	uint8_t ind = 0; ///<attempts buffer index
 
-	/*--------VOLTAGE PART----------*/
+	while (1) {
+		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
+		RPS_VAW_Conversion(r);
+		HMI_Display_MeasPage(r);
+		if(ind>3) ind = 0;
+		att_buf[ind] = r->val.volt; //value changes not more than 1
+		ind++;
+		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
+			break;
+		}
 
-	HAL_Delay(1000); //wait until capacitor is charged
-	RPS_VAW_Conversion(r);
+		if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {
+			r->err.bit.cicle_timeout = 1;
+			break;
+		}
+	}
+
+	timeout_cnt = 0;
+	ind = 0;
+	att_buf[0] = 0;
+	att_buf[1] = 0;
+	att_buf[2] = 0;
 
 	while (1) {
 		calc_diff = r->val.u_sp_val - r->val.volt; //what is difference now
 		if (calc_diff < 0) {
 			calc_diff = -calc_diff;
 			rev_flag = 1;
+		} else {
+			rev_flag = 0;
 		}
-
+		__NOP();
 		//adjust step calculation
 		if (calc_diff > r->val.u_dac_step100) {
 			dac_diff = 100;
-		} else if (r->val.u_dac_step100 > calc_diff && calc_diff > r->val.u_dac_step10) {
+		}
+		if (r->val.u_dac_step100 > calc_diff && calc_diff > r->val.u_dac_step10) {
 			dac_diff = 10;
-		} else if (calc_diff < r->val.u_dac_step10) {
+		}
+		if (r->val.u_dac_step10 > calc_diff && calc_diff > r->val.u_dac_step5) {
+			dac_diff = 5;
+		}
+		if (calc_diff < r->val.u_dac_step5) {
 			dac_diff = 1;
-		} else if (calc_diff == 1) {
+		}
+		if (abs(calc_diff) == 0) {
+			//here is success !!!
 			//r->val.cv_cc_ctrl = _VOLT;
+			__NOP();
+			//r->fl.stop_jump = 1;
 			return 0;
 		}
 
@@ -455,21 +486,17 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 			if (dac_val < 0)
 				dac_val = 0;
 		}
-
+		__NOP();
 		PERIF_DAC_SET(dac_val, DAC_VOLT_CH);
 		r->val.u_dac = dac_val;
 		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
-
-		att_buf[ind > 3 ? ind = 0 : ind++] = r->val.volt; //voltage doesn't change 3 times
-		if (att_buf[0] == att_buf[1]) {
-			if (att_buf[1] == att_buf[2]) {
-				if (att_buf[0] == att_buf[2]) {
-					return 1;
-				}
-			}
-
+		if(ind>3) ind = 0;
+		att_buf[ind] = r->val.volt; //value changes not more than 1
+		ind++;
+		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
+			break;
 		}
 
 		if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {
@@ -477,8 +504,8 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 			return 1;
 		}
 
-		//__NOP();
+		__NOP();
 	}
-
+	return 1;
 }
 

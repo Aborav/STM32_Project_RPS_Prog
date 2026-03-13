@@ -112,9 +112,6 @@ void HMI_Display_StartPage(rps_type *r) {
 	r->fl.start_draw = 1;
 }
 
-
-
-
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief draw redrawing stack of the main page
@@ -128,14 +125,15 @@ void HMI_Display_MeasPage(rps_type *r) {
 
 	static uint16_t volt_old, curr_old, watt_old;
 	static uint16_t sp_u_old, sp_i_old, dac_u_old, dac_i_old;
-	int16_t diff = 0; ///<differance between new and old values
+	//int16_t diff = 0; ///<differance between new and old values
 
 	MGL_SET_FONT(FONT_17x24_FP);
 //voltage
-	diff = volt_old - r->val.volt;
-	if (diff < 0)
-		diff *= -1; //no matter is old value bigger or smaller than a new one
-	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) { //eliminate fluctuation of the value
+//	diff = volt_old - r->val.volt;
+//	if (diff < 0)
+//		diff *= -1; //no matter is old value bigger or smaller than a new one
+//	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) { //eliminate fluctuation of the value
+	if (volt_old - r->val.volt != 0 || r->fl.start_draw) {
 		MGL_SET_CLR(VOLT_COLOR);
 		MGL_SetCursor(VAW_VOLTAGE_X, VAW_VOLTAGE_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.volt, 4, 2, &mgl_t);
@@ -143,10 +141,11 @@ void HMI_Display_MeasPage(rps_type *r) {
 	}
 
 //current
-	diff = curr_old - r->val.curr;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) {
+//	diff = curr_old - r->val.curr;
+//	if (diff < 0)
+//		diff *= -1;
+//	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) {
+	if (curr_old - r->val.curr != 0 || r->fl.start_draw) {
 		MGL_SET_CLR(CURR_COLOR);
 		MGL_SetCursor(VAW_CURRENT_X, VAW_CURRENT_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.curr, 4, 3, &mgl_t);
@@ -154,10 +153,11 @@ void HMI_Display_MeasPage(rps_type *r) {
 	}
 
 //wattage
-	diff = watt_old - r->val.watt;
-	if (diff < 0)
-		diff *= -1;
-	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) {
+//	diff = watt_old - r->val.watt;
+//	if (diff < 0)
+//		diff *= -1;
+//	if (diff > r->fl.tl494_on ? 1 : 0 || r->fl.start_draw) {
+	if (watt_old - r->val.watt != 0 || r->fl.start_draw) {
 		MGL_SET_CLR(WATT_COLOR);
 		MGL_SetCursor(VAW_WATTAGE_X, VAW_WATTAGE_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.watt, 4, 1, &mgl_t);
@@ -168,25 +168,25 @@ void HMI_Display_MeasPage(rps_type *r) {
 	MGL_SET_FONT(FONT_5x8_FP);
 
 //voltage DAC value
-	if(dac_u_old - r->val.u_dac != 0 || r->fl.start_draw){
+	if (dac_u_old - r->val.u_dac != 0 || r->fl.start_draw) {
 		MGL_SetCursor(45, LOW_INF_BAR_UPP_Y, &mgl_t);
 		MGL_PrintUint16_R(r->val.u_dac, 4, &mgl_t);
 	}
 
 //current dac value
-	if(dac_i_old - r->val.i_dac != 0 || r->fl.start_draw){
+	if (dac_i_old - r->val.i_dac != 0 || r->fl.start_draw) {
 		MGL_SetCursor(45, LOW_INF_BAR_LOW_Y, &mgl_t);
 		MGL_PrintUint16_R(r->val.i_dac, 4, &mgl_t);
 	}
 
 //voltage set point
-	if(sp_u_old - r->val.u_sp_val != 0 || r->fl.start_draw) {
+	if (sp_u_old - r->val.u_sp_val != 0 || r->fl.start_draw) {
 		MGL_SetCursor(120, LOW_INF_BAR_UPP_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.u_sp_val, 4, 2, &mgl_t);
 	}
 
 //current set point
-	if(sp_i_old - r->val.i_sp_val != 0 || r->fl.start_draw) {
+	if (sp_i_old - r->val.i_sp_val != 0 || r->fl.start_draw) {
 		MGL_SetCursor(120, LOW_INF_BAR_LOW_Y, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.i_sp_val, 4, 3, &mgl_t);
 	}
@@ -245,6 +245,8 @@ void HMI_Input(rps_type *r) {
 			RPS_Ctrl_SPReachTable(r, _VOLT);
 			RPS_Ctrl_SPReachTable(r, _CURR);
 			PERIF_TL494_ON();
+			__NOP();
+			RPS_Ctrl_SPReachSteps(r);
 		} else {
 			PERIF_TL494_OFF();
 			PERIF_DAC_SET(r->val.u_dac = 0, DAC_VOLT_CH);
