@@ -26,10 +26,7 @@ menc_struct_type menc1, menc2;
  * @param[in/out] *r -> project structure pointer
  */
 void HMI_Display_GraphBarsStructInit(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	volt_bar.num = &r->val.volt;
 	volt_bar.num_max = r->val.u_max;
@@ -67,10 +64,7 @@ void HMI_Display_GraphBarsStructInit(rps_type *r) {
  * @brief starting page drawing function
  */
 void HMI_Display_StartPage(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	MGL_SET_BG_CLR(COLOR_BLACK); //background for text
 	MGL_SET_CLR(0xffff);
@@ -118,10 +112,7 @@ void HMI_Display_StartPage(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void HMI_Display_MeasPage(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	static uint16_t volt_old, curr_old, watt_old;
 	static uint16_t sp_u_old, sp_i_old, dac_u_old, dac_i_old;
@@ -230,10 +221,7 @@ void HMI_Input_EncodersStructInit(void) {
  * @param[in/out] *r -> project structure pointer
  */
 void HMI_Input(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	MENC_MainHandler(&menc1);
 	MENC_MainHandler(&menc2);

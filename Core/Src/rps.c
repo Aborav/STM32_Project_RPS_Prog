@@ -25,10 +25,7 @@ uint16_t table_dac_step[RPS_TABLE_SIZE]; ///<DAC from 0 to 4095
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_VAW_Conversion(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 //static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
 
@@ -49,10 +46,7 @@ void RPS_VAW_Conversion(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_Save_FBTableVolt(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t val = 0; ///<buffer
 	uint32_t timeout_cnt = 0; ///<against infinite while
@@ -111,11 +105,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 	while (r->val.volt != 0) {
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
-		if (timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
-			r->err.bit.cicle_timeout = 1;
-			return;
-		}
-		timeout_cnt++;
+		RPS_CHECK_TIMEOUT(timeout_cnt,return);
 	}
 
 #ifdef USE_DEBUG
@@ -130,10 +120,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_Save_FBTableCurr(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t val = 0;
 	uint32_t timeout_cnt = 0; ///<against infinite while
@@ -192,11 +179,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 	while (r->val.volt != 0) {
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
-		if (timeout_cnt >= RPS_TIMEOUT_THRESHOLD) {
-			r->err.bit.cicle_timeout = 1;
-			return;
-		}
-		timeout_cnt++;
+		RPS_CHECK_TIMEOUT(timeout_cnt,return);
 	}
 
 #ifdef USE_DEBUG
@@ -212,10 +195,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
  * @param[in/out] *r -> project structure pointer
  */
 void RPS_Save_Table(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 	SERV_Flash_EraseTable(r); //clear last page in FLASH
 
 //filling tables
@@ -234,10 +214,8 @@ void RPS_Save_Table(rps_type *r) {
  * it's required for voltage/current control functions
  */
 void RPS_Save_TableInit(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
+
 	uint16_t val;
 	uint16_t buf_curr = 0; //buffer
 	uint16_t debug_buf;
@@ -264,17 +242,6 @@ void RPS_Save_TableInit(rps_type *r) {
 			break;
 		}
 		buf_curr = *(table_ptr_i + i);
-		__NOP();
-
-//		//compare voltage from the feedback voltage table and a set point.
-//		//to find a table pointer with closest to SP voltage but smaller than it
-//		if (*(table_ptr_i + i) > set_point) {
-//			r->val.dac_i = *(table_dac_step + i - 1);
-//			//here must be some protection from pointer miss read. But my first value in the tables are 0
-//			//nothing is smaller than 0 in uint16_t
-//			break;
-//		}
-
 	}
 }
 
@@ -295,16 +262,12 @@ void RPS_Save_PrintSavedTables(void) {
 /*
  * @brief Function to calculate DAC steps using tables in flash
  * DAC +10 -> voltage +?\
- * DAC +100 -> current +?
- * function returns val.u_dac_step100/10 value in the global structure
+ * function returns val.u_dac_step100/10/5 value in the global structure
  * @param[in/out] *r -> structure pointer
  * @param[in] va -> voltage/current channel
  */
 void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t *table_ptr; ///<flash table pointer
 	filter_type fil_arr[3] = { 0, }; ///<median filter buffer
@@ -356,10 +319,7 @@ void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
  * @param[in/out] *r -> structure pointer
  */
 void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return;
-	}
+	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t dac_val; ///< DAC value, will be written in global structure
 	uint16_t max_val; ///< max value in the global structure
@@ -407,7 +367,7 @@ void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
  * After RPS_Ctrl_SPReachTable function
  * @param[in/out] *r -> structure pointer
  */
-//bool RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type ch) {
+//bool RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va) {
 //	if (r == 0) {
 //		r->err.bit.empty_ptr = 1;
 //		return;
@@ -451,11 +411,8 @@ void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
  * Affects on both channels
  * @param[in/out] *r -> structure pointer
  */
-bool RPS_Ctrl_SPReachSteps(rps_type *r) {
-	if (r == 0) {
-		r->err.bit.empty_ptr = 1;
-		return 1;
-	}
+void RPS_Ctrl_SPReachSteps(rps_type *r) {
+	RPS_CHECK_STRUCT_PTR();
 
 	int16_t calc_diff; ///<difference for calculation in cycle
 	uint32_t timeout_cnt = 0;
@@ -476,10 +433,7 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 			break;
 		}
 
-		if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {
-			r->err.bit.cicle_timeout = 1;
-			break;
-		}
+		RPS_CHECK_TIMEOUT(timeout_cnt,break);
 	}
 
 	timeout_cnt = 0;
@@ -515,7 +469,7 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 			//r->val.cv_cc_ctrl = _VOLT;
 			__NOP();
 			//r->fl.stop_jump = 1;
-			return 0;
+			return;
 		}
 
 		//direction of adjust and limits check
@@ -546,13 +500,9 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 			}
 		}
 
-		if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {
-			r->err.bit.cicle_timeout = 1;
-			return 1;
-		}
+		RPS_CHECK_TIMEOUT(timeout_cnt,break);
 
 		__NOP();
 	}
-	return 1;
 }
 

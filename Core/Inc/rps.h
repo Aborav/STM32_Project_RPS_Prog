@@ -20,7 +20,6 @@
 #include "hmi.h"
 #include "serv.h"
 
-
 /*---------------------------------------------DEFINES------------------------------------------------*/
 //DAC fast function
 /////////////////////////////////////////////////////
@@ -41,6 +40,26 @@
 
 #define RPS_TIMEOUT_THRESHOLD 10000000U
 
+//Fast functions
+/////////////////////////////////////////////////////
+
+//empty pointer check
+#define RPS_CHECK_STRUCT_PTR() do{\
+		if (r == 0) {\
+		r->err.bit.empty_ptr = 1;\
+		return;\
+		}\
+	} while(0);
+
+//timeout check
+//cnt -> counter to increment, act -> action to implement (break,return,return 1)
+#define RPS_CHECK_TIMEOUT(cnt,act) do{\
+		if (cnt++ >= RPS_TIMEOUT_THRESHOLD) {\
+		r->err.bit.cicle_timeout = 1;\
+		act;\
+		}\
+	}while(0);
+
 /*---------------------------------------------TYPES------------------------------------------------*/
 extern DAC_HandleTypeDef hdac1;
 
@@ -54,7 +73,6 @@ void RPS_Save_TableInit(rps_type *r);
 void RPS_Save_PrintSavedTables(void);
 void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va);
 void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va);
-bool RPS_Ctrl_SPReachSteps(rps_type *r);
-
+void RPS_Ctrl_SPReachSteps(rps_type *r);
 
 #endif /* INC_RPS_H_ */
