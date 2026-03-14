@@ -402,6 +402,48 @@ void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
 		PERIF_DAC_SET(dac_val, DAC_CURR_CH);
 	}
 }
+/*
+ * @brief Function to wait for stable current/voltage
+ * After RPS_Ctrl_SPReachTable function
+ * @param[in/out] *r -> structure pointer
+ */
+//bool RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type ch) {
+//	if (r == 0) {
+//		r->err.bit.empty_ptr = 1;
+//		return;
+//	}
+//
+//	if (va == _VOLT) {
+//		table_ptr = (uint16_t*) table_ptr_u;
+//		max_val = r->val.u_max;
+//		set_point = r->val.u_sp_val;
+//	} else if (va == _CURR) {
+//		table_ptr = (uint16_t*) table_ptr_i;
+//		max_val = r->val.i_max;
+//		set_point = r->val.i_sp_val;
+//	} else {
+//		r->err.bit.wrong_channel = 1;
+//		return;
+//	}
+//	uint16_t att_buf[3]={0,}; ///<buffer to hold previous values of voltage/current
+//	uint8_t ind = 0; ///<attempts buffer index
+//
+//	HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
+//	RPS_VAW_Conversion(r);
+//	HMI_Display_MeasPage(r);
+//	if(ind>3) ind = 0;
+//	att_buf[ind] = r->val.volt; //fill the buffer
+//	ind++;
+//	if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
+//		break;
+//	}
+//
+//	if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {
+//		r->err.bit.cicle_timeout = 1;
+//		break;
+//	}
+//}
+
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -420,7 +462,7 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 	bool rev_flag = 0; ///<reverse flag
 	int16_t dac_val = r->val.u_dac;
 	uint16_t dac_diff;
-	uint16_t att_buf[3]; ///<buffer to hold previous values of voltage/current
+	uint16_t att_buf[3]={0,}; ///<buffer to hold previous values of voltage/current
 	uint8_t ind = 0; ///<attempts buffer index
 
 	while (1) {
@@ -428,7 +470,7 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
 		if(ind>3) ind = 0;
-		att_buf[ind] = r->val.volt; //value changes not more than 1
+		att_buf[ind] = r->val.volt; //fill the buffer
 		ind++;
 		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
 			break;
@@ -468,7 +510,7 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 		if (calc_diff < r->val.u_dac_step5) {
 			dac_diff = 1;
 		}
-		if (abs(calc_diff) == 0) {
+		if (abs(calc_diff) < 2) {
 			//here is success !!!
 			//r->val.cv_cc_ctrl = _VOLT;
 			__NOP();
@@ -493,10 +535,15 @@ bool RPS_Ctrl_SPReachSteps(rps_type *r) {
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
 		if(ind>3) ind = 0;
-		att_buf[ind] = r->val.volt; //value changes not more than 1
+		att_buf[ind] = r->val.volt; //fill the buffer
 		ind++;
+		//compare 3 values in a row. If voltage is now in this function and it can't reach a set point then CC
+		//due to voltage/current fluctuations it has to be some gap -> 1
 		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
-			break;
+			//and voltage/current is not close to a set point
+			if(abs(att_buf[0]-r->val.u_sp_val) > 1){
+			break; //if _VOLT -> now CC, if _CURR -> now CV
+			}
 		}
 
 		if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {

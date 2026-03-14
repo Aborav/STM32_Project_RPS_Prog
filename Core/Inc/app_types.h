@@ -23,6 +23,10 @@ typedef struct _values_type {
 	uint16_t u_max; ///<maximum voltage after calibration
 	uint16_t i_min; ///<minimum current after calibration
 	uint16_t i_max; ///<maximum current after calibration
+	uint16_t u_att_buf[3]; ///<buffer to hold 3 last voltage values
+	uint16_t i_att_buf[3]; ///<buffer to hold 3 last current values
+	uint8_t u_att_buf_ind; ///<index for attempts buffer for voltage
+	uint8_t i_att_buf_ind; ///<index for attempts buffer for current
 
 	//DAC
 	int16_t u_dac; ///<will be written into DAC register
