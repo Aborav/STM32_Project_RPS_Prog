@@ -105,7 +105,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 	while (r->val.volt != 0) {
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
-		RPS_CHECK_TIMEOUT(timeout_cnt,return);
+		RPS_CHECK_TIMEOUT(timeout_cnt, return);
 	}
 
 #ifdef USE_DEBUG
@@ -179,7 +179,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 	while (r->val.volt != 0) {
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
-		RPS_CHECK_TIMEOUT(timeout_cnt,return);
+		RPS_CHECK_TIMEOUT(timeout_cnt, return);
 	}
 
 #ifdef USE_DEBUG
@@ -366,44 +366,45 @@ void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
  * @brief Function to wait for stable current/voltage
  * After RPS_Ctrl_SPReachTable function
  * @param[in/out] *r -> structure pointer
+ * @param[in] va -> _VOLT/_CURR
  */
-//bool RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va) {
-//	if (r == 0) {
-//		r->err.bit.empty_ptr = 1;
-//		return;
-//	}
-//
-//	if (va == _VOLT) {
-//		table_ptr = (uint16_t*) table_ptr_u;
-//		max_val = r->val.u_max;
-//		set_point = r->val.u_sp_val;
-//	} else if (va == _CURR) {
-//		table_ptr = (uint16_t*) table_ptr_i;
-//		max_val = r->val.i_max;
-//		set_point = r->val.i_sp_val;
-//	} else {
-//		r->err.bit.wrong_channel = 1;
-//		return;
-//	}
-//	uint16_t att_buf[3]={0,}; ///<buffer to hold previous values of voltage/current
-//	uint8_t ind = 0; ///<attempts buffer index
-//
-//	HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
-//	RPS_VAW_Conversion(r);
-//	HMI_Display_MeasPage(r);
-//	if(ind>3) ind = 0;
-//	att_buf[ind] = r->val.volt; //fill the buffer
-//	ind++;
-//	if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
-//		break;
-//	}
-//
-//	if (timeout_cnt++ >= RPS_TIMEOUT_THRESHOLD) {
-//		r->err.bit.cicle_timeout = 1;
-//		break;
-//	}
-//}
+void RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va) {
+	RPS_CHECK_STRUCT_PTR();
 
+	uint16_t *val; ///<current or voltage
+	uint16_t *att_buf; ///<3 previous voltage/current values
+	uint8_t *ind; ///< att_buf index
+
+	if (va == _VOLT) {
+		val = &r->val.volt; //fill the buffer
+		att_buf = r->val.u_att_buf;
+		ind = &r->val.u_att_buf_ind;
+	} else if (va == _CURR) {
+		val = &r->val.curr; //fill the buffer
+		att_buf = r->val.i_att_buf;
+		ind = &r->val.i_att_buf_ind;
+	} else {
+		r->err.bit.wrong_channel = 1;
+		return;
+	}
+
+	HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
+	RPS_VAW_Conversion(r);
+	HMI_Display_MeasPage(r);
+
+	if (*ind > 3)
+		*ind = 0;
+	att_buf[*ind] = *val; //fill the buffer
+	*ind = *ind + 1;
+	if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
+		if (va == _VOLT)
+			r->fl.volt_stable = 1;
+		if(va == _CURR)
+			r->fl.curr_stable = 1;
+	}
+
+	//RPS_CHECK_TIMEOUT(timeout_cnt, return);
+}
 
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -419,21 +420,22 @@ void RPS_Ctrl_SPReachSteps(rps_type *r) {
 	bool rev_flag = 0; ///<reverse flag
 	int16_t dac_val = r->val.u_dac;
 	uint16_t dac_diff;
-	uint16_t att_buf[3]={0,}; ///<buffer to hold previous values of voltage/current
+	uint16_t att_buf[3] = { 0, }; ///<buffer to hold previous values of voltage/current
 	uint8_t ind = 0; ///<attempts buffer index
 
 	while (1) {
 		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
-		if(ind>3) ind = 0;
+		if (ind > 3)
+			ind = 0;
 		att_buf[ind] = r->val.volt; //fill the buffer
 		ind++;
 		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
 			break;
 		}
 
-		RPS_CHECK_TIMEOUT(timeout_cnt,break);
+		RPS_CHECK_TIMEOUT(timeout_cnt, break);
 	}
 
 	timeout_cnt = 0;
@@ -488,19 +490,20 @@ void RPS_Ctrl_SPReachSteps(rps_type *r) {
 		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
 		RPS_VAW_Conversion(r);
 		HMI_Display_MeasPage(r);
-		if(ind>3) ind = 0;
+		if (ind > 3)
+			ind = 0;
 		att_buf[ind] = r->val.volt; //fill the buffer
 		ind++;
 		//compare 3 values in a row. If voltage is now in this function and it can't reach a set point then CC
 		//due to voltage/current fluctuations it has to be some gap -> 1
 		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
 			//and voltage/current is not close to a set point
-			if(abs(att_buf[0]-r->val.u_sp_val) > 1){
-			break; //if _VOLT -> now CC, if _CURR -> now CV
+			if (abs(att_buf[0] - r->val.u_sp_val) > 1) {
+				break; //if _VOLT -> now CC, if _CURR -> now CV
 			}
 		}
 
-		RPS_CHECK_TIMEOUT(timeout_cnt,break);
+		RPS_CHECK_TIMEOUT(timeout_cnt, break);
 
 		__NOP();
 	}

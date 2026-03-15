@@ -44,6 +44,8 @@ typedef struct _values_type {
 typedef struct _flags_type {
 	unsigned tl494_on :1; ///<TL494 clocking is ON
 	unsigned start_draw :1; ///<draw object at start
+	unsigned volt_stable:1; ///<voltage is stable after performance
+	unsigned curr_stable:1; ///<current is stable after performance
 } flags_type;
 
 //Bits field for errors
