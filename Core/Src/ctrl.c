@@ -17,6 +17,8 @@ const uint16_t *table_ptr_i = (uint16_t*) TABLE_CURR_ADDR;
 ////////////////////////////////////////////////////////////
 uint32_t tmr_ctrl_wait_stable;
 
+const uint8_t ctrl_dac_step[] = { 100, 50, 20, 10, 5 }; ///<steps in CTRL_SP_ReachBySteps function
+
 //Feedback tables in flash
 uint16_t table_dac_step[RPS_TABLE_SIZE]; ///<DAC from 0 to 4095, step 100
 //uint16_t table_volt_fb[RPS_TABLE_SIZE]; ///<ralated to DAC step voltage
@@ -326,13 +328,16 @@ void CTRL_SAVE_CalcDACSteps(rps_type *r, rps_channel_type va) {
 	filter_type fil_val; ///<median filter variable
 	uint16_t buf = 0; ///<previous value holder
 	uint16_t max_val; ///<<max value in the global structure
+	uint8_t *step_arr; ///<pointer to rps_type DAC step array
 
 	if (va == _VOLT) {
 		table_ptr = (uint16_t*) table_ptr_u;
 		max_val = r->val.u_max;
+		step_arr = r->val.u_dac_step_arr;
 	} else if (va == _CURR) {
 		table_ptr = (uint16_t*) table_ptr_i;
 		max_val = r->val.i_max;
+		step_arr = r->val.i_dac_step_arr;
 	} else {
 		r->err.bit.wrong_channel = 1;
 		return;
@@ -352,15 +357,11 @@ void CTRL_SAVE_CalcDACSteps(rps_type *r, rps_channel_type va) {
 		}
 	}
 
-	if (va == _VOLT) {
-		r->val.u_dac_step100 = (uint16_t) fil_val; //calculate average step of DAC
-		r->val.u_dac_step10 = (uint16_t) fil_val / 10; //calculate average step of DAC
-		r->val.u_dac_step5 = (uint16_t) fil_val / 20; //calculate average step of DAC
-	} else if (va == _CURR) {
-		r->val.i_dac_step100 = (uint16_t) fil_val; //calculate average step of DAC
-		r->val.i_dac_step10 = (uint16_t) fil_val / 10; //calculate average step of DAC
-		r->val.u_dac_step5 = (uint16_t) fil_val / 20; //calculate average step of DAC
-	}
+	step_arr[0] = (uint8_t) fil_val; //step is 100
+	step_arr[1] = (uint8_t) fil_val / 2; //step is 50
+	step_arr[2] = (uint8_t) fil_val / 5; //step is 20
+	step_arr[3] = (uint8_t) fil_val / 10; //step is 10
+	step_arr[4] = (uint8_t) fil_val / 20; //step is 5
 }
 /////////////////////////////////////////////////////////////////////////
 /*
@@ -489,6 +490,7 @@ void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va) {
 	uint16_t dac_diff = 0; ///<calculated DAC step to reach a set point
 	bool rev_flag = 0; ///<reverse flag (1 -> DAC--, 0 -> DAC++)
 
+
 	//use pointers in function to read/write global structure values
 	if (va == _VOLT) {
 		val = &r->val.volt;
@@ -513,19 +515,14 @@ void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va) {
 		rev_flag = 0;
 	}
 	//adjust step calculation
-	if (calc_diff > r->val.u_dac_step100) {
-		dac_diff += 100;
-		calc_diff -= r->val.u_dac_step100;
+	for(uint8_t i =0;i<5;i++){
+		if (calc_diff > r->val.u_dac_step_arr[i]) {
+			dac_diff += ctrl_dac_step[i];
+			calc_diff -= r->val.u_dac_step_arr[i];
+			__NOP();
+		}
 	}
-	if (calc_diff > r->val.u_dac_step10) {
-		dac_diff += 10;
-		calc_diff -= r->val.u_dac_step10;
-	}
-	if (calc_diff > r->val.u_dac_step5) {
-		dac_diff += 5;
-		calc_diff -= r->val.u_dac_step5;
-	}
-	if (calc_diff < r->val.u_dac_step5) {
+	if (calc_diff < r->val.u_dac_step_arr[4]) {
 		dac_diff += 1;
 	}
 	if (abs(*set_point - *val) == 0) {
@@ -536,7 +533,7 @@ void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va) {
 		} else {
 			r->fl.ctrl_cc = 1;
 		}
-		//move sage in CTRL_Handler
+		//move stage in CTRL_Handler function
 		if (r->fl.ctrl_stages == 2)
 			r->fl.ctrl_stages = 0;
 		__NOP();
@@ -545,9 +542,9 @@ void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va) {
 
 	//direction of adjust and limits check
 	if (rev_flag == 0) {
-		RPS_DAC_PLUS_LIMIT_CHECK(*dac_val, dac_diff);
+		RPS_PLUS_LIMIT_CHECK(*dac_val, dac_diff, 4095);
 	} else if (rev_flag == 1) {
-		RPS_DAC_MINUS_LIMIT_CHECK(*dac_val, dac_diff);
+		RPS_MINUS_LIMIT_CHECK(*dac_val, dac_diff, 0);
 	}
 	__NOP();
 	PERIF_DAC_SET(*dac_val, DAC_VOLT_CH);

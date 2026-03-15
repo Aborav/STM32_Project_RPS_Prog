@@ -37,16 +37,16 @@
 	} while(0);
 
 //Increase or decrease DAC value and check limits
-#define RPS_DAC_PLUS_LIMIT_CHECK(val,inc) do{\
+#define RPS_PLUS_LIMIT_CHECK(val,inc,max) do{\
 		val+=(inc);\
-		if (val>4095)\
-			val = 4095;\
+		if (val>(max))\
+			val = (max);\
 	} while(0)
 
-#define RPS_DAC_MINUS_LIMIT_CHECK(val,dec) do{\
+#define RPS_MINUS_LIMIT_CHECK(val,dec,max) do{\
 		val -= (dec);\
-		if (val < 0)\
-			val = 0;\
+		if (val < (max))\
+			val = (max);\
 	} while(0)
 
 /*---------------------------------------------TYPES------------------------------------------------*/
@@ -76,12 +76,15 @@ typedef struct _values_type {
 	//DAC
 	int16_t u_dac; ///<will be written into DAC register
 	int16_t i_dac; ///<will be written into DAC register
-	uint8_t u_dac_step100;
-	uint8_t u_dac_step10;
-	uint8_t u_dac_step5;
-	uint8_t i_dac_step100;
-	uint8_t i_dac_step10;
-	uint8_t i_dac_step5;
+
+	uint8_t u_dac_step_arr[5]; ///<100,50,20,10,5 -> DAC step to V/I difference
+	uint8_t i_dac_step_arr[5]; ///<100,50,20,10,5 -> DAC step to V/I difference
+//	uint8_t u_dac_step100;
+//	uint8_t u_dac_step10;
+//	uint8_t u_dac_step5;
+//	uint8_t i_dac_step100;
+//	uint8_t i_dac_step10;
+//	uint8_t i_dac_step5;
 } values_type;
 
 //Bits field for status flags
@@ -95,8 +98,6 @@ typedef struct _flags_type {
 	unsigned ctrl_stop :1; ///<stop control, turn off the output
 	unsigned ctrl_cv :1; ///<voltage is a master/slave
 	unsigned ctrl_cc :1; ///<current is a master/slave
-	unsigned ctrl_wait_stable_start :1; ///<run CTRL_SP_WaitUntilStable function
-	unsigned ctrl_reach_steps_start :1; ///<start CTRL_SP_ReachBySteps function
 	unsigned ctrl_stages:4; ///<stages of reach a set point sequence
 } flags_type;
 

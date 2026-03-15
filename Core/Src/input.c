@@ -55,29 +55,23 @@ void INPUT_EncHandler(rps_type *r) {
 
 //voltage trim
 	if (MENC_TurnRight(&menc1)) {
-		r->val.u_sp_val += 10;
-		if (r->val.u_sp_val >= r->val.u_max)
-			r->val.u_sp_val = r->val.u_max;
+		RPS_PLUS_LIMIT_CHECK(r->val.u_sp_val, 10, r->val.u_max);
 	}
 
 	if (MENC_TurnLeft(&menc1)) {
-		r->val.u_sp_val -= 10;
-		if (r->val.u_sp_val < r->val.u_min)
-			r->val.u_sp_val = r->val.u_min;
+		RPS_MINUS_LIMIT_CHECK(r->val.u_sp_val, 10, r->val.u_min);
 	}
 
 //current trim
 	if (MENC_TurnRight(&menc2)) {
-		r->val.i_sp_val += 10;
-		if (r->val.i_sp_val >= r->val.i_max)
-			r->val.i_sp_val = r->val.i_max;
+		RPS_PLUS_LIMIT_CHECK(r->val.i_sp_val, 10, r->val.i_max);
 	}
 
 	if (MENC_TurnLeft(&menc2)) {
-		r->val.i_sp_val -= 10;
-		if (r->val.i_sp_val < r->val.i_min)
-			r->val.i_sp_val = r->val.i_min;
+		RPS_MINUS_LIMIT_CHECK(r->val.i_sp_val, 10, r->val.i_min);
 	}
+}
+
 
 //if any turn
 //	if (MENC_AnyTurn(&menc1)) {
@@ -112,5 +106,4 @@ void INPUT_EncHandler(rps_type *r) {
 //			//HAL_DAC_SetValue(&hdac, DAC_CHANNEL_2, DAC_ALIGN_12B_R, dac_curr_value);
 //			sf.curr_draw = 1;
 //		}
-}
 

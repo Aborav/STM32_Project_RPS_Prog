@@ -38,6 +38,14 @@
  quantity of banks -> only 1
  only 64 bit double word can be programmed
 
+
+ TO DO:
+ 1) Current channel control
+ 2) More steps or algorithm for CTRL_SP_ReachBySteps
+ 3) Permanent control function to maintain stable voltage/current
+ 4) Slave channel check in permanent control
+
+
  ******************************************************************************
  */
 /* USER CODE END Header */
