@@ -9,6 +9,29 @@
 #ifndef INC_CTRL_H_
 #define INC_CTRL_H_
 
+/*
+ START CONTROL SEQUENCE PROCEDURE
+ 1) CTRL_SP_ReachByTable -> find closest DAC value to a set point in saved table
+ 2) Turn ON TL494 clocking
+ 3) CTRL_SP_WaitUntilStable -> wait until 3 times voltage/current will be the same
+ 4) CTRL_SP_ReachBySteps -> step by step +/- DAC value to reach a set point
+ 6) if voltage can reach a set point -> Voltage is a master (CV) (or current)
+ 7) CTRL_SP_WaitUntilStable -> wait until 3 times voltage/current will be the same
+ 8) current can't reach a set point but it is stable -> it is a slave now (or voltage)
+ 9) CTRL_SP_ReachByTable -> write back slave DAC value from saved table
+ 10) CTRL_SP_ConstHold -> from 4) to 9)
+ */
+
+/*
+ TO DO:
+ 1) Current channel control
+ 2) More steps or algorithm for CTRL_SP_ReachBySteps
+ 3) Permanent control function to maintain stable voltage/current
+ 4) Slave channel check in permanent control
+*/
+
+/*---------------------------------------------INCLUDES------------------------------------------------*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -71,6 +94,6 @@ void CTRL_SAVE_CalcDACSteps(rps_type *r, rps_channel_type va);
 //operating function, reach set point
 void CTRL_SP_ReachByTable(rps_type *r, rps_channel_type va);
 void CTRL_SP_WaitUntilStable(rps_type *r, rps_channel_type va);
-void CTRL_SP_ReachBySteps(rps_type *r);
+void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va);
 
 #endif /* INC_CTRL_H_ */

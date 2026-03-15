@@ -4,14 +4,15 @@
  *  Created on: Mar 15, 2026
  *      Author: aborav
  */
-#include <display.h>
+#include <stdlib.h>
 #include "main.h"
+#include "display.h"
+
 
 /*---------------------------------------------TYPES------------------------------------------------*/
 
 //Progress bars structures initialization
 mgl_bar_gr_type volt_bar, curr_bar, watt_bar; //progress bars init
-
 
 /*---------------------------------------------FUNCTIONS------------------------------------------------*/
 /////////////////////////////////////////////////////////////////////////
@@ -123,6 +124,7 @@ void DISP_MeasPage(rps_type *r) {
 	if (volt_old - r->val.volt != 0 || r->fl.disp_draw_start) {
 		MGL_SET_CLR(VOLT_COLOR);
 		MGL_SetCursor(VAW_VOLTAGE_X, VAW_VOLTAGE_Y, &mgl_t);
+		//MGL_PrintFloatTiny_R(abs(r->val.volt - r->val.u_sp_val) < 3 ? r->val.u_sp_val : r->val.volt, 4, 2, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.volt, 4, 2, &mgl_t);
 		MGL_DrawBar(&volt_bar);
 	}
@@ -135,6 +137,7 @@ void DISP_MeasPage(rps_type *r) {
 	if (curr_old - r->val.curr != 0 || r->fl.disp_draw_start) {
 		MGL_SET_CLR(CURR_COLOR);
 		MGL_SetCursor(VAW_CURRENT_X, VAW_CURRENT_Y, &mgl_t);
+		//MGL_PrintFloatTiny_R(abs(r->val.curr - r->val.i_sp_val) < 3 ? r->val.i_sp_val : r->val.curr, 4, 3, &mgl_t);
 		MGL_PrintFloatTiny_R(r->val.curr, 4, 3, &mgl_t);
 		MGL_DrawBar(&curr_bar);
 	}

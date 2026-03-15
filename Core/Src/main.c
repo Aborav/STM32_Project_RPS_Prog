@@ -198,9 +198,7 @@ int main(void) {
 	//Control flags and variables initialization states
 	//////////////////////////////////////////////////////////////////////////////////////
 	rps.fl.ctrl_stop = 1; //tl494 control is stopped
-	rps.val.u_att_buf[0] = rps.val.i_att_buf[0] = 0xF;
-	rps.val.u_att_buf[1] = rps.val.i_att_buf[1] = 0xFF;
-	rps.val.u_att_buf[2] = rps.val.i_att_buf[2] = 0xFFF;
+
 
 #ifdef USE_DEBUG
 	printf("While start\n\r");
