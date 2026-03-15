@@ -8,6 +8,31 @@
 #ifndef INC_APP_TYPES_H_
 #define INC_APP_TYPES_H_
 
+#include "main.h"
+
+/*---------------------------------------------DEFINES------------------------------------------------*/
+//Fast functions
+/////////////////////////////////////////////////////
+//empty pointer check
+#define RPS_CHECK_STRUCT_PTR() do{\
+		if (r == 0) {\
+		r->err.bit.empty_ptr = 1;\
+		return;\
+		}\
+	} while(0);
+
+//timeout check
+//cnt -> counter to increment, act -> action to implement (break,return,return 1)
+#define RPS_CHECK_TIMEOUT(cnt,act) do{\
+		if (cnt++ >= RPS_TIMEOUT_THRESHOLD) {\
+		r->err.bit.cicle_timeout = 1;\
+		act;\
+		}\
+	}while(0);
+
+
+/*---------------------------------------------TYPES------------------------------------------------*/
+
 //Values structure
 ////////////////////////////////////////////////////////////
 typedef struct _values_type {

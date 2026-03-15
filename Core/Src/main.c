@@ -41,20 +41,19 @@
  ******************************************************************************
  */
 /* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 
-#include "app_types.h"
-#include "hmi.h"
-#include "rps.h"
-
-//Libraries
 #include "MGL/MGL.h"
 #include "INA226/M_INA226.h"
+
+#include "app_types.h"
+#include "ctrl.h"
+#include "input.h"
+#include "display.h"
+#include "main.h"
 
 /* USER CODE END Includes */
 

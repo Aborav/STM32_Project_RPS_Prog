@@ -5,7 +5,7 @@
  *      Author: aborav
  */
 
-#include "rps.h"
+#include <ctrl.h>
 
 /*---------------------------------------------TYPES------------------------------------------------*/
 //Feedback tables in flash

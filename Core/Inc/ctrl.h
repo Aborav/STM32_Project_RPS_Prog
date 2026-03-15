@@ -6,19 +6,23 @@
  *  Regulated power supply block
  */
 
-#ifndef INC_RPS_H_
-#define INC_RPS_H_
+#ifndef INC_CTRL_H_
+#define INC_CTRL_H_
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "main.h"
+
 #include "app_types.h"
+#include "input.h"
+#include "serv.h"
+#include "display.h"
+
 #include "Encoder/M_ENC.h"
 #include "SignalFilter/M_Filter.h"
 #include "FlashProm/M_Flashprom.h"
 #include "INA226/M_INA226.h"
-#include "hmi.h"
-#include "serv.h"
 
 /*---------------------------------------------DEFINES------------------------------------------------*/
 //DAC fast function
@@ -40,26 +44,6 @@
 
 #define RPS_TIMEOUT_THRESHOLD 10000000U
 
-//Fast functions
-/////////////////////////////////////////////////////
-
-//empty pointer check
-#define RPS_CHECK_STRUCT_PTR() do{\
-		if (r == 0) {\
-		r->err.bit.empty_ptr = 1;\
-		return;\
-		}\
-	} while(0);
-
-//timeout check
-//cnt -> counter to increment, act -> action to implement (break,return,return 1)
-#define RPS_CHECK_TIMEOUT(cnt,act) do{\
-		if (cnt++ >= RPS_TIMEOUT_THRESHOLD) {\
-		r->err.bit.cicle_timeout = 1;\
-		act;\
-		}\
-	}while(0);
-
 /*---------------------------------------------TYPES------------------------------------------------*/
 extern DAC_HandleTypeDef hdac1;
 
@@ -76,5 +60,4 @@ void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va);
 void RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va);
 void RPS_Ctrl_SPReachSteps(rps_type *r);
 
-
-#endif /* INC_RPS_H_ */
+#endif /* INC_CTRL_H_ */
