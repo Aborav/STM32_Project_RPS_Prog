@@ -25,6 +25,12 @@
 #include "INA226/M_INA226.h"
 
 /*---------------------------------------------DEFINES------------------------------------------------*/
+//VAW settings
+/////////////////////////////////////////////////////
+#define VAW_MAX_VOLT 2400U
+#define VAW_MAX_CURR 5000U
+#define VAW_MAX_WATT 1200U
+
 //DAC fast function
 /////////////////////////////////////////////////////
 #define DAC_VOLT_CH DAC_CHANNEL_1
@@ -48,16 +54,23 @@
 extern DAC_HandleTypeDef hdac1;
 
 /*---------------------------------------------FUNCTIONS------------------------------------------------*/
+//while function
+void CTRL_Handler(rps_type *r);
 
-void RPS_VAW_Conversion(rps_type *r);
-void RPS_Save_FBTableVolt(rps_type *r);
-void RPS_Save_FBTableCurr(rps_type *r);
-void RPS_Save_Table(rps_type *r);
-void RPS_Save_TableInit(rps_type *r);
-void RPS_Save_PrintSavedTables(void);
-void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va);
-void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va);
-void RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va);
-void RPS_Ctrl_SPReachSteps(rps_type *r);
+//conversion to volt,curr,watt
+void CTRL_VAW_Conversion(rps_type *r);
+
+//saving functions
+void CTRL_SAVE_FBTableVolt(rps_type *r);
+void CTRL_SAVE_FBTableCurr(rps_type *r);
+void CTRL_SAVE_Table(rps_type *r);
+void CTRL_SAVE_TableInit(rps_type *r);
+void CTRL_SAVE_PrintSavedTables(void);
+void CTRL_SAVE_CalcDACSteps(rps_type *r, rps_channel_type va);
+
+//operating function, reach set point
+void CTRL_SP_ReachByTable(rps_type *r, rps_channel_type va);
+void CTRL_SP_WaitUntilStable(rps_type *r, rps_channel_type va);
+void CTRL_SP_ReachBySteps(rps_type *r);
 
 #endif /* INC_CTRL_H_ */

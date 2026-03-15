@@ -67,10 +67,16 @@ typedef struct _values_type {
 //Bits field for status flags
 ////////////////////////////////////////////////////////////
 typedef struct _flags_type {
-	unsigned tl494_on :1; ///<TL494 clocking is ON
-	unsigned start_draw :1; ///<draw object at start
-	unsigned volt_stable:1; ///<voltage is stable after performance
-	unsigned curr_stable:1; ///<current is stable after performance
+	//display
+	unsigned disp_draw_start :1; ///<draw object at start
+
+	//control
+	unsigned ctrl_start :1; ///<start to reach a set point
+	unsigned ctrl_stop:1; ///<stop control, turn off the output
+	unsigned ctrl_volt_stable:1; ///<voltage is stable after performance
+	unsigned ctrl_curr_stable:1; ///<current is stable after performance
+	unsigned ctrl_wait_stable_start:1; ///<run CTRL_SP_WaitUntilStable function
+	unsigned ctrl_reach_steps_start:1; ///<start CTRL_SP_ReachBySteps function
 } flags_type;
 
 //Bits field for errors

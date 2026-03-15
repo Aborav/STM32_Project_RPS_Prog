@@ -19,7 +19,7 @@ menc_struct_type menc1, menc2;
 /*
  * @brief Function to fill up encoders structures
  */
-void HMI_Input_EncodersStructInit(void) {
+void INPUT_EncStructInit(void) {
 	menc1.s1_pin = ENC1_S1_Pin;
 	menc1.s2_pin = ENC1_S2_Pin;
 	menc1.key_pin = ENC1_KEY_Pin;
@@ -42,26 +42,15 @@ void HMI_Input_EncodersStructInit(void) {
  * @brief Function to maintain clicks and turns response
  * @param[in/out] *r -> project structure pointer
  */
-void HMI_Input(rps_type *r) {
+void INPUT_EncHandler(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
 
 	MENC_MainHandler(&menc1);
 	MENC_MainHandler(&menc2);
 
-//turn on/off PERIF_TL494 clocking
 	if (MENC_Click(&menc1)) {
-		r->fl.tl494_on = ~r->fl.tl494_on;
-		if (r->fl.tl494_on) {
-			RPS_Ctrl_SPReachTable(r, _VOLT);
-			RPS_Ctrl_SPReachTable(r, _CURR);
-			PERIF_TL494_ON();
-			__NOP();
-			RPS_Ctrl_SPReachSteps(r);
-		} else {
-			PERIF_TL494_OFF();
-			PERIF_DAC_SET(r->val.u_dac = 0, DAC_VOLT_CH);
-			PERIF_DAC_SET(r->val.i_dac = 0, DAC_CURR_CH);
-		}
+		r->fl.ctrl_start = ~r->fl.ctrl_start; //start/stop SP reach procedure
+		r->fl.ctrl_stop = ~r->fl.ctrl_stop; //start/stop SP reach procedure
 	}
 
 //voltage trim
@@ -69,18 +58,12 @@ void HMI_Input(rps_type *r) {
 		r->val.u_sp_val += 10;
 		if (r->val.u_sp_val >= r->val.u_max)
 			r->val.u_sp_val = r->val.u_max;
-//		r->val.dac_u += 10;
-//		if (r->val.dac_u >= 4095)
-//			r->val.dac_u = 4095;
 	}
 
 	if (MENC_TurnLeft(&menc1)) {
 		r->val.u_sp_val -= 10;
 		if (r->val.u_sp_val < r->val.u_min)
 			r->val.u_sp_val = r->val.u_min;
-//		r->val.dac_u -= 10;
-//		if (r->val.dac_u < 0)
-//			r->val.dac_u = 0;
 	}
 
 //current trim
@@ -88,33 +71,19 @@ void HMI_Input(rps_type *r) {
 		r->val.i_sp_val += 10;
 		if (r->val.i_sp_val >= r->val.i_max)
 			r->val.i_sp_val = r->val.i_max;
-//		r->val.dac_i += 10;
-//		if (r->val.dac_i >= 4095)
-//			r->val.dac_i = 4095;
 	}
 
 	if (MENC_TurnLeft(&menc2)) {
 		r->val.i_sp_val -= 10;
 		if (r->val.i_sp_val < r->val.i_min)
 			r->val.i_sp_val = r->val.i_min;
-//		r->val.dac_i -= 10;
-//		if (r->val.dac_i < 0)
-//			r->val.dac_i = 0;
 	}
 
 //if any turn
-	if (MENC_AnyTurn(&menc1)) {
-//		if (r->fl.tl494_on) {
-//			RPS_Ctrl_SPReachTable(r->val.u_sp_val, r, _VOLT);
-//			//PERIF_DAC_SET(r->val.dac_u, DAC_VOLT_CH);
-//		}
-	}
-	if (MENC_AnyTurn(&menc2)) {
-//		if (r->fl.tl494_on) {
-//			RPS_Ctrl_SPReachTable(r->val.i_sp_val, r, _CURR);
-//			//PERIF_DAC_SET(r->val.dac_i, DAC_CURR_CH);
-//		}
-	}
+//	if (MENC_AnyTurn(&menc1)) {
+//	}
+//	if (MENC_AnyTurn(&menc2)) {
+//	}
 //		//fast turn
 //		if (MENC_TurnFastRight(&menc1)) {
 //			dac_volt_value += 20;

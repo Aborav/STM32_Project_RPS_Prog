@@ -92,10 +92,10 @@ FLASH_EraseInitTypeDef pflash;
 ////////////////////////////////////////////////////////////
 //extern menc_struct_type menc1, menc2; //Encoder library structures
 
-//Timers for millist delay
+//Timers for ms delay
 ////////////////////////////////////////////////////////////
-uint32_t ms_tmr_screen_refresh;
-uint32_t ms_tmr_debug;
+uint32_t tmr_disp_screen_refresh;
+uint32_t tmr_debug;
 
 /* USER CODE END PV */
 
@@ -181,24 +181,30 @@ int main(void) {
 	}
 	INA_SetCalVal(INA_CALIB_VAL);
 
-	RPS_Save_TableInit(&rps);
-	RPS_Save_CalculateDACSteps(&rps,_VOLT);
-	RPS_Save_CalculateDACSteps(&rps,_CURR);
+	CTRL_SAVE_TableInit(&rps);
+	CTRL_SAVE_CalcDACSteps(&rps, _VOLT);
+	CTRL_SAVE_CalcDACSteps(&rps, _CURR);
 
 	//Input
 	//////////////////////////////////////////////////////////////////////////////////////
-	HMI_Input_EncodersStructInit();
+	INPUT_EncStructInit();
 
 	//Display
 	//////////////////////////////////////////////////////////////////////////////////////
-	HMI_Display_GraphBarsStructInit(&rps);
+	DISP_GraphBarsStructInit(&rps);
 	MGL_DriverInit();
-	HMI_Display_StartPage(&rps);
+	DISP_StartPage(&rps);
 
+	//Control flags and variables initialization states
+	//////////////////////////////////////////////////////////////////////////////////////
+	rps.fl.ctrl_stop = 1; //tl494 control is stopped
+	rps.val.u_att_buf[0] = rps.val.i_att_buf[0] = 0xF;
+	rps.val.u_att_buf[1] = rps.val.i_att_buf[1] = 0xFF;
+	rps.val.u_att_buf[2] = rps.val.i_att_buf[2] = 0xFFF;
 
 #ifdef USE_DEBUG
 	printf("While start\n\r");
-	RPS_Save_PrintSavedTables();
+	CTRL_SAVE_PrintSavedTables();
 	rps.val.i_sp_val = rps.val.i_max;
 #endif
 
@@ -209,12 +215,15 @@ int main(void) {
 	/* USER CODE BEGIN WHILE */
 
 	while (1) {
-		HMI_Input(&rps);
+		INPUT_EncHandler(&rps);
 
-		if (MillisDelay(&ms_tmr_screen_refresh, SCREEN_REFRESH_RATE)) {
-			RPS_VAW_Conversion(&rps);
-			HMI_Display_MeasPage(&rps);
+		if (MillisDelay(&tmr_disp_screen_refresh, SCREEN_REFRESH_RATE)) {
+			CTRL_VAW_Conversion(&rps);
+			DISP_MeasPage(&rps);
 		}
+
+		CTRL_Handler(&rps);
+
 #ifdef USE_DEBUG
 //		if (MillisDelay(&ms_tmr_debug, DEBUG_REFRESH)) {
 //			printf("U:");

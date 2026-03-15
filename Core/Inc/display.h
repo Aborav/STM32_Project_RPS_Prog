@@ -80,10 +80,9 @@
 extern mgl_bar_gr_type volt_bar, curr_bar, watt_bar; //progress bars init
 
 /*---------------------------------------------FUNCTIONS------------------------------------------------*/
-void HMI_Display_GraphBarsStructInit(rps_type *r);
-void HMI_Display_StartPage(rps_type *r);
-void HMI_Display_MeasPage(rps_type *r);
-void HMI_Display_DebugMeasPage(rps_type *r);
+void DISP_GraphBarsStructInit(rps_type *r);
+void DISP_StartPage(rps_type *r);
+void DISP_MeasPage(rps_type *r);
 
 #endif /* INC_DISPLAY_H_ */
 

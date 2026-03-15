@@ -13,18 +13,58 @@
 const uint16_t *table_ptr_u = (uint16_t*) TABLE_VOLT_ADDR;
 const uint16_t *table_ptr_i = (uint16_t*) TABLE_CURR_ADDR;
 
-uint16_t table_dac_step[RPS_TABLE_SIZE]; ///<DAC from 0 to 4095
+//Timers for millis delay
+////////////////////////////////////////////////////////////
+uint32_t tmr_ctrl_wait_stable;
+
+//Feedback tables in flash
+uint16_t table_dac_step[RPS_TABLE_SIZE]; ///<DAC from 0 to 4095, step 100
 //uint16_t table_volt_fb[RPS_TABLE_SIZE]; ///<ralated to DAC step voltage
 //uint16_t table_curr_fb[RPS_TABLE_SIZE]; ///<ralated to DAC step current
 
 /*---------------------------------------------FUNCTIONS------------------------------------------------*/
+/////////////////////////////////////////////////////////////////////////
+/*
+ * @brief Common function for while(1)
+ * starts/stops control function by flags
+ * @param[in/out] *r -> project structure pointer
+ */
+void CTRL_Handler(rps_type *r) {
+	RPS_CHECK_STRUCT_PTR();
+
+	if (r->fl.ctrl_start) {
+		CTRL_SP_ReachByTable(r, _VOLT); //get DAC value for closest voltage
+		CTRL_SP_ReachByTable(r, _CURR); //get DAC value for closest current
+		PERIF_TL494_ON(); //turn of tl494 clock
+		r->fl.ctrl_wait_stable_start = 1; //start CTRL_SP_WaitUntilStable with delay
+		r->fl.ctrl_reach_steps_start = 1; //start CTRL_SP_ReachBySteps
+		r->fl.ctrl_start = 0; //stop the control start sequence
+	}
+
+	if (r->fl.ctrl_stop) {
+		PERIF_TL494_OFF();
+		PERIF_DAC_SET(r->val.u_dac = 0, DAC_VOLT_CH);
+		PERIF_DAC_SET(r->val.i_dac = 0, DAC_CURR_CH);
+	}
+
+	if (r->fl.ctrl_wait_stable_start) {
+		if (MillisDelay(&tmr_ctrl_wait_stable, RPS_TABLE_DELAY)) {
+			CTRL_SP_WaitUntilStable(r, _VOLT);
+		}
+	}
+
+	if(r->fl.ctrl_reach_steps_start){
+		CTRL_SP_ReachBySteps(r);
+	}
+
+}
 
 /////////////////////////////////////////////////////////////////////////
 /*
  * @brief Function to read INA226 register and convert to uint16 fake float
  * @param[in/out] *r -> project structure pointer
  */
-void RPS_VAW_Conversion(rps_type *r) {
+void CTRL_VAW_Conversion(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
 
 //static uint16_t med_fil_volt_buf[3],med_fil_curr_buf[3];
@@ -45,7 +85,7 @@ void RPS_VAW_Conversion(rps_type *r) {
  * use it only after RPS_Save_TableInit()
  * @param[in/out] *r -> project structure pointer
  */
-void RPS_Save_FBTableVolt(rps_type *r) {
+void CTRL_SAVE_FBTableVolt(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t val = 0; ///<buffer
@@ -69,7 +109,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 		PERIF_DAC_SET(val, DAC_VOLT_CH); //voltage increasing
 		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
 		r->val.u_dac = val;
-		RPS_VAW_Conversion(r);
+		CTRL_VAW_Conversion(r);
 		//*(table_volt_fb + i) = r->val.volt;
 
 #ifdef USE_DEBUG
@@ -103,8 +143,8 @@ void RPS_Save_FBTableVolt(rps_type *r) {
 
 //wait until capacitor is discharged
 	while (r->val.volt != 0) {
-		RPS_VAW_Conversion(r);
-		HMI_Display_MeasPage(r);
+		CTRL_VAW_Conversion(r);
+		DISP_MeasPage(r);
 		RPS_CHECK_TIMEOUT(timeout_cnt, return);
 	}
 
@@ -119,7 +159,7 @@ void RPS_Save_FBTableVolt(rps_type *r) {
  * use it only after RPS_Save_TableInit()
  * @param[in/out] *r -> project structure pointer
  */
-void RPS_Save_FBTableCurr(rps_type *r) {
+void CTRL_SAVE_FBTableCurr(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t val = 0;
@@ -144,7 +184,7 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 		PERIF_DAC_SET(val, DAC_CURR_CH); //voltage increasing
 		HAL_Delay(RPS_TABLE_DELAY); //wait until output capacitor is charged
 		r->val.i_dac = val;
-		RPS_VAW_Conversion(r);
+		CTRL_VAW_Conversion(r);
 		//*(table_curr_fb + i) = r->val.curr;
 
 #ifdef USE_DEBUG
@@ -177,8 +217,8 @@ void RPS_Save_FBTableCurr(rps_type *r) {
 	r->val.i_dac = 0; //clear global structure variable
 
 	while (r->val.volt != 0) {
-		RPS_VAW_Conversion(r);
-		HMI_Display_MeasPage(r);
+		CTRL_VAW_Conversion(r);
+		DISP_MeasPage(r);
 		RPS_CHECK_TIMEOUT(timeout_cnt, return);
 	}
 
@@ -194,15 +234,15 @@ void RPS_Save_FBTableCurr(rps_type *r) {
  * before each saving page erasing required
  * @param[in/out] *r -> project structure pointer
  */
-void RPS_Save_Table(rps_type *r) {
+void CTRL_SAVE_Table(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
 	SERV_Flash_EraseTable(r); //clear last page in FLASH
 
 //filling tables
-	RPS_Save_FBTableVolt(r);
+	CTRL_SAVE_FBTableVolt(r);
 	volt_bar.num_max = r->val.u_max; //renew maximum value after calibration
 
-	RPS_Save_FBTableCurr(r);
+	CTRL_SAVE_FBTableCurr(r);
 	curr_bar.num_max = r->val.i_max; //renew maximum value after calibration
 }
 
@@ -213,7 +253,7 @@ void RPS_Save_Table(rps_type *r) {
  * saved previously in FLASH
  * it's required for voltage/current control functions
  */
-void RPS_Save_TableInit(rps_type *r) {
+void CTRL_SAVE_TableInit(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t val;
@@ -249,7 +289,7 @@ void RPS_Save_TableInit(rps_type *r) {
 /*
  * @brief Function to print saved in Flash tables
  */
-void RPS_Save_PrintSavedTables(void) {
+void CTRL_SAVE_PrintSavedTables(void) {
 	printf("Print saved in flash tables");
 	for (uint16_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		printf("DAC value: %u", *(table_dac_step + i));
@@ -266,7 +306,7 @@ void RPS_Save_PrintSavedTables(void) {
  * @param[in/out] *r -> structure pointer
  * @param[in] va -> voltage/current channel
  */
-void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
+void CTRL_SAVE_CalcDACSteps(rps_type *r, rps_channel_type va) {
 	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t *table_ptr; ///<flash table pointer
@@ -318,7 +358,7 @@ void RPS_Save_CalculateDACSteps(rps_type *r, rps_channel_type va) {
  * @param[in] sp_val-> set point
  * @param[in/out] *r -> structure pointer
  */
-void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
+void CTRL_SP_ReachByTable(rps_type *r, rps_channel_type va) {
 	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t dac_val; ///< DAC value, will be written in global structure
@@ -368,7 +408,7 @@ void RPS_Ctrl_SPReachTable(rps_type *r, rps_channel_type va) {
  * @param[in/out] *r -> structure pointer
  * @param[in] va -> _VOLT/_CURR
  */
-void RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va) {
+void CTRL_SP_WaitUntilStable(rps_type *r, rps_channel_type va) {
 	RPS_CHECK_STRUCT_PTR();
 
 	uint16_t *val; ///<current or voltage
@@ -388,19 +428,21 @@ void RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va) {
 		return;
 	}
 
-	HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
-	RPS_VAW_Conversion(r);
-	HMI_Display_MeasPage(r);
+	//HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
+	CTRL_VAW_Conversion(r);
+	//DISP_MeasPage(r);
 
-	if (*ind > 3)
+	if (*ind > 2)
 		*ind = 0;
 	att_buf[*ind] = *val; //fill the buffer
 	*ind = *ind + 1;
+	__NOP();
 	if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
 		if (va == _VOLT)
-			r->fl.volt_stable = 1;
-		if(va == _CURR)
-			r->fl.curr_stable = 1;
+			r->fl.ctrl_volt_stable = 1;
+		if (va == _CURR)
+			r->fl.ctrl_curr_stable = 1;
+		r->fl.ctrl_wait_stable_start = 0;
 	}
 
 	//RPS_CHECK_TIMEOUT(timeout_cnt, return);
@@ -412,7 +454,7 @@ void RPS_Ctrl_WaitUntilStable(rps_type *r, rps_channel_type va) {
  * Affects on both channels
  * @param[in/out] *r -> structure pointer
  */
-void RPS_Ctrl_SPReachSteps(rps_type *r) {
+void CTRL_SP_ReachBySteps(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
 
 	int16_t calc_diff; ///<difference for calculation in cycle
@@ -423,20 +465,20 @@ void RPS_Ctrl_SPReachSteps(rps_type *r) {
 	uint16_t att_buf[3] = { 0, }; ///<buffer to hold previous values of voltage/current
 	uint8_t ind = 0; ///<attempts buffer index
 
-	while (1) {
-		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
-		RPS_VAW_Conversion(r);
-		HMI_Display_MeasPage(r);
-		if (ind > 3)
-			ind = 0;
-		att_buf[ind] = r->val.volt; //fill the buffer
-		ind++;
-		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
-			break;
-		}
-
-		RPS_CHECK_TIMEOUT(timeout_cnt, break);
-	}
+//	while (1) {
+//		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
+//		CTRL_VAW_Conversion(r);
+//		DISP_MeasPage(r);
+//		if (ind > 3)
+//			ind = 0;
+//		att_buf[ind] = r->val.volt; //fill the buffer
+//		ind++;
+//		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
+//			break;
+//		}
+//
+//		RPS_CHECK_TIMEOUT(timeout_cnt, break);
+//	}
 
 	timeout_cnt = 0;
 	ind = 0;
@@ -470,7 +512,7 @@ void RPS_Ctrl_SPReachSteps(rps_type *r) {
 			//here is success !!!
 			//r->val.cv_cc_ctrl = _VOLT;
 			__NOP();
-			//r->fl.stop_jump = 1;
+			r->fl.ctrl_reach_steps_start = 0;
 			return;
 		}
 
@@ -488,9 +530,9 @@ void RPS_Ctrl_SPReachSteps(rps_type *r) {
 		PERIF_DAC_SET(dac_val, DAC_VOLT_CH);
 		r->val.u_dac = dac_val;
 		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
-		RPS_VAW_Conversion(r);
-		HMI_Display_MeasPage(r);
-		if (ind > 3)
+		CTRL_VAW_Conversion(r);
+		DISP_MeasPage(r);
+		if (ind > 2)
 			ind = 0;
 		att_buf[ind] = r->val.volt; //fill the buffer
 		ind++;
@@ -499,13 +541,12 @@ void RPS_Ctrl_SPReachSteps(rps_type *r) {
 		if (abs(att_buf[0] - att_buf[1]) < 2 && abs(att_buf[1] - att_buf[2]) < 2 && abs(att_buf[0] - att_buf[2]) < 2) {
 			//and voltage/current is not close to a set point
 			if (abs(att_buf[0] - r->val.u_sp_val) > 1) {
+				r->fl.ctrl_reach_steps_start = 0;
 				break; //if _VOLT -> now CC, if _CURR -> now CV
 			}
 		}
-
 		RPS_CHECK_TIMEOUT(timeout_cnt, break);
-
-		__NOP();
 	}
+	r->fl.ctrl_reach_steps_start = 0;
 }
 

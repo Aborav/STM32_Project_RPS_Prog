@@ -17,12 +17,6 @@
 
 /*---------------------------------------------DEFINES------------------------------------------------*/
 
-//VAW settings
-/////////////////////////////////////////////////////
-#define VAW_MAX_VOLT 2400U
-#define VAW_MAX_CURR 5000U
-#define VAW_MAX_WATT 1200U
-
 //PERIF_TL494
 /////////////////////////////////////////////////////
 #define PERIF_TL494_ON() HAL_GPIO_WritePin(TL494_DTC_GPIO_Port, TL494_DTC_Pin,0)
@@ -33,8 +27,8 @@
 extern menc_struct_type menc1, menc2; //Encoder library structures
 
 /*---------------------------------------------FUNCTIONS------------------------------------------------*/
-void HMI_Input_EncodersStructInit(void);
-void HMI_Input(rps_type *r);
+void INPUT_EncStructInit(void);
+void INPUT_EncHandler(rps_type *r);
 
 #endif /* INC_INPUT_H_ */
 
