@@ -42,7 +42,7 @@ void CTRL_Handler(rps_type *r) {
 		//r->fl.ctrl_reach_steps_start = 1; //start CTRL_SP_ReachBySteps
 		r->fl.ctrl_start = 0; //stop the control start sequence
 		r->fl.ctrl_stages = 1;
-		RPS_RESET_ATT_BUF(r->val.u_att_buf); //put the mask in the attempts buffer
+		SERV_RESET_ATT_BUF(r->val.u_att_buf); //put the mask in the attempts buffer
 	}
 
 	if (r->fl.ctrl_stop) {
@@ -52,23 +52,21 @@ void CTRL_Handler(rps_type *r) {
 		PERIF_DAC_SET(r->val.i_dac = 0, DAC_CURR_CH);
 	}
 
-	if (MillisDelay(&tmr_ctrl_wait_stable, RPS_TABLE_DELAY)) {
+	if (MillisDelay(&tmr_ctrl_wait_stable, RPS_CAP_CHAR_DELAY)) {
 		switch (r->fl.ctrl_stages) {
 		case 1:
 			CTRL_SP_WaitUntilStable(r, _VOLT);
+			CTRL_SP_WaitUntilStable(r, _CURR);
 			break;
 		case 2:
 			CTRL_SP_ReachBySteps(r, _VOLT);
-			//CTRL_SP_WaitUntilStable(r, _VOLT);
+			CTRL_SP_ReachBySteps(r, _CURR);
+			break;
+		case 3:
+			__NOP(); //constant control
 			break;
 		}
-//		if (r->fl.ctrl_reach_steps_start) {
-//			CTRL_SP_ReachBySteps(r, _VOLT);
-//			r->fl.ctrl_wait_stable_start = 1;
-//		}
-//		if (r->fl.ctrl_wait_stable_start) {
-//			CTRL_SP_WaitUntilStable(r, _VOLT);
-//		}
+
 	}
 
 }
@@ -121,7 +119,7 @@ void CTRL_SAVE_FBTableVolt(rps_type *r) {
 	for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		val = *(table_dac_step + i);
 		PERIF_DAC_SET(val, DAC_VOLT_CH); //voltage increasing
-		HAL_Delay(RPS_TABLE_DELAY); //wait until capacitor is charged
+		HAL_Delay(RPS_CAP_CHAR_DELAY); //wait until capacitor is charged
 		r->val.u_dac = val;
 		CTRL_VAW_Conversion(r);
 		//*(table_volt_fb + i) = r->val.volt;
@@ -159,7 +157,7 @@ void CTRL_SAVE_FBTableVolt(rps_type *r) {
 	while (r->val.volt != 0) {
 		CTRL_VAW_Conversion(r);
 		DISP_MeasPage(r);
-		RPS_CHECK_TIMEOUT(timeout_cnt, return);
+		SERV_CHECK_TIMEOUT(timeout_cnt, return);
 	}
 
 #ifdef USE_DEBUG
@@ -196,7 +194,7 @@ void CTRL_SAVE_FBTableCurr(rps_type *r) {
 	for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
 		val = *(table_dac_step + i);
 		PERIF_DAC_SET(val, DAC_CURR_CH); //voltage increasing
-		HAL_Delay(RPS_TABLE_DELAY); //wait until output capacitor is charged
+		HAL_Delay(RPS_CAP_CHAR_DELAY); //wait until output capacitor is charged
 		r->val.i_dac = val;
 		CTRL_VAW_Conversion(r);
 		//*(table_curr_fb + i) = r->val.curr;
@@ -233,7 +231,7 @@ void CTRL_SAVE_FBTableCurr(rps_type *r) {
 	while (r->val.volt != 0) {
 		CTRL_VAW_Conversion(r);
 		DISP_MeasPage(r);
-		RPS_CHECK_TIMEOUT(timeout_cnt, return);
+		SERV_CHECK_TIMEOUT(timeout_cnt, return);
 	}
 
 #ifdef USE_DEBUG
@@ -265,7 +263,7 @@ void CTRL_SAVE_Table(rps_type *r) {
  * @brief Function to fill table_dac_step array
  * max and min values of current and voltage
  * saved previously in FLASH
- * it's required for voltage/current control functions
+ * it's required for U/I control functions
  */
 void CTRL_SAVE_TableInit(rps_type *r) {
 	RPS_CHECK_STRUCT_PTR();
@@ -318,7 +316,7 @@ void CTRL_SAVE_PrintSavedTables(void) {
  * DAC +10 -> voltage +?\
  * function returns val.u_dac_step100/10/5 value in the global structure
  * @param[in/out] *r -> structure pointer
- * @param[in] va -> voltage/current channel
+ * @param[in] va -> U/I channel
  */
 void CTRL_SAVE_CalcDACSteps(rps_type *r, rps_channel_type va) {
 	RPS_CHECK_STRUCT_PTR();
@@ -378,7 +376,7 @@ void CTRL_SP_ReachByTable(rps_type *r, rps_channel_type va) {
 	uint16_t max_val; ///< max value in the global structure
 	uint16_t *table_ptr; ///<flash table pointer
 	int16_t set_point; ///<set point for this function
-	uint16_t *clos_val; ///<the closest voltage/current value in the saved tables
+	uint16_t *clos_val; ///<the closest U/I value in the saved tables
 
 	if (va == _VOLT) {
 		table_ptr = (uint16_t*) table_ptr_u;
@@ -401,7 +399,7 @@ void CTRL_SP_ReachByTable(rps_type *r, rps_channel_type va) {
 		dac_val = 4095; //max
 	} else {
 		for (uint8_t i = 0; i < RPS_TABLE_SIZE; i++) {
-			//compare voltage/current from the feedback voltage table and a set point.
+			//compare U/I from the feedback voltage table and a set point.
 			//to find a table pointer with closest to SP value but smaller than it
 			if (*(table_ptr + i) > set_point) {
 				dac_val = *(table_dac_step + i - 1); //use this shift in the DAC values table
@@ -428,8 +426,8 @@ void CTRL_SP_ReachByTable(rps_type *r, rps_channel_type va) {
 void CTRL_SP_WaitUntilStable(rps_type *r, rps_channel_type va) {
 	RPS_CHECK_STRUCT_PTR();
 
-	uint16_t *val; ///<pointer to rps_type voltage/current
-	uint16_t *att_buf; ///<pointer to rps_type 3 previous voltage/current values
+	uint16_t *val; ///<pointer to rps_type U/I
+	uint16_t *att_buf; ///<pointer to rps_type 3 previous U/I values
 	uint8_t *ind; ///<pointer to rps_type att_buf index
 
 	if (va == _VOLT) {
@@ -455,21 +453,11 @@ void CTRL_SP_WaitUntilStable(rps_type *r, rps_channel_type va) {
 		switch (r->fl.ctrl_stages) {
 		case 1:
 			r->fl.ctrl_stages = 2;
-			//CC/CV check. If the V/I can't reach table value after CTRL_SP_ReachByTable
-			if (va == _VOLT) {
-				if (abs(att_buf[0] - r->val.u_clos_val) > 100)
-					r->fl.ctrl_cv = 0;
-			} else {
-				if (abs(att_buf[0] - r->val.i_clos_val) > 100)
-					r->fl.ctrl_cc = 0;
-			}
-			break;
-		case 2:
-			r->fl.ctrl_stages = 0;
 			break;
 		}
-		RPS_RESET_ATT_BUF(r->val.u_att_buf); //put the mask in the attempts buffer
 		__NOP();
+		SERV_RESET_ATT_BUF(r->val.u_att_buf); //put the mask in the attempts buffer
+		SERV_RESET_ATT_BUF(r->val.i_att_buf); //put the mask in the attempts buffer
 	}
 }
 
@@ -484,22 +472,24 @@ void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va) {
 	RPS_CHECK_STRUCT_PTR();
 
 	int16_t *dac_val; ///<pointer to rps_type dac value
-	uint16_t *val; ///<pointer to rps_type voltage/current
+	uint16_t *val; ///<pointer to rps_type U/I
 	int16_t *set_point; ///<pointer to rps_type set point
 	int16_t calc_diff; ///<voltage minus set point
 	uint16_t dac_diff = 0; ///<calculated DAC step to reach a set point
 	bool rev_flag = 0; ///<reverse flag (1 -> DAC--, 0 -> DAC++)
-
+	uint8_t *step_arr; ///<pointer to rps_type U/I
 
 	//use pointers in function to read/write global structure values
 	if (va == _VOLT) {
 		val = &r->val.volt;
 		dac_val = &r->val.u_dac;
 		set_point = &r->val.u_sp_val;
+		step_arr = r->val.u_dac_step_arr;
 	} else if (va == _CURR) {
 		val = &r->val.curr; //fill the buffer
 		dac_val = &r->val.i_dac;
 		set_point = &r->val.i_sp_val;
+		step_arr = r->val.i_dac_step_arr;
 	} else {
 		r->err.bit.wrong_channel = 1;
 		return;
@@ -515,39 +505,66 @@ void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va) {
 		rev_flag = 0;
 	}
 	//adjust step calculation
-	for(uint8_t i =0;i<5;i++){
-		if (calc_diff > r->val.u_dac_step_arr[i]) {
+	for (uint8_t i = 0; i < 5; i++) {
+		if (calc_diff > step_arr[i]) {
 			dac_diff += ctrl_dac_step[i];
-			calc_diff -= r->val.u_dac_step_arr[i];
+			calc_diff -= step_arr[i];
 			__NOP();
 		}
 	}
-	if (calc_diff < r->val.u_dac_step_arr[4]) {
+	if (calc_diff < step_arr[4]) {
 		dac_diff += 1;
 	}
 	if (abs(*set_point - *val) == 0) {
 		//here is success !!!
 		//CC/CV check. If the V/I can't reach table value after CTRL_SP_ReachByTable
 		if (va == _VOLT) {
-			r->fl.ctrl_cv = 1;
+			r->fl.cv_cc = _VOLT; //now is CV
+			CTRL_SP_ReachByTable(r, _CURR); //back to start value
 		} else {
-			r->fl.ctrl_cc = 1;
+			r->fl.cv_cc = _CURR; //now is CC
+			CTRL_SP_ReachByTable(r, _VOLT); //back to start value
 		}
 		//move stage in CTRL_Handler function
 		if (r->fl.ctrl_stages == 2)
-			r->fl.ctrl_stages = 0;
+			r->fl.ctrl_stages = 3;
 		__NOP();
 		return;
 	}
 
 	//direction of adjust and limits check
 	if (rev_flag == 0) {
-		RPS_PLUS_LIMIT_CHECK(*dac_val, dac_diff, 4095);
+		SERV_PLUS_LIMIT_CHECK(*dac_val, dac_diff, 4095);
 	} else if (rev_flag == 1) {
-		RPS_MINUS_LIMIT_CHECK(*dac_val, dac_diff, 0);
+		SERV_MINUS_LIMIT_CHECK(*dac_val, dac_diff, 0);
 	}
 	__NOP();
-	PERIF_DAC_SET(*dac_val, DAC_VOLT_CH);
-	r->val.u_dac = *dac_val;
+	if (va == _VOLT) {
+		PERIF_DAC_SET(*dac_val, DAC_VOLT_CH);
+		r->val.u_dac = *dac_val;
+	} else {
+		PERIF_DAC_SET(*dac_val, DAC_CURR_CH);
+		r->val.i_dac = *dac_val;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////
+/*
+ * @brief Function to make small DAC steps and check CC/CV control
+ * @param[in/out] *r -> structure pointer
+ * @param[in] va -> _VOLT/_CURR
+ */
+void CTRL_SP_SetCheckBack(rps_type *r, rps_channel_type va) {
+	RPS_CHECK_STRUCT_PTR();
+
+	if (va == _VOLT) {
+		r->val.u_dac += 10;
+	} else if (va == _CURR) {
+		r->val.i_dac += 10;
+	} else {
+		r->err.bit.wrong_channel = 1;
+		return;
+	}
+
 }
 

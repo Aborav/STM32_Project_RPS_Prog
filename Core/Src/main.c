@@ -40,10 +40,10 @@
 
 
  TO DO:
- 1) Current channel control
- 2) More steps or algorithm for CTRL_SP_ReachBySteps
- 3) Permanent control function to maintain stable voltage/current
- 4) Slave channel check in permanent control
+ 1) Permanent control function to maintain stable voltage/current
+ 2) Permanent CV/CC check
+ 3) Current jumps are give an overshoot in CTRL_SP_ReachBySteps
+
 
 
  ******************************************************************************
@@ -211,7 +211,7 @@ int main(void) {
 #ifdef USE_DEBUG
 	printf("While start\n\r");
 	CTRL_SAVE_PrintSavedTables();
-	rps.val.i_sp_val = rps.val.i_max;
+	//rps.val.i_sp_val = rps.val.i_max;
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////

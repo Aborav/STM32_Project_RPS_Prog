@@ -15,6 +15,35 @@
 #include "main.h"
 #include "app_types.h"
 
+/*---------------------------------------------MACROS------------------------------------------------*/
+
+//cnt -> counter to increment, act -> action to implement (break,return,return 1)
+#define SERV_CHECK_TIMEOUT(cnt,act) do{\
+		if (cnt++ >= RPS_TIMEOUT_THRESHOLD) {\
+		r->err.bit.cicle_timeout = 1;\
+		act;\
+		}\
+	}while(0);
+
+#define SERV_RESET_ATT_BUF(buf) do{\
+		buf[0] = 0xF;\
+		buf[1] = 0xFF;\
+		buf[2] = 0xFFF;\
+	} while(0);
+
+//Increase or decrease DAC value and check limits
+#define SERV_PLUS_LIMIT_CHECK(val,inc,max) do{\
+		val+=(inc);\
+		if (val>(max))\
+			val = (max);\
+	} while(0)
+
+#define SERV_MINUS_LIMIT_CHECK(val,dec,max) do{\
+		val -= (dec);\
+		if (val < (max))\
+			val = (max);\
+	} while(0)
+
 /*---------------------------------------------TYPES------------------------------------------------*/
 //Flash erase structure
 ////////////////////////////////////////////////////////////

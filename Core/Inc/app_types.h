@@ -22,34 +22,14 @@
 	} while(0);
 
 //timeout check
-//cnt -> counter to increment, act -> action to implement (break,return,return 1)
-#define RPS_CHECK_TIMEOUT(cnt,act) do{\
-		if (cnt++ >= RPS_TIMEOUT_THRESHOLD) {\
-		r->err.bit.cicle_timeout = 1;\
-		act;\
-		}\
-	}while(0);
 
-#define RPS_RESET_ATT_BUF(buf) do{\
-		buf[0] = 0xF;\
-		buf[1] = 0xFF;\
-		buf[2] = 0xFFF;\
-	} while(0);
-
-//Increase or decrease DAC value and check limits
-#define RPS_PLUS_LIMIT_CHECK(val,inc,max) do{\
-		val+=(inc);\
-		if (val>(max))\
-			val = (max);\
-	} while(0)
-
-#define RPS_MINUS_LIMIT_CHECK(val,dec,max) do{\
-		val -= (dec);\
-		if (val < (max))\
-			val = (max);\
-	} while(0)
 
 /*---------------------------------------------TYPES------------------------------------------------*/
+//Unions for functions
+////////////////////////////////////////////////////////////
+typedef enum rps_channel_type {
+	_VOLT = 0, _CURR = 1
+} rps_channel_type;
 
 //Values structure
 ////////////////////////////////////////////////////////////
@@ -79,12 +59,6 @@ typedef struct _values_type {
 
 	uint8_t u_dac_step_arr[5]; ///<100,50,20,10,5 -> DAC step to V/I difference
 	uint8_t i_dac_step_arr[5]; ///<100,50,20,10,5 -> DAC step to V/I difference
-//	uint8_t u_dac_step100;
-//	uint8_t u_dac_step10;
-//	uint8_t u_dac_step5;
-//	uint8_t i_dac_step100;
-//	uint8_t i_dac_step10;
-//	uint8_t i_dac_step5;
 } values_type;
 
 //Bits field for status flags
@@ -99,6 +73,7 @@ typedef struct _flags_type {
 	unsigned ctrl_cv :1; ///<voltage is a master/slave
 	unsigned ctrl_cc :1; ///<current is a master/slave
 	unsigned ctrl_stages:4; ///<stages of reach a set point sequence
+	rps_channel_type cv_cc;
 } flags_type;
 
 //Bits field for errors
@@ -124,10 +99,5 @@ typedef struct _rps_type {
 	errors_type err;
 } rps_type;
 
-//Unions for functions
-////////////////////////////////////////////////////////////
-typedef enum rps_channel_type {
-	_VOLT = 0, _CURR = 1
-} rps_channel_type;
 
 #endif /* INC_APP_TYPES_H_ */

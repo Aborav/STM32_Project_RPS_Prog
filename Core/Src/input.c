@@ -55,20 +55,20 @@ void INPUT_EncHandler(rps_type *r) {
 
 //voltage trim
 	if (MENC_TurnRight(&menc1)) {
-		RPS_PLUS_LIMIT_CHECK(r->val.u_sp_val, 10, r->val.u_max);
+		SERV_PLUS_LIMIT_CHECK(r->val.u_sp_val, 10, r->val.u_max);
 	}
 
 	if (MENC_TurnLeft(&menc1)) {
-		RPS_MINUS_LIMIT_CHECK(r->val.u_sp_val, 10, r->val.u_min);
+		SERV_MINUS_LIMIT_CHECK(r->val.u_sp_val, 10, r->val.u_min);
 	}
 
 //current trim
 	if (MENC_TurnRight(&menc2)) {
-		RPS_PLUS_LIMIT_CHECK(r->val.i_sp_val, 10, r->val.i_max);
+		SERV_PLUS_LIMIT_CHECK(r->val.i_sp_val, 10, r->val.i_max);
 	}
 
 	if (MENC_TurnLeft(&menc2)) {
-		RPS_MINUS_LIMIT_CHECK(r->val.i_sp_val, 10, r->val.i_min);
+		SERV_MINUS_LIMIT_CHECK(r->val.i_sp_val, 10, r->val.i_min);
 	}
 }
 

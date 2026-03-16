@@ -26,6 +26,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "main.h"
 
@@ -59,7 +60,7 @@
 
 //RPS configuration
 /////////////////////////////////////////////////////
-#define RPS_TABLE_DELAY 100U //this is delay between DAC step when the FB table is filling up (min 70ms)
+#define RPS_CAP_CHAR_DELAY 100U ///<this is delay between DAC step when the FB table is filling up (min 70ms)
 #define RPS_TABLE_DAC_STEP 100U
 #define RPS_TABLE_SIZE 42U
 
@@ -87,5 +88,6 @@ void CTRL_SAVE_CalcDACSteps(rps_type *r, rps_channel_type va);
 void CTRL_SP_ReachByTable(rps_type *r, rps_channel_type va);
 void CTRL_SP_WaitUntilStable(rps_type *r, rps_channel_type va);
 void CTRL_SP_ReachBySteps(rps_type *r, rps_channel_type va);
+void CTRL_SP_SetCheckBack(rps_type *r, rps_channel_type va);
 
 #endif /* INC_CTRL_H_ */
