@@ -1,15 +1,15 @@
 [submodule "Libs/Encoder"]
 	path = Libs/Encoder
-	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Encoder
+	url = https://github.com/Aborav/STM32_Library_Encoder.git
 [submodule "Libs/INA226"]
 	path = Libs/INA226
-	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_INA226
+	url = https://github.com/Aborav/STM32_Library_INA226.git
 [submodule "Libs/MGL"]
 	path = Libs/MGL
-	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_My_Graphic_Library
+	url = https://github.com/Aborav/STM32_Library_My_Graphic_Lib.git
 [submodule "Libs/SignalFilter"]
 	path = Libs/SignalFilter
-	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Signal_Filter
+	url = https://github.com/Aborav/STM32_Library_Signal_Filter.git
 [submodule "Libs/FlashProm"]
 	path = Libs/FlashProm
-	url = /media/aborav/Seagate Expansion Drive/1.Laptop/1.Programming/2.STM32/Libraries_M/STM32_Library_Flashprom
+	url = https://github.com/Aborav/STM32_Library_FlashProm.git
