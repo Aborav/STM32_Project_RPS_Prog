@@ -58,7 +58,7 @@
             "request": "launch",
             "executable": "${workspaceFolder}/build/Debug/${workspaceFolderBasename}.elf",
             "servertype": "stlink",
-            "device": "STM32F407VE",
+            "device": "STM32G431C8Ux",
             "interface": "swd",
             "runToEntryPoint": "main",
             "serverArgs": ["-l", "1", "-m", "0", "-s", "-k"],
