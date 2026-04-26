@@ -1,0 +1,70 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "J-Link",
+            "type": "cortex-debug",
+            "request": "launch",
+            "executable": "${workspaceFolder}/build/Debug/${workspaceFolderBasename}.elf",
+            "servertype": "jlink",
+            "device": "STM32F407VE",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "swoConfig": {
+                "enabled": true,
+                "cpuFrequency": 168000000,
+                "swoFrequency": 4000000,
+                "source": "probe",
+                "decoders": [
+                    {
+                        "type": "console",
+                        "label": "ITM",
+                        "port": 0,
+                        "showOnStartup": true
+                    }
+                ]
+            }
+        },
+        {
+            "name": "OpenOCD",
+            "type": "cortex-debug",
+            "request": "launch",
+            "executable": "${workspaceFolder}/build/Debug/${workspaceFolderBasename}.elf",
+            "servertype": "openocd",
+            "device": "STM32F407VE",
+            "configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
+            "runToEntryPoint": "main",
+            "gdbTarget": "localhost:3333",
+            "preLaunchCommands": ["monitor arm semihosting enable"],
+            "swoConfig": {
+                "enabled": false
+            }
+        },
+        {
+            "name": "st-util",
+            "type": "cortex-debug",
+            "request": "launch",
+            "executable": "${workspaceFolder}/build/Debug/${workspaceFolderBasename}.elf",
+            "servertype": "stutil",
+            "device": "STM32F407VE",
+            "runToEntryPoint": "main",
+            "swoConfig": {
+                "enabled": false
+            }
+        },
+        {
+            "name": "ST-Link GDB Server",
+            "type": "cortex-debug",
+            "request": "launch",
+            "executable": "${workspaceFolder}/build/Debug/${workspaceFolderBasename}.elf",
+            "servertype": "stlink",
+            "device": "STM32F407VE",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "serverArgs": ["-l", "1", "-m", "0", "-s", "-k"],
+            "swoConfig": {
+                "enabled": false
+            }
+        }
+    ]
+}

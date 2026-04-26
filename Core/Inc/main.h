@@ -48,7 +48,7 @@ extern "C" {
 /* USER CODE BEGIN EM */
 //DEBUG
 /////////////////////////////////////////////////////
-#define USE_DEBUG
+//#define USE_DEBUG
 #define DEBUG_REFRESH 1000U
 /* USER CODE END EM */
 
